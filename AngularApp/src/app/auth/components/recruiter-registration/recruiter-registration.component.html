@@ -1,1 +1,39 @@
-<p>recruiter-registration works!</p>
+<form class="flex flex-col gap-4">
+  <div class="flex items-center gap-5">
+    <div class="flex flex-col w-full gap-2">
+      <label>First Name</label>
+      <input pInputText type="text" class="w-full" />
+    </div>
+    <div class="flex flex-col w-full gap-2">
+      <label>Last Name</label>
+      <input pInputText type="text" class="w-full" />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="email">E-Mail</label>
+    <input pInputText type="email" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="password">Password</label>
+    <input pInputText type="password" />
+  </div>
+
+  <p-divider></p-divider>
+
+  <div class="flex items-center gap-5">
+    <div class="flex flex-col w-full gap-2">
+      <label for="email">Company Name</label>
+      <input pInputText type="email" />
+    </div>
+    <div class="flex flex-col w-full gap-2">
+      <label for="email">Company URL</label>
+      <input pInputText type="email" />
+    </div>
+  </div>
+
+  <p-divider></p-divider>
+
+  <p-button label="Sign Up as a Recruiter" type="submit" severity="help"></p-button>
+</form>

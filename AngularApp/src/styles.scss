@@ -21,3 +21,7 @@ select,
 textarea {
   line-height: normal;
 }
+
+router-outlet {
+  display: none;
+}
