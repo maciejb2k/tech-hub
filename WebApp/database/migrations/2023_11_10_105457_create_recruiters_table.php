@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("company_name");
             $table->string("company_description")->nullable();
             $table->string("company_url")->nullable();
-            $table->string("position");
+            $table->string("position")->nullable();
             $table->foreignIdFor(User::class)->constrained();
             $table->timestamps();
         });
