@@ -1,0 +1,37 @@
+<header class="pb-5">
+  <nav class="bg-white px-4 lg:px-6 py-2.5 dark:bg-gray-800 border-b border-gray-100">
+    <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto">
+      <a href="/" class="flex items-center">
+        <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
+          >TechHub</span
+        >
+      </a>
+      <div class="items-center justify-between hidden w-full lg:flex lg:w-auto" id="mobile-menu-2">
+        <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-700">Home</a>
+          </li>
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-700">Talents Search</a>
+          </li>
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-700">Contact</a>
+          </li>
+        </ul>
+      </div>
+      <div class="flex items-center gap-2">
+        <p-button
+          label="Sign In"
+          size="small"
+          [outlined]="true"
+          icon="pi pi-sign-in"
+          [routerLink]="'/auth/login'"></p-button>
+        <p-button
+          label="Sign Up"
+          size="small"
+          icon="pi pi-user-plus"
+          [routerLink]="'/auth/register'"></p-button>
+      </div>
+    </div>
+  </nav>
+</header>

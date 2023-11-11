@@ -1,0 +1,135 @@
+<ng-container>
+  <p-toast></p-toast>
+  <p-messages [(value)]="alerts" [enableService]="false" [closable]="true"></p-messages>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="flex flex-col gap-4">
+      <div class="flex gap-5">
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-2">
+            <label for="first_name">First Name</label>
+            <input
+              pInputText
+              required
+              type="text"
+              class="w-full"
+              id="first_name"
+              placeholder="John"
+              formControlName="first_name" />
+          </div>
+          <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+            <small *ngIf="firstName.errors?.['required']" class="p-error">
+              First name is required
+            </small>
+            <small *ngIf="firstName.errors?.['serverError']" class="p-error">
+              {{ firstName.errors['serverError'] }}
+            </small>
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-2">
+            <label for="last_name">Last Name</label>
+            <input
+              pInputText
+              required
+              type="text"
+              class="w-full"
+              id="last_name"
+              placeholder="Doe"
+              formControlName="last_name" />
+          </div>
+          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+            <small *ngIf="lastName.errors?.['required']" class="p-error"
+              >Last name is required.
+            </small>
+            <small *ngIf="lastName.errors?.['serverError']" class="p-error">
+              {{ lastName.errors['serverError'] }}
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2">
+          <label for="email">E-Mail</label>
+          <input
+            pInputText
+            required
+            type="email"
+            id="email"
+            placeholder="john.doe@gmail.com"
+            formControlName="email" />
+        </div>
+        <div *ngIf="email.invalid && (email.dirty || email.touched)">
+          <small *ngIf="email.errors?.['required']" class="p-error">Email is required.</small>
+          <small *ngIf="email.errors?.['email']" class="p-error">Invalid email address.</small>
+          <small *ngIf="email.errors?.['serverError']" class="p-error">
+            {{ email.errors['serverError'] }}
+          </small>
+        </div>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2">
+          <label for="password">Password</label>
+          <input
+            pInputText
+            required
+            type="password"
+            id="password"
+            placeholder="Password (min 8 characters)"
+            formControlName="password" />
+        </div>
+        <div *ngIf="password.invalid && (password.dirty || password.touched)">
+          <small *ngIf="password.errors?.['required']" class="p-error">
+            Password is required.
+          </small>
+          <small *ngIf="password.errors?.['minlength']" class="p-error">
+            Password must be at least 8 characters.
+          </small>
+          <small *ngIf="password.errors?.['serverError']" class="p-error">
+            {{ password.errors['serverError'] }}
+          </small>
+        </div>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2">
+          <label for="repeat_password">Repeat Password</label>
+          <input
+            pInputText
+            required
+            type="password"
+            id="repeat_password"
+            placeholder="Repeat your password"
+            formControlName="repeat_password" />
+        </div>
+        <div *ngIf="repeatPassword.invalid && (repeatPassword.dirty || repeatPassword.touched)">
+          <small *ngIf="repeatPassword.errors?.['required']" class="p-error">
+            Repeat password is required.
+          </small>
+          <small *ngIf="repeatPassword.errors?.['minlength']" class="p-error">
+            Repeat password must be at least 8 characters.
+          </small>
+          <small *ngIf="repeatPassword.errors?.['serverError']" class="p-error">
+            {{ repeatPassword.errors['serverError'] }}
+          </small>
+        </div>
+        <div *ngIf="registerForm.hasError('passwordMismatch')">
+          <small class="p-error"> Repeat password must match password. </small>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <div class="flex flex-col gap-2">
+        <button
+          pButton
+          label="Sign Up as a Employee"
+          type="submit"
+          [disabled]="registerForm.disabled || !registerForm.valid"></button>
+      </div>
+    </div>
+  </form>
+</ng-container>
