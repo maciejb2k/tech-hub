@@ -1,10 +1,45 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { passwordMatchValidator, urlValidator } from 'src/app/shared/validators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
+  constructor(private formBuilder: FormBuilder) {}
+
+  getBaseRegistrationForm() {
+    return this.formBuilder.group(
+      {
+        first_name: ['', [Validators.required]],
+        last_name: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        repeat_password: ['', [Validators.required, Validators.minLength(8)]],
+      },
+      { validators: [passwordMatchValidator] }
+    );
+  }
+
+  // Alias for getBaseRegistrationForm()
+  getEmployeeRegistrationForm() {
+    return this.getBaseRegistrationForm();
+  }
+
+  getRecruiterRegistrationForm() {
+    const baseForm = this.getBaseRegistrationForm();
+
+    return this.formBuilder.group(
+      {
+        ...baseForm.controls,
+        company_name: ['', [Validators.required]],
+        company_url: ['', [urlValidator]],
+      },
+      { validators: [passwordMatchValidator] }
+    );
+  }
+
   handleFormErrors(form: FormGroup, errors: { [key: string]: string[] }) {
     for (const controlName in errors) {
       if (form.get(controlName)) {

@@ -11,3 +11,8 @@ export interface EmployeeRegistrationForm {
   password: string;
   repeat_password: string;
 }
+
+export interface RecruiterRegistrationForm extends EmployeeRegistrationForm {
+  company_name: string;
+  company_url: string;
+}

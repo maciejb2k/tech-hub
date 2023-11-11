@@ -16,19 +16,9 @@ import { FormService } from '../../services/form.service';
 export class EmployeeRegistrationComponent {
   alerts: Message[] | undefined;
 
-  registerForm = this.formBuilder.group(
-    {
-      first_name: ['Wojciech', [Validators.required]],
-      last_name: ['Rzasa', [Validators.required]],
-      email: ['wrzasa@ur.edu.pl', [Validators.required, Validators.email]],
-      password: ['12345678', [Validators.required, Validators.minLength(8)]],
-      repeat_password: ['12345678', [Validators.required, Validators.minLength(8)]],
-    },
-    { validators: [passwordMatchValidator] }
-  );
+  registerForm = this.formService.getEmployeeRegistrationForm();
 
   constructor(
-    private formBuilder: FormBuilder,
     private authService: AuthService,
     private messageService: MessageService,
     private formService: FormService
@@ -52,7 +42,7 @@ export class EmployeeRegistrationComponent {
           {
             severity: 'success',
             summary: 'Success',
-            detail: 'Account succesfully created',
+            detail: 'Employee succesfully created.',
           },
         ];
 

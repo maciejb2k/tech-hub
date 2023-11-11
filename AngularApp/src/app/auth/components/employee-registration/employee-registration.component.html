@@ -94,15 +94,17 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label for="repeat_password">Repeat Password</label>
-        <input
-          pInputText
-          required
-          type="password"
-          id="repeat_password"
-          placeholder="Repeat your password"
-          formControlName="repeat_password" />
+      <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2">
+          <label for="repeat_password">Repeat Password</label>
+          <input
+            pInputText
+            required
+            type="password"
+            id="repeat_password"
+            placeholder="Repeat your password"
+            formControlName="repeat_password" />
+        </div>
         <div *ngIf="repeatPassword.invalid && (repeatPassword.dirty || repeatPassword.touched)">
           <small *ngIf="repeatPassword.errors?.['required']" class="p-error">
             Repeat password is required.
