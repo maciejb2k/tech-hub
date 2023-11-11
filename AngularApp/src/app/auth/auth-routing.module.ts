@@ -6,7 +6,7 @@ import { RegistrationFormComponent } from './components/registration-form/regist
 import { EmployeeRegistrationComponent } from './components/employee-registration/employee-registration.component';
 import { RecruiterRegistrationComponent } from './components/recruiter-registration/recruiter-registration.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
-import { authGuard } from './auth-guard';
+import { authGuard } from './guards/auth-guard';
 
 const routes: Routes = [
   {

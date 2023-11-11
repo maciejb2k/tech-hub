@@ -25,3 +25,9 @@ textarea {
 router-outlet {
   display: none;
 }
+
+// PrimeNG overrides
+
+.p-message {
+  margin: 0 0 2rem;
+}
