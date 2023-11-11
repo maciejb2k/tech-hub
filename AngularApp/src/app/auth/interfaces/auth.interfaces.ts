@@ -16,3 +16,8 @@ export interface RecruiterRegistrationForm extends EmployeeRegistrationForm {
   company_name: string;
   company_url: string;
 }
+
+export interface LoginForm {
+  email: string;
+  password: string;
+}
