@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
 
-import {
-  EmployeeRegistrationForm,
-  ErrorResponse,
-  RecruiterRegistrationForm,
-} from '../../interfaces/auth.interfaces';
+import { ErrorResponse, RecruiterRegistrationForm } from '../../interfaces/auth.interfaces';
 import { AuthService } from '../../services/auth.service';
 import { FormService } from '../../services/form.service';
 
@@ -47,8 +43,6 @@ export class RecruiterRegistrationComponent {
             detail: 'Recruiter succesfully created',
           },
         ];
-
-        // TODO: Token handling
       },
       error: (error: ErrorResponse) => {
         this.registerForm.enable();

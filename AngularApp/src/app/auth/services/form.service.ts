@@ -1,13 +1,19 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { passwordMatchValidator, urlValidator } from 'src/app/shared/validators';
+import { passwordMatchValidator, urlValidator } from 'src/app/auth/validators/auth.validator';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
   constructor(private formBuilder: FormBuilder) {}
+
+  getLoginForm() {
+    return this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+    });
+  }
 
   getBaseRegistrationForm() {
     return this.formBuilder.group(
