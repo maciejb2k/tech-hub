@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { Message, MessageService } from 'primeng/api';
-import { passwordMatchValidator } from 'src/app/shared/validators';
 
 import { EmployeeRegistrationForm, ErrorResponse } from '../../interfaces/auth.interfaces';
 import { AuthService } from '../../services/auth.service';
@@ -45,8 +43,6 @@ export class EmployeeRegistrationComponent {
             detail: 'Employee succesfully created.',
           },
         ];
-
-        // TODO: Token handling
       },
       error: (error: ErrorResponse) => {
         this.registerForm.enable();

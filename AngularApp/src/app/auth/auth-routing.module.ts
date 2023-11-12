@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { authenticatedGuard } from './guards/auth.guard';
+
 import { AuthLayoutComponent } from './components/auth-layout/auth-layout.component';
 import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
 import { EmployeeRegistrationComponent } from './components/employee-registration/employee-registration.component';
 import { RecruiterRegistrationComponent } from './components/recruiter-registration/recruiter-registration.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
-import { authGuard } from './guards/auth-guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AuthLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authenticatedGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {

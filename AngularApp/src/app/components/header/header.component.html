@@ -1,6 +1,6 @@
 <header class="pb-5">
-  <nav class="bg-white px-4 lg:px-6 py-2.5 dark:bg-gray-800 border-b border-gray-100">
-    <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto">
+  <nav class="bg-white py-2.5 dark:bg-gray-800 border-b border-gray-100">
+    <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
       <a href="/" class="flex items-center">
         <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
           >TechHub</span
@@ -21,16 +21,25 @@
       </div>
       <div class="flex items-center gap-2">
         <p-button
+          *ngIf="!authService.isAuthenticated()"
           label="Sign In"
           size="small"
           [outlined]="true"
           icon="pi pi-sign-in"
           [routerLink]="'/auth/login'"></p-button>
         <p-button
+          *ngIf="!authService.isAuthenticated()"
           label="Sign Up"
           size="small"
           icon="pi pi-user-plus"
           [routerLink]="'/auth/register'"></p-button>
+        <p-button
+          *ngIf="authService.isAuthenticated()"
+          label="Sign Out"
+          size="small"
+          icon="pi pi-sign-out"
+          severity="secondary"
+          (click)="authService.logout()"></p-button>
       </div>
     </div>
   </nav>
