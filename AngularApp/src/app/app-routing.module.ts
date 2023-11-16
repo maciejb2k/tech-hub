@@ -12,6 +12,14 @@ const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
   },
+  {
+    path: 'employee',
+    loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule),
+  },
+  {
+    path: 'recruiter',
+    loadChildren: () => import('./recruiter/recruiter.module').then(m => m.RecruiterModule),
+  },
   { path: '**', component: NotFoundPageComponent },
 ];
 
