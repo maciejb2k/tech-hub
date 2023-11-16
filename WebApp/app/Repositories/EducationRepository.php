@@ -50,4 +50,9 @@ class EducationRepository {
     {
         $this->education::where("id", $educationId)->delete();
     }
+
+    public function getEducationsByEmployeeId(int $employeeId)
+    {
+        return $this->education::where("employee_id", $employeeId)->get();
+    }
 }

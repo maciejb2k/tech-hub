@@ -44,4 +44,9 @@ class SkillRepository {
     {
         $this->skill::where("id", $skillId)->delete();
     }
+
+    public function getSkillsByEmployeeId(int $employeeId)
+    {
+        return $this->skill::where("employee_id", $employeeId)->get();
+    }
 }
