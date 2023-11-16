@@ -32,5 +32,4 @@ class EmployeeRepository {
 
         return $employee;
     }
-
 }

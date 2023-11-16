@@ -30,35 +30,35 @@ class AuthService {
         $this->roleRepository = $roleRepository;
     }
 
-    public function registerEmployee(RegisterEmployeeRequest $registerEmployeeRequest)
+    public function registerEmployee(RegisterEmployeeRequest $request)
     {
-        $this->comparePasswordsFromRequest($registerEmployeeRequest['password'], $registerEmployeeRequest['repeat_password']);
-        $user = $this->userRepository->createEmployee($registerEmployeeRequest);
-        $employee = $this->employeeRepository->createEmployee($registerEmployeeRequest, $user['id']);
+        $this->comparePasswordsFromRequest($request['password'], $request['repeat_password']);
+        $user = $this->userRepository->createEmployee($request);
+        $employee = $this->employeeRepository->createEmployee($request, $user['id']);
 
         $token = $this->createToken($user);
 
         return $this->returnEmployeeWithToken($user, $token);
     }
 
-    public function registerRecruiter(RegisterRecruiterRequest $registerRecruiterRequest)
+    public function registerRecruiter(RegisterRecruiterRequest $request)
     {
-        $this->comparePasswordsFromRequest($registerRecruiterRequest['password'], $registerRecruiterRequest['repeat_password']);
-        $user = $this->userRepository->createRecruiter($registerRecruiterRequest);
-        $recruiter = $this->recruiterRepository->createRecruiter($registerRecruiterRequest, $user['id']);
+        $this->comparePasswordsFromRequest($request['password'], $request['repeat_password']);
+        $user = $this->userRepository->createRecruiter($request);
+        $recruiter = $this->recruiterRepository->createRecruiter($request, $user['id']);
 
         $token = $this->createToken($user);
 
         return $this->returnRecruiterWithToken($user, $token);
     }
 
-    public function login(LoginRequest $loginRequest)
+    public function login(LoginRequest $request)
     {
-        $user = $this->userRepository->findUserByEmail($loginRequest['email']);
+        $user = $this->userRepository->findUserByEmail($request['email']);
         
         if(!$user) $this->validateUser($user, "");
         
-        $isCorrectPassword = $this->userRepository->comparePassword($loginRequest['password'], $user);
+        $isCorrectPassword = $this->userRepository->comparePassword($request['password'], $user);
         
         $this->validateUser($user, $isCorrectPassword);
         

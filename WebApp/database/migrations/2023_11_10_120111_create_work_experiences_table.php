@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('company_name');
             $table->string('position');
-            $table->string('description')->nullable();
+            $table->string('description', 500)->nullable();
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->foreignIdFor(Employee::class)->constrained();
