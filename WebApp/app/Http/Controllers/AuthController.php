@@ -19,23 +19,23 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function registerEmployee(RegisterEmployeeRequest $registerEmployeeRequest)
+    public function registerEmployee(RegisterEmployeeRequest $request)
     {
-        $res = $this->authService->registerEmployee($registerEmployeeRequest);
+        $res = $this->authService->registerEmployee($request);
         return response($res, 201);
     }
 
-    public function registerRecruiter(RegisterRecruiterRequest $registerRecruiterRequest)
+    public function registerRecruiter(RegisterRecruiterRequest $request)
     {
-        $res = $this->authService->registerRecruiter($registerRecruiterRequest);
+        $res = $this->authService->registerRecruiter($request);
         return response($res, 201);
     }
 
-    public function login(LoginRequest $loginRequest)
+    public function login(LoginRequest $request)
     {
         try 
         {
-            $res = $this->authService->login($loginRequest);
+            $res = $this->authService->login($request);
             return response($res, 200);
         } 
         catch(Exception $e)

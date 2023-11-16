@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -30,10 +32,14 @@ class Handler extends ExceptionHandler
     }
 
     public function render($request, Throwable $e)
- {
+    {
         if ($e instanceof AuthenticationException) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+        if ($e instanceof AuthorizationException)
+        {
+            return response()->json(['message' => 'Invalid ability provided.'], 403);
+        }
         return parent::render($request, $e);
- }
+    }
 }
