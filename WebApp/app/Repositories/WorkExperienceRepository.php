@@ -52,4 +52,9 @@ class WorkExperienceRepository {
     {
         $this->workExperience::where("id", $workExperienceId)->delete();
     }
+
+    public function getWorkExperiencesByEmployeeId(int $employeeId)
+    {
+        return $this->workExperience::where("employee_id", $employeeId)->get();
+    }
 }

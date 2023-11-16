@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EducationController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\WorkExperienceController;
 use Illuminate\Http\Request;
@@ -29,11 +31,12 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth
 
 
 Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
-    Route::resource('skill', SkillController::class); 
-    Route::resource('education', EducationController::class); 
-    Route::resource('work-experience', WorkExperienceController::class); 
+    Route::resource('skill', SkillController::class);
+    Route::resource('education', EducationController::class);
+    Route::resource('work-experience', WorkExperienceController::class);
+    Route::resource('language', LanguageController::class);
 });
 
 Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(function () {
-    //
+    Route::resource('profile', ProfileController::class);
 });
