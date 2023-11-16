@@ -12,21 +12,27 @@ import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
-import { HomepageComponent } from './components/homepage/homepage.component';
-import { HeaderComponent } from './components/header/header.component';
+import { RecruiterModule } from './recruiter/recruiter.module';
+
+import { PublicModule } from './public/public.module';
+
+import { EmployeeModule } from './employee/employee.module';
 
 import { ButtonModule } from 'primeng/button';
+import { HeaderComponent } from './shared/components/header/header.component';
 
 @NgModule({
-  declarations: [AppComponent, NotFoundPageComponent, HomepageComponent, HeaderComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    RouterModule,
+    PublicModule,
+    AuthModule,
+    RecruiterModule,
+    EmployeeModule,
     FormsModule,
     AppRoutingModule,
-    RouterModule,
-    AuthModule,
     ButtonModule,
     ReactiveFormsModule,
   ],

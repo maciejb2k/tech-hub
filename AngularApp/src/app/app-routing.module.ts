@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
-import { HomepageComponent } from './components/homepage/homepage.component';
+
+import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
 
 const routes: Routes = [
-  { path: '', component: HomepageComponent },
+  {
+    path: '',
+    loadChildren: () => import('./public/public.module').then(m => m.PublicModule),
+  },
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
@@ -14,6 +17,5 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
 })
 export class AppRoutingModule {}
