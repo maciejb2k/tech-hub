@@ -42,7 +42,8 @@
           size="small"
           icon="pi pi-sign-out"
           severity="secondary"
-          (click)="authService.logout()"></p-button>
+          [disabled]="isLoading"
+          (click)="logout()"></p-button>
       </div>
     </div>
   </nav>

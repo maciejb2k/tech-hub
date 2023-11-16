@@ -23,9 +23,17 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { SharedModule } from 'primeng/api';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
+import { LoaderInterceptor } from './shared/interceptors/loader.interceptor';
+import { BaseComponent } from './shared/components/base/base.component';
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, HeaderComponent, NotFoundPageComponent],
+  declarations: [
+    AppComponent,
+    LayoutComponent,
+    HeaderComponent,
+    NotFoundPageComponent,
+    BaseComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -41,6 +49,11 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
     ReactiveFormsModule,
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

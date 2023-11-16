@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import {
@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
+  user$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
   constructor(private http: HttpClient, private router: Router) {}
 
   registerEmployee(formData: EmployeeRegistrationForm) {
@@ -35,11 +37,26 @@ export class AuthService {
     );
   }
 
+  userDetails() {
+    const url = 'http://localhost:8000/api/profile';
+    return this.http.get(url).pipe(
+      tap((user: any) => {
+        this.user$.next(user); // Store user details in BehaviorSubject
+      })
+    );
+  }
+
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('email');
-    this.router.navigate(['/auth/login']);
+    const url = 'http://localhost:8000/api/auth/logout';
+    return this.http.post(url, {}).pipe(
+      tap(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('email');
+
+        this.router.navigate(['/auth/login']);
+      })
+    );
   }
 
   isAuthenticated() {
