@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+
 import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
@@ -7,12 +9,13 @@ import { PrimeNGConfig } from 'primeng/api';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'AngularApp';
+  title = 'TechHub - Recruitment Platform';
   value: string;
 
-  constructor(private primengConfig: PrimeNGConfig) {}
+  constructor(private primengConfig: PrimeNGConfig, private titleService: Title) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;
+    this.titleService.setTitle(this.title);
   }
 }
