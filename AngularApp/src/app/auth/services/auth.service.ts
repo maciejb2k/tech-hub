@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, of, throwError } from 'rxjs';
+import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
   AuthResponse,
@@ -55,10 +55,18 @@ export class AuthService {
   }
 
   getUserData() {
-    if (this.user$.value === null && this.isAuthenticated()) {
-      return this.fetchUserData();
-    }
-    return this.user$.asObservable();
+    return this.user$.pipe(
+      switchMap(user => {
+        if (user === null && this.isAuthenticated()) {
+          return this.fetchUserData().pipe(
+            finalize(() => {
+              return this.user$.asObservable();
+            })
+          );
+        }
+        return of(user);
+      })
+    );
   }
 
   getRole() {
