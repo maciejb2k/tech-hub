@@ -19,6 +19,11 @@ class EmployeeRepository {
         return $this->employee::where('user_id', $userId)->first();
     }
 
+    public function getEmployeeById(int $employeeId)
+    {
+        return $this->employee::findOrFail($employeeId);
+    }
+
     public function createEmployee(RegisterEmployeeRequest $registerEmployeeRequest, string $userId)
     {
         $employee = $this->employee::create([

@@ -40,7 +40,7 @@ class ProfileService {
         $this->employeeRepository = $employeeRepository;
         $this->recruiterRepository = $recruiterRepository;
     }
-    
+
     public function getProfile(int $userId, int $roleId)
     {
         if($roleId === 1)
@@ -48,8 +48,8 @@ class ProfileService {
             $employee = $this->employeeRepository->getEmployeeByUserId($userId);
 
             return [
-                "employee" => new EmployeeResource($employee),
-                "languages" => new LanguageCollection($this->languageRepository->getLanguagesByEmployeeId($employee['id'])),
+                //"employee" => new EmployeeResource($employee),
+                //"languages" => new LanguageCollection($this->languageRepository->getLanguagesByEmployeeId($employee['id'])),
                 "educations" => new EducationCollection($this->educationRepository->getEducationsByEmployeeId($employee['id'])),
                 "skills" => new SkillCollection($this->skillRepository->getSkillsByEmployeeId($employee['id'])),
                 "work_experiences" => new WorkExperienceCollection($this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id'])),

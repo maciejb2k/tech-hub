@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProfileService;
+use App\Services\EmployeeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class ProfileController extends Controller
+class EmployeeController extends Controller
 {
-    protected $profileService;
+    protected $employeeService;
 
-    public function __construct(ProfileService $profileService)
+    public function __construct(EmployeeService $employeeService)
     {
-        $this->profileService = $profileService;
+        $this->employeeService = $employeeService;
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $res = $this->profileService->getProfile($request->user()->id, $request->user()->role_id);
-        return response($res, 200);
+        //
     }
 
     /**
@@ -42,9 +42,14 @@ class ProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id, Request $request)
     {
-        //
+        if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
+            Auth::setUser($user);
+        }
+
+        $res = $this->employeeService->getEmployee($id, $request);
+        return response($res, 200);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EducationController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillController;
@@ -40,3 +41,5 @@ Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
 Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(function () {
     Route::resource('profile', ProfileController::class);
 });
+
+Route::get('/employees/{id}', [EmployeeController::class, 'show']);
