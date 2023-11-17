@@ -36,14 +36,14 @@
           size="small"
           icon="pi pi-user-plus"
           [routerLink]="'/auth/register'"></p-button>
-        <p-button
-          *ngIf="authService.isAuthenticated()"
-          label="Sign Out"
-          size="small"
-          icon="pi pi-sign-out"
+        <p-splitButton
+          *ngIf="authService.isAuthenticated() && userData"
+          label="Hi, {{ userData.first_name }}!"
+          styleClass="p-button-sm p-button-secondary"
+          icon="pi pi-id-card"
           severity="secondary"
-          [disabled]="isLoading"
-          (click)="logout()"></p-button>
+          [model]="items">
+        </p-splitButton>
       </div>
     </div>
   </nav>

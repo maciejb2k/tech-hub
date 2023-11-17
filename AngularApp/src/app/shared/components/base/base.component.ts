@@ -11,7 +11,7 @@ export class BaseComponent {
   private isLoadingSubscription: Subscription;
 
   constructor(protected loaderService: LoaderService) {
-    this.isLoadingSubscription = this.loaderService.isLoadingSubject.subscribe(value => {
+    this.isLoadingSubscription = this.loaderService.isLoading$.subscribe(value => {
       this.isLoading = value;
     });
   }

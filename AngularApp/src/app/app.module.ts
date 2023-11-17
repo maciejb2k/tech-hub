@@ -18,13 +18,17 @@ import { PublicModule } from './public/public.module';
 
 import { EmployeeModule } from './employee/employee.module';
 
-import { ButtonModule } from 'primeng/button';
 import { LayoutComponent } from './shared/components/layout/layout.component';
-import { SharedModule } from 'primeng/api';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
 import { LoaderInterceptor } from './shared/interceptors/loader.interceptor';
 import { BaseComponent } from './shared/components/base/base.component';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [
@@ -33,12 +37,12 @@ import { BaseComponent } from './shared/components/base/base.component';
     HeaderComponent,
     NotFoundPageComponent,
     BaseComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule,
-    SharedModule,
     PublicModule,
     AuthModule,
     RecruiterModule,
@@ -46,6 +50,9 @@ import { BaseComponent } from './shared/components/base/base.component';
     FormsModule,
     AppRoutingModule,
     ButtonModule,
+    ProgressSpinnerModule,
+    ProgressBarModule,
+    SplitButtonModule,
     ReactiveFormsModule,
   ],
   providers: [
