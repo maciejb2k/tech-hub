@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, of, throwError } from 'rxjs';
+import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
   AuthResponse,
   EmployeeRegistrationForm,
   LoginForm,
+  ProfileData,
+  ProfileResponse,
   RecruiterRegistrationForm,
 } from '../interfaces/auth.interfaces';
 import { Router } from '@angular/router';
@@ -15,6 +17,9 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
+  user$: BehaviorSubject<ProfileData | null> = new BehaviorSubject<ProfileData | null>(null);
+  private destroy$: Subject<void> = new Subject<void>();
+
   constructor(private http: HttpClient, private router: Router) {}
 
   registerEmployee(formData: EmployeeRegistrationForm) {
@@ -31,27 +36,46 @@ export class AuthService {
     const url = 'http://localhost:8000/api/auth/login';
     return this.http.post<AuthResponse>(url, formData).pipe(
       catchError(this.handleError),
-      tap(response => this.setAuthInfo(response))
+      tap(response => {
+        this.setToken(response.token);
+        this.getUserData().pipe(takeUntil(this.destroy$)).subscribe();
+      })
     );
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('email');
-    this.router.navigate(['/auth/login']);
+    const url = 'http://localhost:8000/api/auth/logout';
+    return this.http.post(url, {}).pipe(
+      tap(() => {
+        this.removeToken();
+        this.clearUser();
+        this.router.navigate(['/auth/login']);
+      })
+    );
   }
 
-  isAuthenticated() {
-    return localStorage.getItem('token') !== null;
+  getUserData() {
+    return this.user$.pipe(
+      switchMap(user => {
+        if (user === null && this.isAuthenticated()) {
+          return this.fetchUserData().pipe(
+            finalize(() => {
+              return this.user$.asObservable();
+            })
+          );
+        }
+        return of(user);
+      })
+    );
   }
 
-  getAuthorizationToken() {
-    return localStorage.getItem('token') || null;
+  getRole() {
+    return this.getUserData().pipe(map(user => (user ? user.role : null)));
   }
 
   roleBasedRedirect() {
     const role = localStorage.getItem('role');
+
     if (role === 'employee') {
       return '/employee';
     } else if (role === 'recruiter') {
@@ -61,13 +85,60 @@ export class AuthService {
     }
   }
 
-  private setAuthInfo(response: AuthResponse) {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('role', response.user_details.user.role.name);
-    localStorage.setItem('email', response.user_details.user.email);
+  isAuthenticated() {
+    return localStorage.getItem('token');
+  }
+
+  private setToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  private removeToken(): void {
+    localStorage.removeItem('token');
+  }
+
+  private fetchUserData(): Observable<ProfileData> {
+    const url = 'http://localhost:8000/api/profile';
+    return this.http.get<ProfileResponse>(url).pipe(
+      map((response: ProfileResponse) => {
+        const data = response['employee'].user || response['recruiter'].user;
+        const userDetails: ProfileData = {
+          id: data.id,
+          email: data.email,
+          role: data.role.name,
+          first_name: data.first_name,
+          last_name: data.last_name,
+        };
+
+        return userDetails;
+      }),
+      tap(userDetails => {
+        this.setUser(userDetails);
+      }),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error.error);
+      })
+    );
+  }
+
+  private setUser(userDetails: ProfileData) {
+    this.user$.next(userDetails);
+  }
+
+  private clearUser() {
+    this.user$.next(null);
   }
 
   private handleError(error: HttpErrorResponse) {
     return throwError(() => error.error);
+  }
+
+  unsubscribeUserData() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeUserData();
   }
 }

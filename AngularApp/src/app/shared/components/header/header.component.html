@@ -3,7 +3,7 @@
     <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
       <a [routerLink]="'/'" class="flex items-end gap-3">
         <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
-          >Tech<span class="text-sky-600">Hub</span></span
+          >Tech<span class="text-sky-600">Hub</span>™</span
         >
         <span class="self-center text-sm text-gray-600">#1 in Poland</span>
       </a>
@@ -36,13 +36,14 @@
           size="small"
           icon="pi pi-user-plus"
           [routerLink]="'/auth/register'"></p-button>
-        <p-button
-          *ngIf="authService.isAuthenticated()"
-          label="Sign Out"
-          size="small"
-          icon="pi pi-sign-out"
+        <p-splitButton
+          *ngIf="authService.isAuthenticated() && userData"
+          label="Hi, {{ userData.first_name }}!"
+          styleClass="p-button-sm"
+          icon="pi pi-user"
           severity="secondary"
-          (click)="authService.logout()"></p-button>
+          [model]="items">
+        </p-splitButton>
       </div>
     </div>
   </nav>
