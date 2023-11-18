@@ -18,19 +18,33 @@ import { PublicModule } from './public/public.module';
 
 import { EmployeeModule } from './employee/employee.module';
 
-import { ButtonModule } from 'primeng/button';
 import { LayoutComponent } from './shared/components/layout/layout.component';
-import { SharedModule } from 'primeng/api';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
+import { LoaderInterceptor } from './shared/interceptors/loader.interceptor';
+import { BaseComponent } from './shared/components/base/base.component';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { FooterComponent } from './shared/components/footer/footer.component';
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, HeaderComponent, NotFoundPageComponent],
+  declarations: [
+    AppComponent,
+    LayoutComponent,
+    HeaderComponent,
+    NotFoundPageComponent,
+    BaseComponent,
+    SpinnerComponent,
+    FooterComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule,
-    SharedModule,
     PublicModule,
     AuthModule,
     RecruiterModule,
@@ -38,9 +52,17 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
     FormsModule,
     AppRoutingModule,
     ButtonModule,
+    ProgressSpinnerModule,
+    ProgressBarModule,
+    SplitButtonModule,
     ReactiveFormsModule,
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

@@ -22,7 +22,7 @@ export interface LoginForm {
   password: string;
 }
 
-export interface User {
+type User = {
   id: number;
   email: string;
   first_name: string;
@@ -32,11 +32,29 @@ export interface User {
     id: number;
     name: string;
   };
-}
+};
 
 export interface AuthResponse {
   token: string;
   user_details: {
     user: User;
   };
+}
+
+export interface UserData extends AuthResponse {}
+
+type Roles = 'employee' | 'recruiter';
+
+export type ProfileResponse = {
+  [key in Roles]: {
+    user: User;
+  };
+};
+
+export interface ProfileData {
+  id: number;
+  email: string;
+  role: string;
+  first_name: string;
+  last_name: string;
 }
