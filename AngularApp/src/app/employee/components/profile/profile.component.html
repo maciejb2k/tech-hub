@@ -24,26 +24,30 @@
   </div>
 
   <div class="py-10 pb-16">
-    <div>
-      <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
-        <i class="pi pi-info-circle"></i>Summary Informations
-      </h3>
-      <p class="max-w-2xl text-sm leading-6 text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
-      </p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
+          <i class="pi pi-info-circle"></i>Summary Information
+        </h3>
+        <p class="max-w-2xl text-sm leading-6 text-gray-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+        </p>
+      </div>
+      <div>
+        <div *ngIf="isEditable">
+          <p-button
+            icon="pi pi-ellipsis-h"
+            [outlined]="true"
+            size="small"
+            (click)="openModal('summary')"></p-button>
+          <app-summary-modal
+            [isVisible]="modals['summary']"
+            (close)="closeModal('summary')"></app-summary-modal>
+        </div>
+      </div>
     </div>
     <div class="mt-6 border-t border-gray-200">
       <dl class="divide-y divide-gray-200">
-        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium leading-6 text-gray-900">Full name</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Margot Foster</dd>
-        </div>
-        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium leading-6 text-gray-900">Application for</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Backend Developer
-          </dd>
-        </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -63,39 +67,67 @@
             reprehenderit deserunt qui eu.
           </dd>
         </div>
+        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Profile views</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">432</dd>
+        </div>
       </dl>
     </div>
   </div>
 
   <div class="pb-16">
-    <div>
-      <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
-        <i class="pi pi-bolt"></i>Skills
-      </h3>
-      <p class="max-w-2xl text-sm leading-6 text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
-      </p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
+          <i class="pi pi-bolt"></i>Skills
+        </h3>
+        <p class="max-w-2xl text-sm leading-6 text-gray-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+        </p>
+      </div>
+      <div>
+        <div *ngIf="isEditable">
+          <p-button
+            icon="pi pi-ellipsis-h"
+            [outlined]="true"
+            size="small"
+            (click)="openModal('skills')"></p-button>
+          <app-skills-modal
+            [isVisible]="modals['skills']"
+            (close)="closeModal('skills')"></app-skills-modal>
+        </div>
+      </div>
     </div>
     <div class="mt-6 border-t border-gray-200">
       <div class="flex items-center gap-3 mt-6">
         <span
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
+          pTooltip="1/5"
+          tooltipPosition="top"
           >JavaScript</span
         >
         <span
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
+          pTooltip="1/5"
+          tooltipPosition="top"
           >TypeScript</span
         >
         <span
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
+          pTooltip="1/5"
+          tooltipPosition="top"
           >React</span
         >
         <span
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
+          pTooltip="1/5"
+          tooltipPosition="top"
           >Angular</span
         >
         <span
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
+          pTooltip="1/5"
+          tooltipPosition="top"
           >ESLint</span
         >
       </div>
@@ -112,7 +144,15 @@
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, tempore.
         </p>
       </div>
-      <div></div>
+      <div>
+        <div *ngIf="isEditable">
+          <p-button
+            icon="pi pi-ellipsis-h"
+            [outlined]="true"
+            size="small"
+            (click)="openModal('workExperience')"></p-button>
+        </div>
+      </div>
     </div>
     <div class="mt-6 border-t border-gray-200">
       <ul role="list" class="divide-y divide-gray-200">
@@ -172,7 +212,15 @@
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, tempore.
         </p>
       </div>
-      <div></div>
+      <div>
+        <div *ngIf="isEditable">
+          <p-button
+            icon="pi pi-ellipsis-h"
+            [outlined]="true"
+            size="small"
+            (click)="openModal('education')"></p-button>
+        </div>
+      </div>
     </div>
     <div class="mt-6 border-t border-gray-200">
       <ul role="list" class="divide-y divide-gray-200">

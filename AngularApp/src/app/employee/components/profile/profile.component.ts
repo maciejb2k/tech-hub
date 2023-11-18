@@ -14,7 +14,13 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 })
 export class ProfileComponent extends BaseComponent {
   userData: ProfileData;
-  isOwner = false;
+  isEditable = false;
+  modals: { [key: string]: boolean } = {
+    summary: false,
+    skills: false,
+    workExperience: false,
+    education: false,
+  };
 
   constructor(
     protected override loaderService: LoaderService,
@@ -25,12 +31,23 @@ export class ProfileComponent extends BaseComponent {
   }
 
   ngOnInit() {
-    const employeeId = this.route.snapshot.paramMap.get('id');
-
     this.subscriptions.push(
       this.authService.getUserData().subscribe(value => {
         this.userData = value;
+        const employeeId = this.route.snapshot.paramMap.get('id');
+
+        if (Number(employeeId) === this.userData.id) {
+          this.isEditable = true;
+        }
       })
     );
+  }
+
+  openModal(modalId: string) {
+    this.modals[modalId] = true;
+  }
+
+  closeModal(modalId: string) {
+    this.modals[modalId] = false;
   }
 }
