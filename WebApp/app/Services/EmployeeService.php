@@ -12,6 +12,7 @@ use App\Http\Resources\LanguageResource;
 use App\Http\Resources\RecruiterResource;
 use App\Http\Resources\SkillCollection;
 use App\Http\Resources\WorkExperienceCollection;
+use App\Models\Employee;
 use App\Repositories\EducationRepository;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\LanguageRepository;
@@ -44,22 +45,31 @@ class EmployeeService {
         $this->employeeRepository = $employeeRepository;
     }
 
-    public function getEmployee(int $employeeId, Request $request)
+    public function getEmployeeById(int $employeeId, $request)
     {
         $employee = $this->employeeRepository->getEmployeeById($employeeId);
+        return $this->getEmployee($employee, $request);
+    }
 
+    public function getEmployeeByUserId(int $user_id, $request){
+        $employee = $this->employeeRepository->getEmployeeByUserId($user_id);
+        return $this->getEmployee($employee, $request);
+    }
+
+    private function getEmployee(Employee $employee, $request)
+    {
         $user_id = $employee['user_id'];
 
-        $preferences = $this->getPreferences(['employee','languages'], $user_id);
+        $preferences = $this->getPreferences(['employee','languages', 'educations', 'skills', 'work_experiences'], $user_id);
 
-        $visitor = ResourceTransformation::GetVisitorType($request, $user_id);
+        $visitor = ResourceTransformation::GetVisitorType($request->user(), $user_id);
 
         return [
             "employee" => new EmployeeResource($employee, $preferences, $visitor),
             "languages" => new LanguageCollection($this->languageRepository->getLanguagesByEmployeeId($employee['id']), $preferences, $visitor),
-            "educations" => new EducationCollection($this->educationRepository->getEducationsByEmployeeId($employee['id'])),
-            "skills" => new SkillCollection($this->skillRepository->getSkillsByEmployeeId($employee['id'])),
-            "work_experiences" => new WorkExperienceCollection($this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id']))
+            "educations" => new EducationCollection($this->educationRepository->getEducationsByEmployeeId($employee['id']), $preferences, $visitor),
+            "skills" => new SkillCollection($this->skillRepository->getSkillsByEmployeeId($employee['id']), $preferences, $visitor),
+            "work_experiences" => new WorkExperienceCollection($this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id']), $preferences, $visitor)
         ];
     }
 }

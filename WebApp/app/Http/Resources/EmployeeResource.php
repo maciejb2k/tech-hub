@@ -30,15 +30,6 @@ class EmployeeResource extends JsonResource
 
         $finalResource = ResourceTransformation::TransformResource($this, $fields, $this->preferences, $this->visitor);
         $finalResource['user'] = new UserResource(User::findOrFail($this->user_id));
-        // return [
-        //     'id' => $this->id,
-        //     'views' => $this->views,
-        //     'location' => $this->location,
-        //     'bio' => $this->bio,
-        //     'expected_salary' => $this->expected_salary,
-        //     'portfolio' => $this->portfolio,
-        //     'user' => new UserResource(User::findOrFail($this->user_id)),
-        // ];
         return $finalResource;
     }
 }

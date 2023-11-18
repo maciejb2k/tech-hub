@@ -48,7 +48,7 @@ class EmployeeController extends Controller
             Auth::setUser($user);
         }
 
-        $res = $this->employeeService->getEmployee($id, $request);
+        $res = $this->employeeService->getEmployeeById($id, $request);
         return response($res, 200);
     }
 

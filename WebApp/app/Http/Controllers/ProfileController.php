@@ -19,7 +19,7 @@ class ProfileController extends Controller
      */
     public function index(Request $request)
     {
-        $res = $this->profileService->getProfile($request->user()->id, $request->user()->role_id);
+        $res = $this->profileService->getProfile($request);
         return response($res, 200);
     }
 

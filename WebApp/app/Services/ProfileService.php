@@ -19,6 +19,7 @@ use App\Repositories\RecruiterRepository;
 use App\Repositories\SkillRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\WorkExperienceRepository;
+use Illuminate\Http\Request;
 
 class ProfileService {
 
@@ -30,7 +31,9 @@ class ProfileService {
     protected $employeeRepository;
     protected $recruiterRepository;
 
-    public function __construct(LanguageRepository $languageRepository, EducationRepository $educationRepository, SkillRepository $skillRepository, WorkExperienceRepository $workExperienceRepository, EmployeeRepository $employeeRepository, RecruiterRepository $recruiterRepository)
+    protected $employeeService;
+
+    public function __construct(LanguageRepository $languageRepository, EducationRepository $educationRepository, SkillRepository $skillRepository, WorkExperienceRepository $workExperienceRepository, EmployeeRepository $employeeRepository, RecruiterRepository $recruiterRepository, EmployeeService $employeeService)
     {
         $this->languageRepository = $languageRepository;
         $this->educationRepository = $educationRepository;
@@ -39,25 +42,21 @@ class ProfileService {
 
         $this->employeeRepository = $employeeRepository;
         $this->recruiterRepository = $recruiterRepository;
+
+        $this->employeeService = $employeeService;
     }
 
-    public function getProfile(int $userId, int $roleId)
+    public function getProfile(Request $request)
     {
-        if($roleId === 1)
+        if($request->user()->role->id === 1)
         {
-            $employee = $this->employeeRepository->getEmployeeByUserId($userId);
+            $employee = $this->employeeService->getEmployeeByUserId($request->user()->id, $request);
 
-            return [
-                //"employee" => new EmployeeResource($employee),
-                //"languages" => new LanguageCollection($this->languageRepository->getLanguagesByEmployeeId($employee['id'])),
-                "educations" => new EducationCollection($this->educationRepository->getEducationsByEmployeeId($employee['id'])),
-                "skills" => new SkillCollection($this->skillRepository->getSkillsByEmployeeId($employee['id'])),
-                "work_experiences" => new WorkExperienceCollection($this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id'])),
-            ];
+            return $employee;
         }
         else
         {
-            $recruiter = $this->recruiterRepository->getRecruiterByUserId($userId);
+            $recruiter = $this->recruiterRepository->getRecruiterByUserId($request->user()->id);
 
             return [
                 "recruiter" => new RecruiterResource($recruiter),

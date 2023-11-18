@@ -31,12 +31,12 @@ class ResourceTransformation
         return $result;
     }
 
-    public static function GetVisitorType($request, $target){
-        if ($request->user() == null)
+    public static function GetVisitorType($currentUser, $target){
+        if ($currentUser == null)
             return 'public';
-        else if ($request->user()->id == $target)
+        else if ($currentUser->id == $target)
             return 'owner';
-        else if ($request->user()->role->name == 'recruiter')
+        else if ($currentUser->role->name == 'recruiter')
             return 'recruter';
         else
             return 'public';
