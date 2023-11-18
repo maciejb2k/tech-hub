@@ -7,18 +7,18 @@ import { Subscription } from 'rxjs';
   styles: [],
 })
 export class BaseComponent {
+  subscriptions: Subscription[] = [];
   isLoading = false;
-  private isLoadingSubscription: Subscription;
 
   constructor(protected loaderService: LoaderService) {
-    this.isLoadingSubscription = this.loaderService.isLoading$.subscribe(value => {
-      this.isLoading = value;
-    });
+    this.subscriptions.push(
+      this.loaderService.isLoading$.subscribe(value => {
+        this.isLoading = value;
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    if (this.isLoadingSubscription) {
-      this.isLoadingSubscription.unsubscribe();
-    }
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

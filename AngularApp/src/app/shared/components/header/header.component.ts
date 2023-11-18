@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends BaseComponent {
-  subscriptions: Subscription[] = [];
   userData: ProfileData;
   items: MenuItem[] = [
     {
@@ -54,10 +53,5 @@ export class HeaderComponent extends BaseComponent {
 
   logout() {
     this.subscriptions.push(this.authService.logout().subscribe());
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
