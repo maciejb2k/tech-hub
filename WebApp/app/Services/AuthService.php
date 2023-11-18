@@ -55,16 +55,16 @@ class AuthService {
     public function login(LoginRequest $request)
     {
         $user = $this->userRepository->findUserByEmail($request['email']);
-        
+
         if(!$user) $this->validateUser($user, "");
-        
+
         $isCorrectPassword = $this->userRepository->comparePassword($request['password'], $user);
-        
+
         $this->validateUser($user, $isCorrectPassword);
-        
+
         $token = $this->createToken($user);
-        
-        if($user['role_id'] === 1) 
+
+        if($user['role_id'] === 1)
             return $this->returnEmployeeWithToken($user, $token);
         return $this->returnRecruiterWithToken($user, $token);
     }
@@ -82,9 +82,15 @@ class AuthService {
 
     public function returnEmployeeWithToken($user, $token)
     {
+        $userDetails = new EmployeeResource(
+            $this->employeeRepository->getEmployeeByUserId($user['id']),
+            [],
+            'owner'
+        );
+
         $res = [
             'token' => $token,
-            'user_details' => new EmployeeResource($this->employeeRepository->getEmployeeByUserId($user['id'])),
+            'user_details' => $userDetails,
         ];
 
         return $res;
@@ -109,5 +115,5 @@ class AuthService {
 
         return $res;
     }
-    
+
 }
