@@ -2,11 +2,22 @@
 
 namespace App\Http\Resources;
 
+use App\Utils\ResourceTransformation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SkillResource extends JsonResource
 {
+    protected $preferences;
+    protected $visitor;
+
+    public function __construct($resource, $preferences, $visitor)
+    {
+        parent::__construct($resource);
+        $this->preferences = $preferences;
+        $this->visitor = $visitor;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,10 +25,8 @@ class SkillResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'level' => $this->level,
-        ];
+        $fields = ['id', 'name', 'level'];
+        $finalResource = ResourceTransformation::TransformResource($this, $fields, $this->preferences, $this->visitor);
+        return $finalResource;
     }
 }

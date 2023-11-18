@@ -3,17 +3,30 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class LanguageCollection extends ResourceCollection
+class LanguageCollection extends JsonResource
 {
+    protected $preferences;
+    protected $visitor;
+
+    public function __construct($resource, $preferences, $visitor)
+    {
+        parent::__construct($resource);
+        $this->preferences = $preferences;
+        $this->visitor = $visitor;
+    }
+
     /**
      * Transform the resource collection into an array.
      *
      * @return array<int|string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request)
     {
-        return parent::toArray($request);
+        return $this->resource->map(function ($trip) {
+            return new LanguageResource($trip, $this->preferences, $this->visitor);
+        });
     }
 }
