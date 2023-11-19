@@ -19,14 +19,14 @@ class SkillService {
         $this->skillRepository = $skillRepository;
         $this->employeeRepository = $employeeRepository;
     }
-    
+
     public function createSkill(SkillRequest $request, int $userId)
     {
         $employee = $this->employeeRepository->getEmployeeByUserId($userId);
 
         $skill = $this->skillRepository->createSkill($request, $employee['id']);
 
-        return new SkillResource($skill);
+        return new SkillResource($skill, [], 'owner');
     }
 
     public function updateSkill(SkillRequest $request, int $skillId, int $userId)
@@ -39,7 +39,7 @@ class SkillService {
 
         $updatedSkill = $this->skillRepository->updateSkill($request, $skillId);
 
-        return new SkillResource($updatedSkill);
+        return new SkillResource($updatedSkill, [], 'owner');
     }
 
     public function deleteSkill(int $skillId, int $userId)

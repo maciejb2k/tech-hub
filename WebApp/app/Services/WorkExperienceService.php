@@ -19,14 +19,14 @@ class WorkExperienceService {
         $this->workExperienceRepository = $workExperienceRepository;
         $this->employeeRepository = $employeeRepository;
     }
-    
+
     public function createWorkExperience(WorkExperienceRequest $request, int $userId)
     {
         $employee = $this->employeeRepository->getEmployeeByUserId($userId);
 
         $workExperience = $this->workExperienceRepository->createWorkExperience($request, $employee['id']);
 
-        return new WorkExperienceResource($workExperience);
+        return new WorkExperienceResource($workExperience, [], 'owner');
     }
 
     public function updateWorkExperience(WorkExperienceRequest $request, int $workExperienceId, int $userId)
@@ -39,7 +39,7 @@ class WorkExperienceService {
 
         $updatedWorkExperience = $this->workExperienceRepository->updateWorkExperience($request, $workExperienceId);
 
-        return new WorkExperienceResource($updatedWorkExperience);
+        return new WorkExperienceResource($updatedWorkExperience, [], 'owner');
     }
 
     public function deleteWorkExperience(int $workExperienceId, int $userId)
