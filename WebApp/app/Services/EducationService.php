@@ -19,14 +19,14 @@ class EducationService {
         $this->educationRepository = $educationRepository;
         $this->employeeRepository = $employeeRepository;
     }
-    
+
     public function createEducation(EducationRequest $request, int $userId)
     {
         $employee = $this->employeeRepository->getEmployeeByUserId($userId);
 
         $education = $this->educationRepository->createEducation($request, $employee['id']);
 
-        return new EducationResource($education);
+        return new EducationResource($education, [], 'owner');
     }
 
     public function updateEducation(EducationRequest $request, int $educationId, int $userId)
@@ -39,7 +39,7 @@ class EducationService {
 
         $updatedEducation = $this->educationRepository->updateEducation($request, $educationId);
 
-        return new EducationResource($updatedEducation);
+        return new EducationResource($updatedEducation, [], 'owner');
     }
 
     public function deleteEducation(int $educationId, int $userId)

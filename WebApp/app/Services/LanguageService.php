@@ -19,14 +19,14 @@ class LanguageService {
         $this->languageRepository = $languageRepository;
         $this->employeeRepository = $employeeRepository;
     }
-    
+
     public function createLanguage(LanguageRequest $request, int $userId)
     {
         $employee = $this->employeeRepository->getEmployeeByUserId($userId);
 
         $language = $this->languageRepository->createLanguage($request, $employee['id']);
 
-        return new LanguageResource($language);
+        return new LanguageResource($language, [], 'owner');
     }
 
     public function updateLanguage(LanguageRequest $request, int $languageId, int $userId)
@@ -39,7 +39,7 @@ class LanguageService {
 
         $updatedLanguage = $this->languageRepository->updateLanguage($request, $languageId);
 
-        return new LanguageResource($updatedLanguage);
+        return new LanguageResource($updatedLanguage, [], 'owner');
     }
 
     public function deleteLanguage(int $languageId, int $userId)
