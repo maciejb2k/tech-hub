@@ -22,11 +22,7 @@ export class LayoutComponent extends BaseComponent {
   ngOnInit() {
     this.subscriptions.push(
       this.toastService.messages$.subscribe(messages => {
-        if (messages) {
-          messages.forEach(message => {
-            this.messageService.add(message);
-          });
-        }
+        this.messageService.add(messages);
       })
     );
   }

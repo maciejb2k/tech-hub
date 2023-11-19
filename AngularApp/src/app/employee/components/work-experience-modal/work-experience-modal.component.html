@@ -1,0 +1,121 @@
+<p-dialog
+  header="Add new work experience"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClosed()">
+  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="company_name">Company name</label>
+        <input
+          pInputText
+          required
+          type="text"
+          id="company_name"
+          placeholder="Crudex Inc."
+          formControlName="company_name" />
+      </div>
+      <div *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)">
+        <small *ngIf="companyName.errors?.['required']" class="p-error"
+          >Company name is required.</small
+        >
+        <small *ngIf="companyName.errors?.['serverError']" class="p-error">
+          {{ companyName.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="position">Position</label>
+        <input
+          pInputText
+          required
+          type="text"
+          id="position"
+          placeholder="Senior DevOps Engineer"
+          formControlName="position" />
+      </div>
+      <div *ngIf="position.invalid && (position.dirty || position.touched)">
+        <small *ngIf="position.errors?.['required']" class="p-error">Position is required.</small>
+        <small *ngIf="position.errors?.['serverError']" class="p-error">
+          {{ position.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="description">Description</label>
+        <textarea
+          rows="5"
+          cols="30"
+          id="description"
+          pInputTextarea
+          formControlName="description"
+          placeholder="I was responsible for the deployment of the application."></textarea>
+      </div>
+      <div *ngIf="description.invalid && (description.dirty || description.touched)">
+        <small *ngIf="description.errors?.['serverError']" class="p-error">
+          {{ description.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex gap-5">
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-2">
+            <label for="start_date">Start Date</label>
+            <p-calendar
+              id="start_date"
+              formControlName="start_date"
+              class="w-full"
+              dateFormat="yy-mm-dd"
+              dataType="string"></p-calendar>
+          </div>
+          <div *ngIf="startDate.invalid && (startDate.dirty || startDate.touched)">
+            <small *ngIf="startDate.errors?.['required']" class="p-error"
+              >Start date is required.</small
+            >
+            <small *ngIf="startDate.errors?.['serverError']" class="p-error">
+              {{ startDate.errors['serverError'] }}
+            </small>
+          </div>
+        </div>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-2">
+            <label for="end_date">End Date</label>
+            <p-calendar
+              id="end_date"
+              formControlName="end_date"
+              styles="w-full"
+              dateFormat="yy-mm-dd"
+              dataType="string"></p-calendar>
+          </div>
+          <div *ngIf="endDate.invalid && (endDate.dirty || endDate.touched)">
+            <small *ngIf="endDate.errors?.['required']" class="p-error"
+              >End date is required.</small
+            >
+            <small *ngIf="endDate.errors?.['serverError']" class="p-error">
+              {{ endDate.errors['serverError'] }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <div class="flex flex-col gap-2">
+      <button
+        pButton
+        label="Add new skill"
+        type="submit"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+    </div>
+  </form>
+</p-dialog>

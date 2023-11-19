@@ -34,7 +34,7 @@ export class BaseComponent {
     this.loaderService.hideGlobalSpinner();
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

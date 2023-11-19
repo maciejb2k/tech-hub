@@ -7,6 +7,7 @@ import { BrowseEmployeesComponent } from './components/browse-employees/browse-e
 import { ProfileComponent } from './components/profile/profile.component';
 import { SummaryModalComponent } from './components/summary-modal/summary-modal.component';
 import { SkillsModalComponent } from './components/skills-modal/skills-modal.component';
+import { WorkExperienceModalComponent } from './components/work-experience-modal/work-experience-modal.component';
 
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -18,6 +19,8 @@ import { MessagesModule } from 'primeng/messages';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
+import { CalendarModule } from 'primeng/calendar';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,7 @@ import { DividerModule } from 'primeng/divider';
     ProfileComponent,
     SummaryModalComponent,
     SkillsModalComponent,
+    WorkExperienceModalComponent,
   ],
   imports: [
     CommonModule,
@@ -39,8 +43,10 @@ import { DividerModule } from 'primeng/divider';
     SkeletonModule,
     MessagesModule,
     ToggleButtonModule,
+    InputTextareaModule,
     ToastModule,
     BadgeModule,
+    CalendarModule,
   ],
 })
 export class EmployeeModule {}

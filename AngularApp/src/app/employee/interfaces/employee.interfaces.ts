@@ -45,7 +45,7 @@ export interface EmployeeProfile {
     user: User;
   };
   skills: Skill[];
-  work_experience: WorkExperience[];
+  work_experiences: WorkExperience[];
   education: Education[];
   languages: Languages[];
 }
@@ -54,7 +54,30 @@ export interface ProfileSections {
   [key: string]: boolean;
 }
 
-export interface AddSkillPayload {
+export interface ModalModes {
+  [key: string]: 'add' | 'edit';
+}
+
+export interface ModalsData {
+  [key: string]: number | null;
+}
+
+export interface SkillPayload {
   name: string;
-  level: string;
+  level: number;
+}
+
+export interface SummaryPayload {
+  bio?: string;
+  location?: string;
+  expected_salary?: string;
+  portfolio?: string;
+}
+
+export interface WorkExperiencePayload {
+  company_name: string;
+  start_date: string;
+  end_date: string;
+  position: string;
+  description: string;
 }

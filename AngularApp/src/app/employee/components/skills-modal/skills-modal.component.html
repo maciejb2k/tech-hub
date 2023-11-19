@@ -1,5 +1,5 @@
 <p-dialog
-  header="Add new skill"
+  header="{{ header }}"
   [(visible)]="isVisible"
   [modal]="true"
   [style]="{ width: '500px' }"
@@ -32,6 +32,7 @@
         <input
           pInputText
           required
+          placeholder="1"
           type="number"
           id="level"
           min="1"
@@ -48,12 +49,28 @@
 
     <p-divider></p-divider>
 
-    <div class="flex flex-col gap-2">
+    <div *ngIf="!isEdit" class="flex flex-col gap-2">
       <button
         pButton
         label="Add new skill"
         type="submit"
+        class="w-full"
         [disabled]="modalForm.disabled || !modalForm.valid"></button>
+    </div>
+    <div *ngIf="isEdit" class="flex items-center gap-2">
+      <button
+        pButton
+        label="Update skill"
+        type="submit"
+        severity="secondary"
+        class="w-2/3 p-button-success"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+      <button
+        pButton
+        label="Delete skill"
+        type="button"
+        class="w-1/3 p-button-danger p-button-outlined"
+        (click)="destroy()"></button>
     </div>
   </form>
 </p-dialog>

@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
-import { EmployeeProfile, ProfileSections } from '../../interfaces/employee.interfaces';
+import { EmployeeProfile, ModalsData, ProfileSections } from '../../interfaces/employee.interfaces';
 
 @Component({
   selector: 'app-profile',
@@ -22,11 +22,11 @@ export class ProfileComponent extends BaseComponent {
     education: false,
   };
 
-  editSections: ProfileSections = {
-    summary: false,
-    skills: false,
-    workExperience: false,
-    education: false,
+  modalsData: ModalsData = {
+    summary: null,
+    skills: null,
+    workExperience: null,
+    education: null,
   };
 
   constructor(
@@ -38,12 +38,15 @@ export class ProfileComponent extends BaseComponent {
   }
 
   ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData() {
     const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.subscriptions.push(
       this.employeeService.getEmployeeProfile(employeeId).subscribe(value => {
-        this.onDataLoaded();
-
+        this.onDataLoaded(); // BaseComponent method to disable loader
         this.userData = value;
 
         if (employeeId === this.userData.employee.id) {
@@ -53,15 +56,16 @@ export class ProfileComponent extends BaseComponent {
     );
   }
 
-  toggleEdit(section: string) {
-    this.editSections[section] = !this.editSections[section];
-  }
-
-  openModal(modalId: string) {
+  openModal(modalId: string, id?: number) {
     this.modals[modalId] = true;
+
+    if (id) {
+      this.modalsData[modalId] = id;
+    }
   }
 
   closeModal(modalId: string) {
     this.modals[modalId] = false;
+    this.modalsData[modalId] = null;
   }
 }

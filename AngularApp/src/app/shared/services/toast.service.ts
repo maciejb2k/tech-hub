@@ -7,14 +7,11 @@ import { Message } from 'primeng/api';
   providedIn: 'root',
 })
 export class ToastService {
-  private messagesSubject = new BehaviorSubject<Message[] | undefined>(undefined);
+  private messagesSubject = new BehaviorSubject<Message | undefined>(undefined);
   messages$ = this.messagesSubject.asObservable();
 
   add(message: Message) {
-    const messages = this.messagesSubject.getValue() || [];
-    messages.push(message);
-
-    this.messagesSubject.next(messages);
+    this.messagesSubject.next(message);
   }
 
   clear() {

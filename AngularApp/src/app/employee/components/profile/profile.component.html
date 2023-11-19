@@ -1,4 +1,4 @@
-<div class="max-w-3xl mt-10">
+<div class="max-w-3xl mx-auto mt-10 xl:mx-0">
   <div
     *ngIf="!isLoading; else loadingHeader"
     class="flex flex-row items-center pb-6 border-b border-gray-200">
@@ -120,42 +120,25 @@
           </div>
           <app-skills-modal
             [isVisible]="modals['skills']"
-            (close)="closeModal('skills')"></app-skills-modal>
+            [data]="modalsData['skills']"
+            (close)="closeModal('skills')"
+            (refetch)="fetchData()"></app-skills-modal>
         </div>
       </div>
     </div>
     <div *ngIf="!isLoading; else loadingSkills" class="mt-6 border-t border-gray-200">
-      <div class="flex items-center gap-3 mt-6">
+      <div *ngIf="userData.skills.length" class="flex flex-wrap items-center gap-3 mt-6">
         <span
+          *ngFor="let skill of userData.skills"
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          pTooltip="1/5"
+          pTooltip="{{ skill.level }} / 5"
           tooltipPosition="top"
-          >JavaScript</span
+          (click)="openModal('skills', skill.id)"
+          >{{ skill.name }}</span
         >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          pTooltip="1/5"
-          tooltipPosition="top"
-          >TypeScript</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          pTooltip="1/5"
-          tooltipPosition="top"
-          >React</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          pTooltip="1/5"
-          tooltipPosition="top"
-          >Angular</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          pTooltip="1/5"
-          tooltipPosition="top"
-          >ESLint</span
-        >
+      </div>
+      <div *ngIf="!userData.skills.length" class="py-5 text-sm text-gray-500">
+        No skills records were added.
       </div>
     </div>
     <ng-template #loadingSkills>
@@ -183,55 +166,41 @@
               size="small"
               (click)="openModal('workExperience')"
               [outlined]="true"></p-button>
+            <app-work-experience-modal
+              [isVisible]="modals['workExperience']"
+              (close)="closeModal('workExperience')"
+              (refetch)="fetchData()"></app-work-experience-modal>
           </div>
         </div>
       </div>
     </div>
     <div *ngIf="!isLoading; else loadingWorkExperience" class="mt-6 border-t border-gray-200">
-      <ul role="list" class="divide-y divide-gray-200">
-        <li class="flex justify-between py-5 gap-x-6">
+      <ul *ngIf="userData.work_experiences.length" role="list" class="divide-y divide-gray-200">
+        <li
+          *ngFor="let work of userData.work_experiences"
+          class="flex justify-between py-5 gap-x-6">
           <div class="flex min-w-0 gap-x-4">
             <img
               class="flex-none w-12 h-12 rounded-full bg-gray-50"
               src="assets/building.jpg"
               alt="" />
             <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Senior DevOps Engineer</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Virtus Lab</p>
-              <p class="mt-4 text-xs text-gray-400">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates pariatur
-                quibusdam aliquam corrupti delectus ipsum tempore architecto excepturi mollitia
-                quis?
-              </p>
+              <p class="text-sm font-semibold leading-6 text-sky-600">{{ work.position }}</p>
+              <p class="text-xs leading-5 text-gray-500 truncate">{{ work.company_name }}</p>
+              <p class="mt-4 text-xs text-gray-400">{{ work.description }}</p>
             </div>
           </div>
           <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
-          </div>
-        </li>
-        <li class="flex justify-between py-5 gap-x-6">
-          <div class="flex min-w-0 gap-x-4">
-            <img
-              class="flex-none w-12 h-12 rounded-full bg-gray-50"
-              src="assets/building.jpg"
-              alt="" />
-            <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Security Administrator</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Uniwersytet Rzeszowski</p>
-              <p class="mt-4 text-xs text-gray-400">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates pariatur
-                quibusdam aliquam corrupti delectus ipsum tempore architecto excepturi mollitia
-                quis?
-              </p>
-            </div>
-          </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
+            <p class="text-xs font-semibold leading-6 text-gray-900">
+              {{ work.start_date }} - {{ work.end_date }}
+            </p>
             <p class="text-xs leading-5 text-gray-500">5 months</p>
           </div>
         </li>
       </ul>
+      <div *ngIf="!userData.work_experiences.length" class="py-5 text-sm text-gray-500">
+        No work experience records were added.
+      </div>
     </div>
     <ng-template #loadingWorkExperience>
       <div class="py-4 mt-6 border-t border-gray-200">
