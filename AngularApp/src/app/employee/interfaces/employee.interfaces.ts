@@ -23,7 +23,7 @@ interface Education {
   university_name?: string;
   start_date?: string;
   end_date?: string;
-  fos?: string;
+  field_of_study?: string;
   description?: string;
 }
 
@@ -31,7 +31,7 @@ interface Languages {
   id?: number;
   employee_id?: number;
   name?: string;
-  proficiency?: number;
+  proficiency?: string;
 }
 
 export interface EmployeeProfile {
@@ -46,7 +46,7 @@ export interface EmployeeProfile {
   };
   skills: Skill[];
   work_experiences: WorkExperience[];
-  education: Education[];
+  educations: Education[];
   languages: Languages[];
 }
 
@@ -80,4 +80,17 @@ export interface WorkExperiencePayload {
   end_date: string;
   position: string;
   description: string;
+}
+
+export interface EducationPayload {
+  university_name: string;
+  start_date: string;
+  end_date: string;
+  fos: string;
+  description: string;
+}
+
+export interface LanguagePayload {
+  name: string;
+  proficiency: string;
 }

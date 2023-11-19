@@ -21,6 +21,8 @@ import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EducationModalComponent } from './components/education-modal/education-modal.component';
+import { LanguageModalComponent } from './components/language-modal/language-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     SummaryModalComponent,
     SkillsModalComponent,
     WorkExperienceModalComponent,
+    EducationModalComponent,
+    LanguageModalComponent,
   ],
   imports: [
     CommonModule,

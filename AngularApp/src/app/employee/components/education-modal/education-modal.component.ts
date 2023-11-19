@@ -1,19 +1,20 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
 import { FormService } from 'src/app/shared/services/form.service';
-import { FormBuilder, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
-import { WorkExperiencePayload } from '../../interfaces/employee.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
+import { EducationPayload } from '../../interfaces/employee.interfaces';
 
 @Component({
-  selector: 'app-work-experience-modal',
-  templateUrl: './work-experience-modal.component.html',
-  styleUrls: ['./work-experience-modal.component.scss'],
+  selector: 'app-education-modal',
+  templateUrl: './education-modal.component.html',
+  styleUrls: ['./education-modal.component.scss'],
 })
-export class WorkExperienceModalComponent extends BaseComponent {
+export class EducationModalComponent extends BaseComponent {
   @Input() isVisible: boolean;
   @Input() data: number | null;
   @Output() close = new EventEmitter();
@@ -22,8 +23,8 @@ export class WorkExperienceModalComponent extends BaseComponent {
   header: string;
   isEdit = false;
   modalForm = this.formBuilder.group({
-    company_name: ['', Validators.required],
-    position: ['', Validators.required],
+    field_of_study: ['', Validators.required],
+    university_name: ['', Validators.required],
     description: [''],
     start_date: ['', Validators.required],
     end_date: ['', Validators.required],
@@ -41,7 +42,7 @@ export class WorkExperienceModalComponent extends BaseComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     this.isEdit = this.data ? true : false;
-    this.header = this.isEdit ? 'Edit Work Experience' : 'Add Work Experience';
+    this.header = this.isEdit ? 'Edit Education' : 'Add Education';
 
     if (changes['data'] && this.isEdit) {
       this.show();
@@ -50,11 +51,11 @@ export class WorkExperienceModalComponent extends BaseComponent {
 
   show() {
     this.subscriptions.push(
-      this.employeeService.getWorkExperience(this.data).subscribe({
+      this.employeeService.getEducation(this.data).subscribe({
         next: value => {
           this.modalForm.patchValue({
-            company_name: value.company_name,
-            position: value.position,
+            field_of_study: value.field_of_study,
+            university_name: value.university_name,
             description: value.description,
             start_date: value.start_date,
             end_date: value.end_date,
@@ -64,15 +65,15 @@ export class WorkExperienceModalComponent extends BaseComponent {
     );
   }
 
-  create(formData: WorkExperiencePayload) {
-    this.employeeService.addWorkExperience(formData).subscribe({
+  create(formData: EducationPayload) {
+    this.employeeService.addEducation(formData).subscribe({
       next: () => {
         this.modalForm.enable();
         this.modalForm.reset();
         this.toastService.add({
           severity: 'success',
           summary: 'Success',
-          detail: "You've successfully added a new work experience.",
+          detail: "You've successfully added an education.",
         });
         this.refetch.emit();
         this.close.emit();
@@ -89,14 +90,14 @@ export class WorkExperienceModalComponent extends BaseComponent {
     });
   }
 
-  update(formData: WorkExperiencePayload) {
-    this.employeeService.updateWorkExperience(this.data, formData).subscribe({
+  update(formData: EducationPayload) {
+    this.employeeService.updateEducation(this.data, formData).subscribe({
       next: () => {
         this.modalForm.enable();
         this.toastService.add({
           severity: 'success',
           summary: 'Success',
-          detail: "You've successfully updated a work experience.",
+          detail: "You've successfully updated an education.",
         });
         this.refetch.emit();
         this.close.emit();
@@ -114,12 +115,12 @@ export class WorkExperienceModalComponent extends BaseComponent {
   }
 
   destroy() {
-    this.employeeService.deleteWorkExperience(this.data).subscribe({
+    this.employeeService.deleteEducation(this.data).subscribe({
       next: () => {
         this.toastService.add({
           severity: 'success',
           summary: 'Success',
-          detail: "You've successfully deleted a work experience.",
+          detail: "You've successfully deleted an education.",
         });
         this.refetch.emit();
         this.close.emit();
@@ -140,7 +141,7 @@ export class WorkExperienceModalComponent extends BaseComponent {
       return;
     }
 
-    const formData = this.modalForm.value as WorkExperiencePayload;
+    const formData = this.modalForm.value as EducationPayload;
 
     this.modalForm.disable();
     this.isEdit ? this.update(formData) : this.create(formData);
@@ -151,8 +152,16 @@ export class WorkExperienceModalComponent extends BaseComponent {
     this.close.emit();
   }
 
-  get companyName() {
-    return this.modalForm.get('company_name');
+  get fieldOfStudy() {
+    return this.modalForm.get('field_of_study');
+  }
+
+  get universityName() {
+    return this.modalForm.get('university_name');
+  }
+
+  get description() {
+    return this.modalForm.get('description');
   }
 
   get startDate() {
@@ -161,13 +170,5 @@ export class WorkExperienceModalComponent extends BaseComponent {
 
   get endDate() {
     return this.modalForm.get('end_date');
-  }
-
-  get position() {
-    return this.modalForm.get('position');
-  }
-
-  get description() {
-    return this.modalForm.get('description');
   }
 }

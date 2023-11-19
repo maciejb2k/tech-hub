@@ -15,7 +15,7 @@
           required
           type="text"
           id="name"
-          placeholder="Angular"
+          placeholder="English"
           formControlName="name" />
       </div>
       <div *ngIf="name.invalid && (name.dirty || name.touched)">
@@ -28,21 +28,21 @@
 
     <div class="flex flex-col w-full">
       <div class="flex flex-col gap-2">
-        <label for="level">Level</label>
+        <label for="level">Proficiency</label>
         <input
           pInputText
           required
-          placeholder="1"
-          type="number"
-          id="level"
-          min="1"
-          max="5"
-          formControlName="level" />
+          placeholder="A2"
+          type="text"
+          id="proficiency"
+          formControlName="proficiency" />
       </div>
-      <div *ngIf="level.invalid && (level.dirty || level.touched)">
-        <small *ngIf="level.errors?.['required']" class="p-error">Level is required.</small>
-        <small *ngIf="level.errors?.['serverError']" class="p-error">
-          {{ level.errors['serverError'] }}
+      <div *ngIf="proficiency.invalid && (proficiency.dirty || proficiency.touched)">
+        <small *ngIf="proficiency.errors?.['required']" class="p-error"
+          >Proficiency is required.</small
+        >
+        <small *ngIf="proficiency.errors?.['serverError']" class="p-error">
+          {{ proficiency.errors['serverError'] }}
         </small>
       </div>
     </div>
@@ -52,7 +52,7 @@
     <div *ngIf="!isEdit" class="flex flex-col gap-2">
       <button
         pButton
-        label="Add new skill"
+        label="Add new language"
         type="submit"
         class="w-full"
         [disabled]="modalForm.disabled || !modalForm.valid"></button>

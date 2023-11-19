@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto mt-10 xl:mx-0">
+<div class="max-w-3xl mx-auto mt-10">
   <div
     *ngIf="!isLoading; else loadingHeader"
     class="flex flex-row items-center pb-6 border-b border-gray-200">
@@ -68,7 +68,7 @@
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Glory Hole 47, San Francisco, California, USA
+            Rigga 47, San Francisco, California, USA
           </dd>
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -130,7 +130,7 @@
       <div *ngIf="userData.skills.length" class="flex flex-wrap items-center gap-3 mt-6">
         <span
           *ngFor="let skill of userData.skills"
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
+          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10 hover:cursor-pointer"
           pTooltip="{{ skill.level }} / 5"
           tooltipPosition="top"
           (click)="openModal('skills', skill.id)"
@@ -166,11 +166,12 @@
               size="small"
               (click)="openModal('workExperience')"
               [outlined]="true"></p-button>
-            <app-work-experience-modal
-              [isVisible]="modals['workExperience']"
-              (close)="closeModal('workExperience')"
-              (refetch)="fetchData()"></app-work-experience-modal>
           </div>
+          <app-work-experience-modal
+            [isVisible]="modals['workExperience']"
+            [data]="modalsData['workExperience']"
+            (close)="closeModal('workExperience')"
+            (refetch)="fetchData()"></app-work-experience-modal>
         </div>
       </div>
     </div>
@@ -190,11 +191,19 @@
               <p class="mt-4 text-xs text-gray-400">{{ work.description }}</p>
             </div>
           </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">
-              {{ work.start_date }} - {{ work.end_date }}
-            </p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
+          <div class="flex gap-3 shrink-0">
+            <div class="text-right">
+              <p class="text-xs font-semibold leading-6 text-gray-900">
+                {{ work.start_date }} - {{ work.end_date }}
+              </p>
+              <p class="text-xs leading-5 text-gray-500">5 months</p>
+            </div>
+            <p-button
+              *ngIf="isEditable"
+              icon="pi pi-ellipsis-h"
+              size="small"
+              (click)="openModal('workExperience', work.id)"
+              [text]="true"></p-button>
           </div>
         </li>
       </ul>
@@ -229,44 +238,50 @@
               (click)="openModal('education')"
               [outlined]="true"></p-button>
           </div>
+          <app-education-modal
+            [isVisible]="modals['education']"
+            [data]="modalsData['education']"
+            (close)="closeModal('education')"
+            (refetch)="fetchData()"></app-education-modal>
         </div>
       </div>
     </div>
     <div *ngIf="!isLoading; else loadingEducation" class="mt-6 border-t border-gray-200">
-      <ul role="list" class="divide-y divide-gray-200">
-        <li class="flex justify-between py-5 gap-x-6">
+      <ul *ngIf="userData.educations" role="list" class="divide-y divide-gray-200">
+        <li *ngFor="let education of userData.educations" class="flex justify-between py-5 gap-x-6">
           <div class="flex min-w-0 gap-x-4">
             <img
               class="flex-none w-12 h-12 rounded-full bg-gray-50"
               src="assets/education.jpg"
               alt="" />
             <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Informatyka</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Uniwersytet Rzeszowski</p>
+              <p class="text-sm font-semibold leading-6 text-sky-600">
+                {{ education.field_of_study }}
+              </p>
+              <p class="text-xs leading-5 text-gray-500 truncate">
+                {{ education.university_name }}
+              </p>
             </div>
           </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
-          </div>
-        </li>
-        <li class="flex justify-between py-5 gap-x-6">
-          <div class="flex min-w-0 gap-x-4">
-            <img
-              class="flex-none w-12 h-12 rounded-full bg-gray-50"
-              src="assets/education.jpg"
-              alt="" />
-            <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Technik Informatyk</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Zespół Szkół Elektronicznych</p>
+          <div class="flex gap-3 shrink-0">
+            <div class="text-right">
+              <p class="text-xs font-semibold leading-6 text-gray-900">
+                {{ education.start_date }} - {{ education.end_date }}
+              </p>
+              <p class="text-xs leading-5 text-gray-500">5 months</p>
             </div>
-          </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
+            <p-button
+              *ngIf="isEditable"
+              icon="pi pi-ellipsis-h"
+              size="small"
+              (click)="openModal('education', education.id)"
+              [text]="true"></p-button>
           </div>
         </li>
       </ul>
+      <div *ngIf="!userData.educations.length" class="py-5 text-sm text-gray-500">
+        No education records were added.
+      </div>
     </div>
     <ng-template #loadingEducation>
       <div class="py-4 mt-6 border-t border-gray-200">
@@ -295,26 +310,30 @@
               (click)="openModal('languages')"
               [outlined]="true"></p-button>
           </div>
+          <app-language-modal
+            [isVisible]="modals['languages']"
+            [data]="modalsData['languages']"
+            (close)="closeModal('languages')"
+            (refetch)="fetchData()"></app-language-modal>
         </div>
       </div>
     </div>
-    <div *ngIf="!isLoading; else loadingLanguages" class="mt-6 border-t border-gray-200">
-      <div class="flex items-center gap-3 mt-6">
+    <div *ngIf="!isLoading; else loadingLanguage" class="mt-6 border-t border-gray-200">
+      <div *ngIf="userData.languages.length" class="flex flex-wrap items-center gap-3 mt-6">
         <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-700 rounded-md bg-indigo-50 ring-1 ring-inset ring-indigo-700/10"
-          pTooltip="B1"
+          *ngFor="let language of userData.languages"
+          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10 hover:cursor-pointer"
+          pTooltip="{{ language.proficiency }}"
           tooltipPosition="top"
-          >English</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-700 rounded-md bg-indigo-50 ring-1 ring-inset ring-indigo-700/10"
-          pTooltip="C2"
-          tooltipPosition="top"
-          >Polish</span
+          (click)="openModal('languages', language.id)"
+          >{{ language.name }}</span
         >
       </div>
+      <div *ngIf="!userData.languages.length" class="py-5 text-sm text-gray-500">
+        No language records were added.
+      </div>
     </div>
-    <ng-template #loadingLanguages>
+    <ng-template #loadingLanguage>
       <div class="py-4 mt-6 border-t border-gray-200">
         <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
       </div>

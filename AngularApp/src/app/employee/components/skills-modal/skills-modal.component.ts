@@ -14,7 +14,6 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   selector: 'app-skills-modal',
   templateUrl: './skills-modal.component.html',
   styleUrls: ['./skills-modal.component.scss'],
-  providers: [MessageService],
 })
 export class SkillsModalComponent extends BaseComponent {
   @Input() isVisible: boolean;
@@ -61,18 +60,6 @@ export class SkillsModalComponent extends BaseComponent {
     );
   }
 
-  onSubmit() {
-    if (this.modalForm.invalid) {
-      this.modalForm.markAllAsTouched();
-      return;
-    }
-
-    const formData = this.modalForm.value as SkillPayload;
-
-    this.modalForm.disable();
-    this.isEdit ? this.update(formData) : this.create(formData);
-  }
-
   create(formData: SkillPayload) {
     this.employeeService.addSkill(formData).subscribe({
       next: () => {
@@ -84,6 +71,7 @@ export class SkillsModalComponent extends BaseComponent {
           detail: "You've successfully added a new skill.",
         });
         this.refetch.emit();
+        this.close.emit();
       },
       error: (error: ErrorResponse) => {
         this.modalForm.enable();
@@ -141,6 +129,18 @@ export class SkillsModalComponent extends BaseComponent {
         });
       },
     });
+  }
+
+  onSubmit() {
+    if (this.modalForm.invalid) {
+      this.modalForm.markAllAsTouched();
+      return;
+    }
+
+    const formData = this.modalForm.value as SkillPayload;
+
+    this.modalForm.disable();
+    this.isEdit ? this.update(formData) : this.create(formData);
   }
 
   onModalClosed() {

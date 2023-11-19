@@ -5,6 +5,8 @@ import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile, ModalsData, ProfileSections } from '../../interfaces/employee.interfaces';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -32,7 +34,8 @@ export class ProfileComponent extends BaseComponent {
   constructor(
     protected override loaderService: LoaderService,
     private route: ActivatedRoute,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private authService: AuthService
   ) {
     super(loaderService);
   }
@@ -45,18 +48,29 @@ export class ProfileComponent extends BaseComponent {
     const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.subscriptions.push(
-      this.employeeService.getEmployeeProfile(employeeId).subscribe(value => {
-        this.onDataLoaded(); // BaseComponent method to disable loader
-        this.userData = value;
+      this.employeeService
+        .getEmployeeProfile(employeeId)
+        .pipe(
+          switchMap(employeeProfile => {
+            this.userData = employeeProfile;
+            return this.authService.getUserData();
+          })
+        )
+        .subscribe(userData => {
+          if (userData.id === this.userData.employee.id) {
+            this.isEditable = true;
+          }
 
-        if (employeeId === this.userData.employee.id) {
-          this.isEditable = true;
-        }
-      })
+          this.onDataLoaded();
+        })
     );
   }
 
   openModal(modalId: string, id?: number) {
+    if (!this.isEditable) {
+      return;
+    }
+
     this.modals[modalId] = true;
 
     if (id) {
@@ -65,6 +79,10 @@ export class ProfileComponent extends BaseComponent {
   }
 
   closeModal(modalId: string) {
+    if (!this.isEditable) {
+      return;
+    }
+
     this.modals[modalId] = false;
     this.modalsData[modalId] = null;
   }
