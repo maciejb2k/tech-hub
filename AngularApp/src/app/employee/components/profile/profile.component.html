@@ -1,5 +1,7 @@
 <div class="max-w-3xl mt-10">
-  <div class="flex flex-row items-center pb-6 border-b border-gray-200">
+  <div
+    *ngIf="!isLoading; else loadingHeader"
+    class="flex flex-row items-center pb-6 border-b border-gray-200">
     <div class="relative">
       <img class="object-cover w-16 h-16 rounded-md" src="assets/user.jpg" alt="User" />
       <div
@@ -10,18 +12,31 @@
     <div class="flex flex-col px-8">
       <div class="flex flex-row items-center h-8">
         <a href="#" target="_blank">
-          <h2 class="text-lg font-semibold">Margot Foster</h2>
+          <h2 class="text-lg font-semibold">
+            {{ userData.employee.user.first_name }} {{ userData.employee.user.last_name }}
+          </h2>
         </a>
       </div>
 
       <div class="flex flex-row space-x-3">
         <div class="flex flex-row">
           <i class="w-4 h-4 mr-1 pi pi-map-marker fill-gray-500/80" style="font-size: 0.8rem"></i>
-          <div class="text-xs text-gray-500 hover:text-gray-400">Rzeszów, Polska</div>
+          <div class="text-xs text-gray-500 hover:text-gray-400">
+            {{ userData.employee.location ? userData.employee.location : 'Unknown location' }}
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <ng-template #loadingHeader>
+    <div class="flex items-center pb-6 mb-3 border-b border-gray-200">
+      <p-skeleton shape="circle" size="4rem" styleClass="mr-2"></p-skeleton>
+      <div>
+        <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+        <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+      </div>
+    </div>
+  </ng-template>
 
   <div class="py-10 pb-16">
     <div class="flex items-center justify-between">
@@ -35,18 +50,20 @@
       </div>
       <div>
         <div *ngIf="isEditable">
-          <p-button
-            icon="pi pi-ellipsis-h"
-            [outlined]="true"
-            size="small"
-            (click)="openModal('summary')"></p-button>
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-wrench"
+              size="small"
+              (click)="openModal('summary')"
+              [outlined]="true"></p-button>
+          </div>
           <app-summary-modal
             [isVisible]="modals['summary']"
             (close)="closeModal('summary')"></app-summary-modal>
         </div>
       </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
+    <div *ngIf="!isLoading; else loadingInfo" class="mt-6 border-t border-gray-200">
       <dl class="divide-y divide-gray-200">
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
@@ -73,6 +90,13 @@
         </div>
       </dl>
     </div>
+    <ng-template #loadingInfo>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 
   <div class="pb-16">
@@ -87,18 +111,20 @@
       </div>
       <div>
         <div *ngIf="isEditable">
-          <p-button
-            icon="pi pi-ellipsis-h"
-            [outlined]="true"
-            size="small"
-            (click)="openModal('skills')"></p-button>
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('skills')"
+              [outlined]="true"></p-button>
+          </div>
           <app-skills-modal
             [isVisible]="modals['skills']"
             (close)="closeModal('skills')"></app-skills-modal>
         </div>
       </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
+    <div *ngIf="!isLoading; else loadingSkills" class="mt-6 border-t border-gray-200">
       <div class="flex items-center gap-3 mt-6">
         <span
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
@@ -132,6 +158,11 @@
         >
       </div>
     </div>
+    <ng-template #loadingSkills>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 
   <div class="pb-16">
@@ -146,15 +177,17 @@
       </div>
       <div>
         <div *ngIf="isEditable">
-          <p-button
-            icon="pi pi-ellipsis-h"
-            [outlined]="true"
-            size="small"
-            (click)="openModal('workExperience')"></p-button>
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('workExperience')"
+              [outlined]="true"></p-button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
+    <div *ngIf="!isLoading; else loadingWorkExperience" class="mt-6 border-t border-gray-200">
       <ul role="list" class="divide-y divide-gray-200">
         <li class="flex justify-between py-5 gap-x-6">
           <div class="flex min-w-0 gap-x-4">
@@ -200,9 +233,15 @@
         </li>
       </ul>
     </div>
+    <ng-template #loadingWorkExperience>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 
-  <div>
+  <div class="pb-16">
     <div class="flex items-center justify-between">
       <div>
         <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
@@ -214,15 +253,17 @@
       </div>
       <div>
         <div *ngIf="isEditable">
-          <p-button
-            icon="pi pi-ellipsis-h"
-            [outlined]="true"
-            size="small"
-            (click)="openModal('education')"></p-button>
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('education')"
+              [outlined]="true"></p-button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
+    <div *ngIf="!isLoading; else loadingEducation" class="mt-6 border-t border-gray-200">
       <ul role="list" class="divide-y divide-gray-200">
         <li class="flex justify-between py-5 gap-x-6">
           <div class="flex min-w-0 gap-x-4">
@@ -258,5 +299,56 @@
         </li>
       </ul>
     </div>
+    <ng-template #loadingEducation>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="pb-16">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
+          <i class="pi pi-language"></i>Languages
+        </h3>
+        <p class="max-w-2xl text-sm leading-6 text-gray-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+        </p>
+      </div>
+      <div>
+        <div *ngIf="isEditable">
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('languages')"
+              [outlined]="true"></p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!isLoading; else loadingLanguages" class="mt-6 border-t border-gray-200">
+      <div class="flex items-center gap-3 mt-6">
+        <span
+          class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-700 rounded-md bg-indigo-50 ring-1 ring-inset ring-indigo-700/10"
+          pTooltip="B1"
+          tooltipPosition="top"
+          >English</span
+        >
+        <span
+          class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-700 rounded-md bg-indigo-50 ring-1 ring-inset ring-indigo-700/10"
+          pTooltip="C2"
+          tooltipPosition="top"
+          >Polish</span
+        >
+      </div>
+    </div>
+    <ng-template #loadingLanguages>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 </div>

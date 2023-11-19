@@ -22,7 +22,7 @@ export interface LoginForm {
   password: string;
 }
 
-type User = {
+export type User = {
   id: number;
   email: string;
   first_name: string;
@@ -47,6 +47,7 @@ type Roles = 'employee' | 'recruiter';
 
 export type ProfileResponse = {
   [key in Roles]: {
+    id: number;
     user: User;
   };
 };

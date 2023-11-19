@@ -3,7 +3,8 @@ import { Message, MessageService } from 'primeng/api';
 
 import { EmployeeRegistrationForm, ErrorResponse } from '../../interfaces/auth.interfaces';
 import { AuthService } from '../../services/auth.service';
-import { FormService } from '../../services/form.service';
+import { AuthFormService } from '../../services/auth-form.service';
+import { FormService } from 'src/app/shared/services/form.service';
 
 @Component({
   selector: 'app-employee-registration',
@@ -14,11 +15,12 @@ import { FormService } from '../../services/form.service';
 export class EmployeeRegistrationComponent {
   alerts: Message[] | undefined;
 
-  registerForm = this.formService.getEmployeeRegistrationForm();
+  registerForm = this.authFormService.getEmployeeRegistrationForm();
 
   constructor(
     private authService: AuthService,
     private messageService: MessageService,
+    private authFormService: AuthFormService,
     private formService: FormService
   ) {}
 

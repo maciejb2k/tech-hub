@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { ProfileData } from 'src/app/auth/interfaces/auth.interfaces';
 
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
+import { EmployeeService } from '../../services/employee.service';
+import { EmployeeProfile, ProfileSections } from '../../interfaces/employee.interfaces';
 
 @Component({
   selector: 'app-profile',
@@ -13,9 +12,17 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent extends BaseComponent {
-  userData: ProfileData;
+  userData: EmployeeProfile;
   isEditable = false;
-  modals: { [key: string]: boolean } = {
+
+  modals: ProfileSections = {
+    summary: false,
+    skills: false,
+    workExperience: false,
+    education: false,
+  };
+
+  editSections: ProfileSections = {
     summary: false,
     skills: false,
     workExperience: false,
@@ -25,22 +32,29 @@ export class ProfileComponent extends BaseComponent {
   constructor(
     protected override loaderService: LoaderService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private employeeService: EmployeeService
   ) {
     super(loaderService);
   }
 
   ngOnInit() {
-    this.subscriptions.push(
-      this.authService.getUserData().subscribe(value => {
-        this.userData = value;
-        const employeeId = this.route.snapshot.paramMap.get('id');
+    const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
-        if (Number(employeeId) === this.userData.id) {
+    this.subscriptions.push(
+      this.employeeService.getEmployeeProfile(employeeId).subscribe(value => {
+        this.onDataLoaded();
+
+        this.userData = value;
+
+        if (employeeId === this.userData.employee.id) {
           this.isEditable = true;
         }
       })
     );
+  }
+
+  toggleEdit(section: string) {
+    this.editSections[section] = !this.editSections[section];
   }
 
   openModal(modalId: string) {

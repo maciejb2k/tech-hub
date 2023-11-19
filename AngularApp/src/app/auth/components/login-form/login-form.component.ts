@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { Message, MessageService } from 'primeng/api';
-import { AuthService } from '../../services/auth.service';
-import { FormService } from '../../services/form.service';
-import { ErrorResponse, LoginForm } from '../../interfaces/auth.interfaces';
 import { Router } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
+import { AuthFormService } from '../../services/auth-form.service';
+import { ErrorResponse, LoginForm } from '../../interfaces/auth.interfaces';
+import { FormService } from 'src/app/shared/services/form.service';
+
+import { Message, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login-form',
@@ -14,11 +17,12 @@ import { Router } from '@angular/router';
 export class LoginFormComponent {
   alerts: Message[] | undefined;
 
-  loginForm = this.formService.getLoginForm();
+  loginForm = this.authFormService.getLoginForm();
 
   constructor(
     private authService: AuthService,
     private messageService: MessageService,
+    private authFormService: AuthFormService,
     private formService: FormService,
     private router: Router
   ) {}

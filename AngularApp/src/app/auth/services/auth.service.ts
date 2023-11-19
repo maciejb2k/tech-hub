@@ -12,6 +12,7 @@ import {
   RecruiterRegistrationForm,
 } from '../interfaces/auth.interfaces';
 import { Router } from '@angular/router';
+import { FormService } from 'src/app/shared/services/form.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,22 +21,26 @@ export class AuthService {
   user$: BehaviorSubject<ProfileData | null> = new BehaviorSubject<ProfileData | null>(null);
   private destroy$: Subject<void> = new Subject<void>();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private formService: FormService) {}
 
   registerEmployee(formData: EmployeeRegistrationForm) {
     const url = 'http://localhost:8000/api/auth/register-employee';
-    return this.http.post<AuthResponse>(url, formData).pipe(catchError(this.handleError));
+    return this.http
+      .post<AuthResponse>(url, formData)
+      .pipe(catchError(this.formService.handleError));
   }
 
   registerRecruiter(formData: RecruiterRegistrationForm) {
     const url = 'http://localhost:8000/api/auth/register-recruiter';
-    return this.http.post<AuthResponse>(url, formData).pipe(catchError(this.handleError));
+    return this.http
+      .post<AuthResponse>(url, formData)
+      .pipe(catchError(this.formService.handleError));
   }
 
   login(formData: LoginForm) {
     const url = 'http://localhost:8000/api/auth/login';
     return this.http.post<AuthResponse>(url, formData).pipe(
-      catchError(this.handleError),
+      catchError(this.formService.handleError),
       tap(response => {
         this.setToken(response.token);
         this.getUserData().pipe(takeUntil(this.destroy$)).subscribe();
@@ -101,13 +106,15 @@ export class AuthService {
     const url = 'http://localhost:8000/api/profile';
     return this.http.get<ProfileResponse>(url).pipe(
       map((response: ProfileResponse) => {
-        const data = response['employee'].user || response['recruiter'].user;
+        const data = response['employee'] || response['recruiter'];
+        const userData = data.user;
+
         const userDetails: ProfileData = {
           id: data.id,
-          email: data.email,
-          role: data.role.name,
-          first_name: data.first_name,
-          last_name: data.last_name,
+          email: userData.email,
+          role: userData.role.name,
+          first_name: userData.first_name,
+          last_name: userData.last_name,
         };
 
         return userDetails;

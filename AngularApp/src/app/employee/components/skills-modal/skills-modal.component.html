@@ -1,16 +1,59 @@
 <p-dialog
-  header="Skills"
+  header="Add new skill"
   [(visible)]="isVisible"
   [modal]="true"
   [style]="{ width: '500px' }"
   [draggable]="false"
   [resizable]="false"
   (onHide)="onModalClosed()">
-  <div>
-    <p class="m-0">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-      labore et dolore magna aliqua.
-    </p>
-  </div>
-  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()"></form>
+  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="name">Name</label>
+        <input
+          pInputText
+          required
+          type="text"
+          id="name"
+          placeholder="Angular"
+          formControlName="name" />
+      </div>
+      <div *ngIf="name.invalid && (name.dirty || name.touched)">
+        <small *ngIf="name.errors?.['required']" class="p-error">Email is required.</small>
+        <small *ngIf="name.errors?.['serverError']" class="p-error">
+          {{ name.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="level">Level</label>
+        <input
+          pInputText
+          required
+          type="number"
+          id="level"
+          min="1"
+          max="5"
+          formControlName="level" />
+      </div>
+      <div *ngIf="level.invalid && (level.dirty || level.touched)">
+        <small *ngIf="level.errors?.['required']" class="p-error">Level is required.</small>
+        <small *ngIf="level.errors?.['serverError']" class="p-error">
+          {{ level.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <div class="flex flex-col gap-2">
+      <button
+        pButton
+        label="Add new skill"
+        type="submit"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+    </div>
+  </form>
 </p-dialog>
