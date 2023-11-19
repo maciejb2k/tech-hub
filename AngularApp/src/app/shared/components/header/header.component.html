@@ -22,7 +22,7 @@
           </li>
         </ul>
       </div>
-      <div class="flex items-center gap-2">
+      <div *ngIf="!isLoading; else loadingButton" class="flex items-center gap-2">
         <p-button
           *ngIf="!authService.isAuthenticated()"
           label="Sign In"
@@ -45,6 +45,9 @@
           [model]="items">
         </p-splitButton>
       </div>
+      <ng-template #loadingButton>
+        <p-skeleton width="12rem" height="2.5rem"></p-skeleton>
+      </ng-template>
     </div>
   </nav>
 </header>

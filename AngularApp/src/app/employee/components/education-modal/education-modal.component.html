@@ -1,0 +1,139 @@
+<p-dialog
+  header="{{ header }}"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClosed()">
+  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="fos">Field of study</label>
+        <input
+          pInputText
+          required
+          type="text"
+          id="fos"
+          placeholder="Computer Science"
+          formControlName="field_of_study" />
+      </div>
+      <div *ngIf="fieldOfStudy.invalid && (fieldOfStudy.dirty || fieldOfStudy.touched)">
+        <small *ngIf="fieldOfStudy.errors?.['required']" class="p-error"
+          >Field of study is required.</small
+        >
+        <small *ngIf="fieldOfStudy.errors?.['serverError']" class="p-error">
+          {{ fieldOfStudy.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="university_name">University Name</label>
+        <input
+          pInputText
+          required
+          type="text"
+          id="university_name"
+          placeholder="University of Rzeszow"
+          formControlName="university_name" />
+      </div>
+      <div *ngIf="universityName.invalid && (universityName.dirty || universityName.touched)">
+        <small *ngIf="universityName.errors?.['required']" class="p-error"
+          >Unveristy name is required.</small
+        >
+        <small *ngIf="universityName.errors?.['serverError']" class="p-error">
+          {{ universityName.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="description">Description</label>
+        <textarea
+          rows="5"
+          cols="30"
+          id="description"
+          pInputTextarea
+          formControlName="description"
+          placeholder="I was responsible for the deployment of the application."></textarea>
+      </div>
+      <div *ngIf="description.invalid && (description.dirty || description.touched)">
+        <small *ngIf="description.errors?.['serverError']" class="p-error">
+          {{ description.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex gap-5">
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-2">
+            <label for="start_date">Start Date</label>
+            <p-calendar
+              id="start_date"
+              formControlName="start_date"
+              class="w-full"
+              dateFormat="yy-mm-dd"
+              dataType="string"></p-calendar>
+          </div>
+          <div *ngIf="startDate.invalid && (startDate.dirty || startDate.touched)">
+            <small *ngIf="startDate.errors?.['required']" class="p-error"
+              >Start date is required.</small
+            >
+            <small *ngIf="startDate.errors?.['serverError']" class="p-error">
+              {{ startDate.errors['serverError'] }}
+            </small>
+          </div>
+        </div>
+        <div class="flex flex-col w-full">
+          <div class="flex flex-col gap-2">
+            <label for="end_date">End Date</label>
+            <p-calendar
+              id="end_date"
+              formControlName="end_date"
+              styles="w-full"
+              dateFormat="yy-mm-dd"
+              dataType="string"></p-calendar>
+          </div>
+          <div *ngIf="endDate.invalid && (endDate.dirty || endDate.touched)">
+            <small *ngIf="endDate.errors?.['required']" class="p-error"
+              >End date is required.</small
+            >
+            <small *ngIf="endDate.errors?.['serverError']" class="p-error">
+              {{ endDate.errors['serverError'] }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <div *ngIf="!isEdit" class="flex flex-col gap-2">
+      <button
+        pButton
+        label="Add new education"
+        type="submit"
+        class="w-full"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+    </div>
+    <div *ngIf="isEdit" class="flex items-center gap-2">
+      <button
+        pButton
+        label="Update"
+        type="submit"
+        severity="secondary"
+        class="w-2/3 p-button-success"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+      <button
+        pButton
+        label="Delete"
+        type="button"
+        class="w-1/3 p-button-danger p-button-outlined"
+        (click)="destroy()"></button>
+    </div>
+  </form>
+</p-dialog>

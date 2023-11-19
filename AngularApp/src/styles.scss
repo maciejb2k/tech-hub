@@ -31,3 +31,7 @@ router-outlet {
 .p-message {
   margin: 0 0 2rem;
 }
+
+.p-dialog-content {
+  overflow-y: visible !important;
+}

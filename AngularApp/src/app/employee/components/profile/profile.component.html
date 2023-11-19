@@ -1,5 +1,7 @@
-<div class="max-w-3xl mt-10">
-  <div class="flex flex-row items-center pb-6 border-b border-gray-200">
+<div class="max-w-3xl mx-auto mt-10">
+  <div
+    *ngIf="!isLoading; else loadingHeader"
+    class="flex flex-row items-center pb-6 border-b border-gray-200">
     <div class="relative">
       <img class="object-cover w-16 h-16 rounded-md" src="assets/user.jpg" alt="User" />
       <div
@@ -10,44 +12,63 @@
     <div class="flex flex-col px-8">
       <div class="flex flex-row items-center h-8">
         <a href="#" target="_blank">
-          <h2 class="text-lg font-semibold">Margot Foster</h2>
+          <h2 class="text-lg font-semibold">
+            {{ userData.employee.user.first_name }} {{ userData.employee.user.last_name }}
+          </h2>
         </a>
       </div>
 
       <div class="flex flex-row space-x-3">
         <div class="flex flex-row">
           <i class="w-4 h-4 mr-1 pi pi-map-marker fill-gray-500/80" style="font-size: 0.8rem"></i>
-          <div class="text-xs text-gray-500 hover:text-gray-400">Rzeszów, Polska</div>
+          <div class="text-xs text-gray-500 hover:text-gray-400">
+            {{ userData.employee.location ? userData.employee.location : 'Unknown location' }}
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <ng-template #loadingHeader>
+    <div class="flex items-center pb-6 mb-3 border-b border-gray-200">
+      <p-skeleton shape="circle" size="4rem" styleClass="mr-2"></p-skeleton>
+      <div>
+        <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+        <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+      </div>
+    </div>
+  </ng-template>
 
   <div class="py-10 pb-16">
-    <div>
-      <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
-        <i class="pi pi-info-circle"></i>Summary Informations
-      </h3>
-      <p class="max-w-2xl text-sm leading-6 text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
-      </p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
+          <i class="pi pi-info-circle"></i>Summary Information
+        </h3>
+        <p class="max-w-2xl text-sm leading-6 text-gray-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+        </p>
+      </div>
+      <div>
+        <div *ngIf="isEditable">
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-wrench"
+              size="small"
+              (click)="openModal('summary')"
+              [outlined]="true"></p-button>
+          </div>
+          <app-summary-modal
+            [isVisible]="modals['summary']"
+            (close)="closeModal('summary')"></app-summary-modal>
+        </div>
+      </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
+    <div *ngIf="!isLoading; else loadingInfo" class="mt-6 border-t border-gray-200">
       <dl class="divide-y divide-gray-200">
-        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium leading-6 text-gray-900">Full name</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Margot Foster</dd>
-        </div>
-        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium leading-6 text-gray-900">Application for</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Backend Developer
-          </dd>
-        </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Glory Hole 47, San Francisco, California, USA
+            Rigga 47, San Francisco, California, USA
           </dd>
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -63,43 +84,68 @@
             reprehenderit deserunt qui eu.
           </dd>
         </div>
+        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Profile views</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">432</dd>
+        </div>
       </dl>
     </div>
+    <ng-template #loadingInfo>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 
   <div class="pb-16">
-    <div>
-      <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
-        <i class="pi pi-bolt"></i>Skills
-      </h3>
-      <p class="max-w-2xl text-sm leading-6 text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
-      </p>
-    </div>
-    <div class="mt-6 border-t border-gray-200">
-      <div class="flex items-center gap-3 mt-6">
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          >JavaScript</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          >TypeScript</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          >React</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          >Angular</span
-        >
-        <span
-          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10"
-          >ESLint</span
-        >
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
+          <i class="pi pi-bolt"></i>Skills
+        </h3>
+        <p class="max-w-2xl text-sm leading-6 text-gray-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+        </p>
+      </div>
+      <div>
+        <div *ngIf="isEditable">
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('skills')"
+              [outlined]="true"></p-button>
+          </div>
+          <app-skills-modal
+            [isVisible]="modals['skills']"
+            [data]="modalsData['skills']"
+            (close)="closeModal('skills')"
+            (refetch)="fetchData()"></app-skills-modal>
+        </div>
       </div>
     </div>
+    <div *ngIf="!isLoading; else loadingSkills" class="mt-6 border-t border-gray-200">
+      <div *ngIf="userData.skills.length" class="flex flex-wrap items-center gap-3 mt-6">
+        <span
+          *ngFor="let skill of userData.skills"
+          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10 hover:cursor-pointer"
+          pTooltip="{{ skill.level }} / 5"
+          tooltipPosition="top"
+          (click)="openModal('skills', skill.id)"
+          >{{ skill.name }}</span
+        >
+      </div>
+      <div *ngIf="!userData.skills.length" class="py-5 text-sm text-gray-500">
+        No skills records were added.
+      </div>
+    </div>
+    <ng-template #loadingSkills>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 
   <div class="pb-16">
@@ -112,57 +158,68 @@
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, tempore.
         </p>
       </div>
-      <div></div>
+      <div>
+        <div *ngIf="isEditable">
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('workExperience')"
+              [outlined]="true"></p-button>
+          </div>
+          <app-work-experience-modal
+            [isVisible]="modals['workExperience']"
+            [data]="modalsData['workExperience']"
+            (close)="closeModal('workExperience')"
+            (refetch)="fetchData()"></app-work-experience-modal>
+        </div>
+      </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
-      <ul role="list" class="divide-y divide-gray-200">
-        <li class="flex justify-between py-5 gap-x-6">
+    <div *ngIf="!isLoading; else loadingWorkExperience" class="mt-6 border-t border-gray-200">
+      <ul *ngIf="userData.work_experiences.length" role="list" class="divide-y divide-gray-200">
+        <li
+          *ngFor="let work of userData.work_experiences"
+          class="flex justify-between py-5 gap-x-6">
           <div class="flex min-w-0 gap-x-4">
             <img
               class="flex-none w-12 h-12 rounded-full bg-gray-50"
               src="assets/building.jpg"
               alt="" />
             <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Senior DevOps Engineer</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Virtus Lab</p>
-              <p class="mt-4 text-xs text-gray-400">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates pariatur
-                quibusdam aliquam corrupti delectus ipsum tempore architecto excepturi mollitia
-                quis?
-              </p>
+              <p class="text-sm font-semibold leading-6 text-sky-600">{{ work.position }}</p>
+              <p class="text-xs leading-5 text-gray-500 truncate">{{ work.company_name }}</p>
+              <p class="mt-4 text-xs text-gray-400">{{ work.description }}</p>
             </div>
           </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
-          </div>
-        </li>
-        <li class="flex justify-between py-5 gap-x-6">
-          <div class="flex min-w-0 gap-x-4">
-            <img
-              class="flex-none w-12 h-12 rounded-full bg-gray-50"
-              src="assets/building.jpg"
-              alt="" />
-            <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Security Administrator</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Uniwersytet Rzeszowski</p>
-              <p class="mt-4 text-xs text-gray-400">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates pariatur
-                quibusdam aliquam corrupti delectus ipsum tempore architecto excepturi mollitia
-                quis?
+          <div class="flex gap-3 shrink-0">
+            <div class="text-right">
+              <p class="text-xs font-semibold leading-6 text-gray-900">
+                {{ work.start_date }} - {{ work.end_date }}
               </p>
+              <p class="text-xs leading-5 text-gray-500">5 months</p>
             </div>
-          </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
+            <p-button
+              *ngIf="isEditable"
+              icon="pi pi-ellipsis-h"
+              size="small"
+              (click)="openModal('workExperience', work.id)"
+              [text]="true"></p-button>
           </div>
         </li>
       </ul>
+      <div *ngIf="!userData.work_experiences.length" class="py-5 text-sm text-gray-500">
+        No work experience records were added.
+      </div>
     </div>
+    <ng-template #loadingWorkExperience>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 
-  <div>
+  <div class="pb-16">
     <div class="flex items-center justify-between">
       <div>
         <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
@@ -172,43 +229,114 @@
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, tempore.
         </p>
       </div>
-      <div></div>
+      <div>
+        <div *ngIf="isEditable">
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('education')"
+              [outlined]="true"></p-button>
+          </div>
+          <app-education-modal
+            [isVisible]="modals['education']"
+            [data]="modalsData['education']"
+            (close)="closeModal('education')"
+            (refetch)="fetchData()"></app-education-modal>
+        </div>
+      </div>
     </div>
-    <div class="mt-6 border-t border-gray-200">
-      <ul role="list" class="divide-y divide-gray-200">
-        <li class="flex justify-between py-5 gap-x-6">
+    <div *ngIf="!isLoading; else loadingEducation" class="mt-6 border-t border-gray-200">
+      <ul *ngIf="userData.educations" role="list" class="divide-y divide-gray-200">
+        <li *ngFor="let education of userData.educations" class="flex justify-between py-5 gap-x-6">
           <div class="flex min-w-0 gap-x-4">
             <img
               class="flex-none w-12 h-12 rounded-full bg-gray-50"
               src="assets/education.jpg"
               alt="" />
             <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Informatyka</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Uniwersytet Rzeszowski</p>
+              <p class="text-sm font-semibold leading-6 text-sky-600">
+                {{ education.field_of_study }}
+              </p>
+              <p class="text-xs leading-5 text-gray-500 truncate">
+                {{ education.university_name }}
+              </p>
             </div>
           </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
-          </div>
-        </li>
-        <li class="flex justify-between py-5 gap-x-6">
-          <div class="flex min-w-0 gap-x-4">
-            <img
-              class="flex-none w-12 h-12 rounded-full bg-gray-50"
-              src="assets/education.jpg"
-              alt="" />
-            <div class="flex-auto min-w-0">
-              <p class="text-sm font-semibold leading-6 text-sky-600">Technik Informatyk</p>
-              <p class="text-xs leading-5 text-gray-500 truncate">Zespół Szkół Elektronicznych</p>
+          <div class="flex gap-3 shrink-0">
+            <div class="text-right">
+              <p class="text-xs font-semibold leading-6 text-gray-900">
+                {{ education.start_date }} - {{ education.end_date }}
+              </p>
+              <p class="text-xs leading-5 text-gray-500">5 months</p>
             </div>
-          </div>
-          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p class="text-xs font-semibold leading-6 text-gray-900">01.01.2020r - 01.06.2020r</p>
-            <p class="text-xs leading-5 text-gray-500">5 months</p>
+            <p-button
+              *ngIf="isEditable"
+              icon="pi pi-ellipsis-h"
+              size="small"
+              (click)="openModal('education', education.id)"
+              [text]="true"></p-button>
           </div>
         </li>
       </ul>
+      <div *ngIf="!userData.educations.length" class="py-5 text-sm text-gray-500">
+        No education records were added.
+      </div>
     </div>
+    <ng-template #loadingEducation>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="pb-16">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
+          <i class="pi pi-language"></i>Languages
+        </h3>
+        <p class="max-w-2xl text-sm leading-6 text-gray-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+        </p>
+      </div>
+      <div>
+        <div *ngIf="isEditable">
+          <div class="flex items-center gap-3">
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              (click)="openModal('languages')"
+              [outlined]="true"></p-button>
+          </div>
+          <app-language-modal
+            [isVisible]="modals['languages']"
+            [data]="modalsData['languages']"
+            (close)="closeModal('languages')"
+            (refetch)="fetchData()"></app-language-modal>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!isLoading; else loadingLanguage" class="mt-6 border-t border-gray-200">
+      <div *ngIf="userData.languages.length" class="flex flex-wrap items-center gap-3 mt-6">
+        <span
+          *ngFor="let language of userData.languages"
+          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10 hover:cursor-pointer"
+          pTooltip="{{ language.proficiency }}"
+          tooltipPosition="top"
+          (click)="openModal('languages', language.id)"
+          >{{ language.name }}</span
+        >
+      </div>
+      <div *ngIf="!userData.languages.length" class="py-5 text-sm text-gray-500">
+        No language records were added.
+      </div>
+    </div>
+    <ng-template #loadingLanguage>
+      <div class="py-4 mt-6 border-t border-gray-200">
+        <p-skeleton styleClass="mb-2" height="3rem"></p-skeleton>
+      </div>
+    </ng-template>
   </div>
 </div>

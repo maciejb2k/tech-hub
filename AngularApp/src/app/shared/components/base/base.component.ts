@@ -7,18 +7,34 @@ import { Subscription } from 'rxjs';
   styles: [],
 })
 export class BaseComponent {
+  subscriptions: Subscription[] = [];
   isLoading = false;
-  private isLoadingSubscription: Subscription;
+  hasLoadedData = false;
 
   constructor(protected loaderService: LoaderService) {
-    this.isLoadingSubscription = this.loaderService.isLoading$.subscribe(value => {
-      this.isLoading = value;
-    });
+    this.subscriptions.push(
+      this.loaderService.isLoading$.subscribe(value => {
+        if (!this.hasLoadedData) {
+          this.isLoading = value;
+        }
+      })
+    );
   }
 
-  ngOnDestroy(): void {
-    if (this.isLoadingSubscription) {
-      this.isLoadingSubscription.unsubscribe();
-    }
+  onDataLoaded() {
+    this.hasLoadedData = true;
+    this.isLoading = false;
+  }
+
+  enableGlobalSpinner() {
+    this.loaderService.showGlobalSpinner();
+  }
+
+  disableGlobalSpinner() {
+    this.loaderService.hideGlobalSpinner();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

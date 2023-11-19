@@ -5,7 +5,7 @@ import { passwordMatchValidator, urlValidator } from 'src/app/auth/validators/au
 @Injectable({
   providedIn: 'root',
 })
-export class FormService {
+export class AuthFormService {
   constructor(private formBuilder: FormBuilder) {}
 
   getLoginForm() {
@@ -44,14 +44,5 @@ export class FormService {
       },
       { validators: [passwordMatchValidator] }
     );
-  }
-
-  handleFormErrors(form: FormGroup, errors: { [key: string]: string[] }) {
-    for (const controlName in errors) {
-      if (form.get(controlName)) {
-        form.get(controlName).setErrors({ serverError: errors[controlName][0] });
-        form.get(controlName).markAsTouched();
-      }
-    }
   }
 }

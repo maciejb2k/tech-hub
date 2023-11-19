@@ -24,12 +24,14 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
 import { LoaderInterceptor } from './shared/interceptors/loader.interceptor';
 import { BaseComponent } from './shared/components/base/base.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
 
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { FooterComponent } from './shared/components/footer/footer.component';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     ProgressBarModule,
     SplitButtonModule,
     ReactiveFormsModule,
+    SkeletonModule,
+    ToastModule,
   ],
   providers: [
     {
