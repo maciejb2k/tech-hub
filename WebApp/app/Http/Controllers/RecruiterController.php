@@ -4,19 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
-use App\Http\Requests\EmployeeRequest;
-use App\Services\EmployeeService;
+use App\Http\Requests\RecruiterRequest;
+use App\Services\RecruiterService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class EmployeeController extends Controller
+class RecruiterController extends Controller
 {
-    protected $employeeService;
+    protected $recruiterService;
 
-    public function __construct(EmployeeService $employeeService)
+    public function __construct(RecruiterService $recruiterService)
     {
-        $this->employeeService = $employeeService;
+        $this->recruiterService = $recruiterService;
     }
 
     /**
@@ -46,14 +45,9 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id, Request $request)
+    public function show(string $id)
     {
-        if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
-            Auth::setUser($user);
-        }
-
-        $res = $this->employeeService->getEmployeeById($id, $request);
-        return response($res, 200);
+        //
     }
 
     /**
@@ -67,11 +61,11 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EmployeeRequest $request, string $id)
+    public function update(RecruiterRequest $request, string $id)
     {
         try 
         {
-            $res = $this->employeeService->updateEmployee($request, $id, $request->user()->id);
+            $res = $this->recruiterService->updateRecruiter($request, $id, $request->user()->id);
             return response($res, 200);
         } 
         catch(Exception $e)

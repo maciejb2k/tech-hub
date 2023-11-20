@@ -46,9 +46,20 @@ class WorkExperienceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
-        //
+        try 
+        {
+            $res = $this->workExperienceService->getWorkExperienceById($id, $request->user()->id);
+            return response($res, 200);
+        } 
+        catch(Exception $e)
+        {
+            if($e instanceof ForbiddenException)
+                return response(['message' => 'No access to the resource!'], 403);
+            if($e instanceof NotFoundException)
+                return response(['message' => 'The resource does not exist!'], 404);
+        }
     }
 
     /**

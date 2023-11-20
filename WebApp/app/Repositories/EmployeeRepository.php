@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Requests\EmployeeRequest;
 use App\Http\Requests\RegisterEmployeeRequest;
 use App\Models\Employee;
 
@@ -21,7 +22,7 @@ class EmployeeRepository {
 
     public function getEmployeeById(int $employeeId)
     {
-        return $this->employee::findOrFail($employeeId);
+        return $this->employee::where('id', $employeeId)->first();
     }
 
     public function createEmployee(RegisterEmployeeRequest $registerEmployeeRequest, string $userId)
@@ -34,6 +35,20 @@ class EmployeeRepository {
             'portfolio' => null,
             'user_id' => $userId
         ]);
+
+        return $employee;
+    }
+
+    public function updateEmployee(EmployeeRequest $request, int $employeeId)
+    {
+        $employee = $this->employee::where('id', $employeeId)->first();
+
+        $employee['location'] = $request['location'];
+        $employee['bio'] = $request['bio'];
+        $employee['expected_salary'] = $request['expected_salary'];
+        $employee['portfolio'] = $request['portfolio'];
+
+        $employee->save();
 
         return $employee;
     }
