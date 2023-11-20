@@ -8,6 +8,16 @@ import {
   WorkExperiencePayload,
   EducationPayload,
   LanguagePayload,
+  Skill,
+  SkillProperties,
+  WorkExperienceProperties,
+  WorkExperience,
+  Education,
+  EducationProperties,
+  LanguagesProperties,
+  Languages,
+  EmployeeProperties,
+  Employee,
 } from '../interfaces/employee.interfaces';
 import { FormService } from 'src/app/shared/services/form.service';
 
@@ -21,7 +31,45 @@ export class EmployeeService {
 
   getEmployeeProfile(id: number) {
     const url = `http://localhost:8000/api/employees/${id}`;
-    return this.http.get<EmployeeProfile>(url);
+    return this.http.get<EmployeeProfile>(url).pipe(
+      map(res => this.parseProfile(res)),
+      catchError(this.formService.handleError)
+    );
+  }
+
+  private parseProfile(response: EmployeeProfile) {
+    const employeeFieldNames = Object.keys(EmployeeProperties) as (keyof Employee)[];
+    const skillFieldNames = Object.keys(SkillProperties) as (keyof Skill)[];
+    const workExperienceFieldNames = Object.keys(
+      WorkExperienceProperties
+    ) as (keyof WorkExperience)[];
+    const educationFieldNames = Object.keys(EducationProperties) as (keyof Education)[];
+    const languagesFieldName = Object.keys(LanguagesProperties) as (keyof Languages)[];
+
+    this.setHiddenFields<Employee>(response.employee, employeeFieldNames);
+
+    response.skills.forEach(item => {
+      this.setHiddenFields<Skill>(item, skillFieldNames);
+    });
+    response.work_experiences.forEach(item => {
+      this.setHiddenFields<WorkExperience>(item, workExperienceFieldNames);
+    });
+    response.educations.forEach(item => {
+      this.setHiddenFields<Education>(item, educationFieldNames);
+    });
+    response.languages.forEach(item => {
+      this.setHiddenFields<Languages>(item, languagesFieldName);
+    });
+
+    return response;
+  }
+
+  private setHiddenFields<T>(object: any, keys: (keyof T)[]) {
+    keys.forEach(key => {
+      if (!(key in object)) {
+        object[key] = 'Hidden';
+      }
+    });
   }
 
   /* Skills */

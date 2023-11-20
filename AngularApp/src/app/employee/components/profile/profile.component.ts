@@ -48,21 +48,19 @@ export class ProfileComponent extends BaseComponent {
     const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.subscriptions.push(
-      this.employeeService
-        .getEmployeeProfile(employeeId)
-        .pipe(
-          switchMap(employeeProfile => {
-            this.userData = employeeProfile;
-            return this.authService.getUserData();
-          })
-        )
-        .subscribe(userData => {
-          if (userData.id === this.userData.employee.id) {
-            this.isEditable = true;
-          }
+      this.employeeService.getEmployeeProfile(employeeId).subscribe(employeeProfile => {
+        this.userData = employeeProfile;
 
-          this.onDataLoaded();
-        })
+        if (this.authService.isAuthenticated()) {
+          this.authService.getUserData().subscribe(authData => {
+            if (authData.id === this.userData.employee.id) {
+              this.isEditable = true;
+            }
+          });
+        }
+
+        this.onDataLoaded();
+      })
     );
   }
 

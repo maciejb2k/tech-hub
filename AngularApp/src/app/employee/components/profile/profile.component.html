@@ -131,7 +131,7 @@
         <span
           *ngFor="let skill of userData.skills"
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10 hover:cursor-pointer"
-          pTooltip="{{ skill.level }} / 5"
+          pTooltip="{{ skill.level }} ⭐"
           tooltipPosition="top"
           (click)="openModal('skills', skill.id)"
           >{{ skill.name }}</span

@@ -1,49 +1,87 @@
 import { User } from 'src/app/auth/interfaces/auth.interfaces';
 
-interface Skill {
-  id?: number;
-  employee_id?: number;
-  name?: string;
-  level?: number;
+export interface Skill {
+  id: number;
+  name: string;
+  level: number;
 }
 
-interface WorkExperience {
-  id?: number;
-  employee_id: number;
-  company_name?: string;
-  start_date?: string;
-  end_date?: string;
-  position?: string;
-  description?: string;
+export const SkillProperties: Skill = {
+  id: undefined,
+  name: undefined,
+  level: undefined,
+};
+
+export interface WorkExperience {
+  id: number;
+  company_name: string;
+  start_date: string;
+  end_date: string;
+  position: string;
+  description: string;
 }
 
-interface Education {
-  id?: number;
-  employee_id?: number;
-  university_name?: string;
-  start_date?: string;
-  end_date?: string;
-  field_of_study?: string;
-  description?: string;
+export const WorkExperienceProperties: WorkExperience = {
+  id: undefined,
+  company_name: undefined,
+  start_date: undefined,
+  end_date: undefined,
+  position: undefined,
+  description: undefined,
+};
+
+export interface Education {
+  id: number;
+  university_name: string;
+  start_date: string;
+  end_date: string;
+  field_of_study: string;
+  description: string;
 }
 
-interface Languages {
-  id?: number;
-  employee_id?: number;
-  name?: string;
-  proficiency?: string;
+export const EducationProperties: Education = {
+  id: undefined,
+  university_name: undefined,
+  start_date: undefined,
+  end_date: undefined,
+  field_of_study: undefined,
+  description: undefined,
+};
+
+export interface Languages {
+  id: number;
+  name: string;
+  proficiency: string;
 }
+
+export const LanguagesProperties: Languages = {
+  id: undefined,
+  name: undefined,
+  proficiency: undefined,
+};
+
+export interface Employee {
+  id: number;
+  views: number;
+  location: string | null;
+  bio: string | null;
+  expected_salary: string;
+  portfolio: string | null;
+  user: User;
+}
+
+export const EmployeeProperties: Employee = {
+  id: undefined,
+  views: undefined,
+  location: undefined,
+  bio: undefined,
+  expected_salary: undefined,
+  portfolio: undefined,
+  user: undefined,
+};
 
 export interface EmployeeProfile {
-  employee: {
-    id?: number;
-    views?: number;
-    location?: string | null;
-    bio?: string | null;
-    expected_salary?: string;
-    portfolio?: string | null;
-    user: User;
-  };
+  employee: Employee;
   skills: Skill[];
   work_experiences: WorkExperience[];
   educations: Education[];
