@@ -26,12 +26,14 @@
 
     <div class="flex flex-col w-full">
       <div class="flex flex-col gap-2">
-        <label for="expected_salary">Expected Salary</label>
+        <label for="expected_salary">Expected Salary (Annualy USD)</label>
         <input
           pInputText
-          type="text"
+          type="number"
+          min="0"
+          max="1000000"
           id="expected_salary"
-          placeholder="120.000$"
+          placeholder="46000"
           formControlName="expected_salary" />
       </div>
       <div *ngIf="expectedSalary.invalid && (expectedSalary.dirty || expectedSalary.touched)">
@@ -66,7 +68,7 @@
           pInputText
           type="text"
           id="portfolio"
-          placeholder="Rzeszów, Poland"
+          placeholder="https://www.linkedin.com/in/username/"
           formControlName="portfolio" />
       </div>
       <div *ngIf="portfolio.invalid && (portfolio.dirty || portfolio.touched)">

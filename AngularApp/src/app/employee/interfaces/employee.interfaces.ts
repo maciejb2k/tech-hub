@@ -106,6 +106,7 @@ export interface SkillPayload {
 }
 
 export interface UserPayload {
+  email: string;
   first_name: string;
   last_name: string;
 }

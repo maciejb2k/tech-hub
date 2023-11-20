@@ -65,7 +65,7 @@ export class SummaryModalComponent extends BaseComponent {
         this.toastService.add({
           severity: 'success',
           summary: 'Success',
-          detail: "You've successfully updated a skill.",
+          detail: "You've successfully updated a summary.",
         });
         this.refetch.emit();
         this.close.emit();

@@ -3,7 +3,32 @@
     *ngIf="!isLoading; else loadingHeader"
     class="flex flex-row items-center pb-6 border-b border-gray-200">
     <div class="relative">
-      <img class="object-cover w-16 h-16 rounded-md" src="assets/user.jpg" alt="User" />
+      <div class="profile-picture">
+        <ng-container *ngIf="userData.employee.user.avatar; else defaultAvatar">
+          <img
+            class="object-cover w-16 h-16 rounded-md"
+            [src]="'http://localhost:8000/storage/avatars/' + userData.employee.user.avatar"
+            alt="User" />
+          <div
+            class="overlay overlay--delete"
+            *ngIf="isEditable && userData.employee.user.avatar"
+            (click)="deleteProfilePicture()">
+            <i class="pi pi-trash"></i>
+          </div>
+        </ng-container>
+        <ng-template #defaultAvatar>
+          <div class="object-cover w-16 h-16 rounded-md default-avatar">
+            <img class="object-cover w-16 h-16 rounded-md" src="assets/user.jpg" alt="User" />
+          </div>
+          <div
+            *ngIf="isEditable"
+            class="overlay overlay--add"
+            (click)="handleProfilePictureClick()">
+            <i class="pi pi-plus"></i>
+          </div>
+        </ng-template>
+      </div>
+      <input type="file" id="uploader" hidden (change)="onFileSelected($event)" />
       <div
         class="absolute w-5 h-5 bg-green-400 border-4 border-white rounded-full -right-3 bottom-5 sm:top-2 sm:invisible md:visible"
         title="User is online"></div>
@@ -92,7 +117,11 @@
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Salary expectations</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {{ +userData.employee.expected_salary === 0 ? '-' : userData.employee.expected_salary }}
+            {{
+              +userData.employee.expected_salary === 0
+                ? '-'
+                : userData.employee.expected_salary + ' $'
+            }}
           </dd>
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">

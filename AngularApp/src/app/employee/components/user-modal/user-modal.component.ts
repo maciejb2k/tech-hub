@@ -3,10 +3,16 @@ import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
 import { FormService } from 'src/app/shared/services/form.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { UserPayload } from '../../interfaces/employee.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
+import { tap } from 'rxjs';
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 
 @Component({
   selector: 'app-user-modal',
@@ -19,9 +25,11 @@ export class UserModalComponent extends BaseComponent {
   @Output() close = new EventEmitter();
   @Output() refetch = new EventEmitter();
 
+  userId: number;
   modalForm = this.formBuilder.group({
-    first_name: [''],
-    last_name: [''],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    email: ['', Validators.required],
   });
 
   constructor(
@@ -42,19 +50,27 @@ export class UserModalComponent extends BaseComponent {
 
   show() {
     this.subscriptions.push(
-      this.employeeService.getUserInfo(this.data).subscribe({
-        next: value => {
-          this.modalForm.patchValue({
-            first_name: value.first_name,
-            last_name: value.last_name,
-          });
-        },
-      })
+      this.employeeService
+        .getUserInfo(this.data)
+        .pipe(
+          tap(res => {
+            this.userId = res.id;
+          })
+        )
+        .subscribe({
+          next: value => {
+            this.modalForm.patchValue({
+              first_name: value.first_name,
+              last_name: value.last_name,
+              email: value.email,
+            });
+          },
+        })
     );
   }
 
   update(formData: UserPayload) {
-    this.employeeService.updateUserInfo(this.data, formData).subscribe({
+    this.employeeService.updateUserInfo(this.userId, formData).subscribe({
       next: () => {
         this.modalForm.enable();
         this.modalForm.reset();
@@ -84,7 +100,8 @@ export class UserModalComponent extends BaseComponent {
       return;
     }
 
-    const formData = this.modalForm.value as UserPayload;
+    const formData = this.modalForm.getRawValue() as UserPayload;
+    console.log(formData);
 
     this.modalForm.disable();
     this.update(formData);
@@ -101,5 +118,9 @@ export class UserModalComponent extends BaseComponent {
 
   get lastName() {
     return this.modalForm.get('last_name');
+  }
+
+  get email() {
+    return this.modalForm.get('email');
   }
 }

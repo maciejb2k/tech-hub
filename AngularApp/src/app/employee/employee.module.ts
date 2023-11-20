@@ -24,6 +24,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EducationModalComponent } from './components/education-modal/education-modal.component';
 import { LanguageModalComponent } from './components/language-modal/language-modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { UserModalComponent } from './components/user-modal/user-modal.component
     ToastModule,
     BadgeModule,
     CalendarModule,
+    FileUploadModule,
   ],
 })
 export class EmployeeModule {}
