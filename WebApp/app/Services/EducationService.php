@@ -52,4 +52,15 @@ class EducationService {
 
         $this->educationRepository->deleteEducation($educationId);
     }
+
+    public function getEducationById(int $educationId, int $userId)
+    {
+        $employee = $this->employeeRepository->getEmployeeByUserId($userId);
+        $education = $this->educationRepository->getEducationById($educationId);
+
+        if(!isset($education)) throw new NotFoundException();
+        if($education['employee_id'] !== $employee['id']) throw new ForbiddenException();
+
+        return new EducationResource($education, [], "owner");
+    }
 }

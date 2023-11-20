@@ -52,4 +52,15 @@ class SkillService {
 
         $this->skillRepository->deleteSkill($skillId);
     }
+
+    public function getSkillById(int $skillId, int $userId)
+    {
+        $employee = $this->employeeRepository->getEmployeeByUserId($userId);
+        $skill = $this->skillRepository->getSkillById($skillId);
+
+        if(!isset($skill)) throw new NotFoundException();
+        if($skill['employee_id'] !== $employee['id']) throw new ForbiddenException();
+
+        return new SkillResource($skill, [], "owner");
+    }
 }

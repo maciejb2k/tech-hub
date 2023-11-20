@@ -52,4 +52,15 @@ class LanguageService {
 
         $this->languageRepository->deleteLanguage($languageId);
     }
+
+    public function getLanguageById(int $languageId, int $userId)
+    {
+        $employee = $this->employeeRepository->getEmployeeByUserId($userId);
+        $language = $this->languageRepository->getLanguageById($languageId);
+
+        if(!isset($language)) throw new NotFoundException();
+        if($language['employee_id'] !== $employee['id']) throw new ForbiddenException();
+
+        return new LanguageResource($language, [], "owner");
+    }
 }

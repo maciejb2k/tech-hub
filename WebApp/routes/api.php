@@ -5,6 +5,7 @@ use App\Http\Controllers\EducationController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkExperienceController;
@@ -37,6 +38,12 @@ Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
     Route::resource('education', EducationController::class);
     Route::resource('work-experience', WorkExperienceController::class);
     Route::resource('language', LanguageController::class);
+
+    Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+});
+
+Route::middleware(['auth:sanctum', 'ability:recruiter'])->group(function () {
+    Route::resource('recruiter', RecruiterController::class);
 });
 
 Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(function () {

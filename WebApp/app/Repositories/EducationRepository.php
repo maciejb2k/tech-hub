@@ -53,6 +53,6 @@ class EducationRepository {
 
     public function getEducationsByEmployeeId(int $employeeId)
     {
-        return $this->education::where("employee_id", $employeeId)->get();
+        return $this->education::where("employee_id", $employeeId)->orderby("start_date", "desc")->get();
     }
 }
