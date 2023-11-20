@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class LanguageCollection extends JsonResource
 {
@@ -25,8 +24,8 @@ class LanguageCollection extends JsonResource
      */
     public function toArray(Request $request)
     {
-        return $this->resource->map(function ($trip) {
-            return new LanguageResource($trip, $this->preferences, $this->visitor);
+        return $this->resource->map(function ($language) {
+            return new LanguageResource($language, $this->preferences, $this->visitor);
         });
     }
 }

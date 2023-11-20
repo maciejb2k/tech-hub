@@ -61,16 +61,35 @@ class EmployeeService {
     {
         $user_id = $employee['user_id'];
 
-        $preferences = $this->getPreferences(['employee','languages', 'educations', 'skills', 'work_experiences'], $user_id);
-
+        $preferences = $this->getPreferences($user_id);
         $visitor = ResourceTransformation::GetVisitorType($request->user(), $user_id);
 
         return [
-            "employee" => new EmployeeResource($employee, $preferences, $visitor),
-            "languages" => new LanguageCollection($this->languageRepository->getLanguagesByEmployeeId($employee['id']), $preferences, $visitor),
-            "educations" => new EducationCollection($this->educationRepository->getEducationsByEmployeeId($employee['id']), $preferences, $visitor),
-            "skills" => new SkillCollection($this->skillRepository->getSkillsByEmployeeId($employee['id']), $preferences, $visitor),
-            "work_experiences" => new WorkExperienceCollection($this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id']), $preferences, $visitor)
+            "employee" => new EmployeeResource(
+                $employee,
+                $this->getTablePreferences($preferences, 'employee'),
+                $visitor
+            ),
+            "languages" => new LanguageCollection(
+                $this->languageRepository->getLanguagesByEmployeeId($employee['id']),
+                $this->getTablePreferences($preferences, 'languages'),
+                $visitor
+            ),
+            "educations" => new EducationCollection(
+                $this->educationRepository->getEducationsByEmployeeId($employee['id']),
+                $this->getTablePreferences($preferences, 'educations'),
+                $visitor
+            ),
+            "skills" => new SkillCollection(
+                $this->skillRepository->getSkillsByEmployeeId($employee['id']),
+                $this->getTablePreferences($preferences, 'skills'),
+                $visitor
+            ),
+            "work_experiences" => new WorkExperienceCollection(
+                $this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id']),
+                $this->getTablePreferences($preferences, 'work_experiences'),
+                $visitor
+            )
         ];
     }
 
