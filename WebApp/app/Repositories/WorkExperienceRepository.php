@@ -55,6 +55,6 @@ class WorkExperienceRepository {
 
     public function getWorkExperiencesByEmployeeId(int $employeeId)
     {
-        return $this->workExperience::where("employee_id", $employeeId)->get();
+        return $this->workExperience::where("employee_id", $employeeId)->orderby("start_date", "desc")->get();
     }
 }

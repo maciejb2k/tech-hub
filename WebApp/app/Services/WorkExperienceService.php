@@ -52,4 +52,15 @@ class WorkExperienceService {
 
         $this->workExperienceRepository->deleteWorkExperience($workExperienceId);
     }
+
+    public function getWorkExperienceById(int $workExperienceId, int $userId)
+    {
+        $employee = $this->employeeRepository->getEmployeeByUserId($userId);
+        $workExperience = $this->workExperienceRepository->getWorkExperienceById($workExperienceId);
+
+        if(!isset($workExperience)) throw new NotFoundException();
+        if($workExperience['employee_id'] !== $employee['id']) throw new ForbiddenException();
+
+        return new WorkExperienceResource($workExperience, [], "owner");
+    }
 }

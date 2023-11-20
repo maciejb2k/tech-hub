@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
+use App\Http\Requests\EmployeeRequest;
 use App\Http\Requests\LanguageRequest;
 use App\Http\Resources\EducationCollection;
 use App\Http\Resources\EmployeeResource;
@@ -71,5 +72,18 @@ class EmployeeService {
             "skills" => new SkillCollection($this->skillRepository->getSkillsByEmployeeId($employee['id']), $preferences, $visitor),
             "work_experiences" => new WorkExperienceCollection($this->workExperienceRepository->getWorkExperiencesByEmployeeId($employee['id']), $preferences, $visitor)
         ];
+    }
+
+    public function updateEmployee(EmployeeRequest $request, int $employeeId, int $userId)
+    {
+        $employee = $this->employeeRepository->getEmployeeByid($employeeId);
+
+        if(!isset($employee)) throw new NotFoundException();
+
+        if($userId !== $employee['user_id']) throw new ForbiddenException();
+
+        $updatedEmployee = $this->employeeRepository->updateEmployee($request, $employeeId);
+
+        return new EmployeeResource($updatedEmployee, [], "owner");
     }
 }
