@@ -18,6 +18,8 @@ import {
   Languages,
   EmployeeProperties,
   Employee,
+  EmployeePayload,
+  UserPayload,
 } from '../interfaces/employee.interfaces';
 import { FormService } from 'src/app/shared/services/form.service';
 
@@ -174,5 +176,37 @@ export class EmployeeService {
   deleteLanguage(id: number) {
     const url = `http://localhost:8000/api/language/${id}`;
     return this.http.delete(url).pipe(catchError(this.formService.handleError));
+  }
+
+  /* Employee */
+
+  getEmployeeInfo(id: number) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.get<EmployeeProfile>(url).pipe(
+      map(res => {
+        return res.employee;
+      })
+    );
+  }
+
+  updateEmployeeInfo(id: number, payload: EmployeePayload) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.put(url, payload).pipe(catchError(this.formService.handleError));
+  }
+
+  /* User */
+
+  getUserInfo(id: number) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.get<EmployeeProfile>(url).pipe(
+      map(res => {
+        return res.employee.user;
+      })
+    );
+  }
+
+  updateUserInfo(id: number, payload: UserPayload) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.put(url, payload).pipe(catchError(this.formService.handleError));
   }
 }

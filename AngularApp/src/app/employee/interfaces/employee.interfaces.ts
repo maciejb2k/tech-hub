@@ -105,11 +105,16 @@ export interface SkillPayload {
   level: number;
 }
 
-export interface SummaryPayload {
-  bio?: string;
-  location?: string;
-  expected_salary?: string;
-  portfolio?: string;
+export interface UserPayload {
+  first_name: string;
+  last_name: string;
+}
+
+export interface EmployeePayload {
+  bio: string;
+  location: string;
+  expected_salary: string;
+  portfolio: string;
 }
 
 export interface WorkExperiencePayload {

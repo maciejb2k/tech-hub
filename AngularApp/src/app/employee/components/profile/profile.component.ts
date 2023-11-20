@@ -18,6 +18,7 @@ export class ProfileComponent extends BaseComponent {
   isEditable = false;
 
   modals: ProfileSections = {
+    user: false,
     summary: false,
     skills: false,
     workExperience: false,
@@ -25,6 +26,7 @@ export class ProfileComponent extends BaseComponent {
   };
 
   modalsData: ModalsData = {
+    user: null,
     summary: null,
     skills: null,
     workExperience: null,
