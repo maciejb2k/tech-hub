@@ -8,24 +8,25 @@ use App\Models\Preference;
 
 trait HandlesPreferences
 {
-    protected function getPreferences(array $views, $userId)
-{
-    $preferences = [];
-
-    foreach ($views as $view) {
-        $viewPreferences = Preference::where('field_name', 'like', $view . '.%')
-            ->where('user_id', $userId)
-            ->get()
-            ->mapWithKeys(function ($item) {
-                $fieldNameParts = explode('.', $item['field_name']);
-                $key = end($fieldNameParts);
-                return [$key => $item->toArray()];
-            })
-            ->toArray();
-
-        $preferences = array_merge($preferences, $viewPreferences);
+    protected function getPreferences($userId)
+    {
+        $preferences = Preference::where('user_id', $userId)->get();
+        return $preferences;
     }
 
-    return $preferences;
-}
+    protected function getTablePreferences($preferences, $tableName)
+    {
+        $tablePreferences = [];
+
+        foreach ($preferences as $preference) {
+            $fieldNameParts = explode('.', $preference['field_name']);
+
+            if ($fieldNameParts[0] === $tableName) {
+                $key = $fieldNameParts[1];
+                $tablePreferences[$key] = $preference->toArray();
+            }
+        }
+
+        return ($tablePreferences);
+    }
 }

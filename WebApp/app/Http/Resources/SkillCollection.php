@@ -24,8 +24,8 @@ class SkillCollection extends JsonResource
      */
     public function toArray(Request $request)
     {
-        return $this->resource->map(function ($trip) {
-            return new SkillResource($trip, $this->preferences, $this->visitor);
+        return $this->resource->map(function ($skill) {
+            return new SkillResource($skill, $this->preferences, $this->visitor);
         });
     }
 }

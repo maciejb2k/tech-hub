@@ -24,8 +24,8 @@ class EducationCollection extends JsonResource
      */
     public function toArray(Request $request)
     {
-        return $this->resource->map(function ($trip) {
-            return new EducationResource($trip, $this->preferences, $this->visitor);
+        return $this->resource->map(function ($education) {
+            return new EducationResource($education, $this->preferences, $this->visitor);
         });
     }
 }
