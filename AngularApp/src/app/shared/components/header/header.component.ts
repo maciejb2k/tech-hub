@@ -48,7 +48,10 @@ export class HeaderComponent extends BaseComponent {
   }
 
   redirectToProfile() {
-    this.router.navigate([`/employee/account/${this.userData.id}`]);
+    if (this.userData.role === 'recruiter') this.router.navigate([`/recruiter/account/`]);
+    else {
+      this.router.navigate([`/employee/account/${this.userData.id}`]);
+    }
   }
 
   logout() {

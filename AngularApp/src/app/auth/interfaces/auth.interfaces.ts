@@ -54,6 +54,7 @@ export type ProfileResponse = {
 
 export interface ProfileData {
   id: number;
+  user_id: number;
   email: string;
   role: string;
   first_name: string;
