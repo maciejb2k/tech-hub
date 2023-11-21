@@ -1,16 +1,90 @@
 <p-dialog
-  header="Summary Information"
+  header="Update Summary Information"
   [(visible)]="isVisible"
   [modal]="true"
   [style]="{ width: '500px' }"
   [draggable]="false"
   [resizable]="false"
   (onHide)="onModalClosed()">
-  <div>
-    <p class="m-0">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-      labore et dolore magna aliqua.
-    </p>
-  </div>
-  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()"></form>
+  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="location">Address</label>
+        <input
+          pInputText
+          type="text"
+          id="location"
+          placeholder="Rzeszów, Poland"
+          formControlName="location" />
+      </div>
+      <div *ngIf="location.invalid && (location.dirty || location.touched)">
+        <small *ngIf="location.errors?.['serverError']" class="p-error">
+          {{ location.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="expected_salary">Expected Salary (Annualy USD)</label>
+        <input
+          pInputText
+          type="number"
+          min="0"
+          max="1000000"
+          id="expected_salary"
+          placeholder="46000"
+          formControlName="expected_salary" />
+      </div>
+      <div *ngIf="expectedSalary.invalid && (expectedSalary.dirty || expectedSalary.touched)">
+        <small *ngIf="expectedSalary.errors?.['serverError']" class="p-error">
+          {{ expectedSalary.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="bio">About</label>
+        <textarea
+          rows="5"
+          cols="30"
+          id="bio"
+          pInputTextarea
+          formControlName="bio"
+          placeholder="Tell us something about yourself."></textarea>
+      </div>
+      <div *ngIf="bio.invalid && (bio.dirty || bio.touched)">
+        <small *ngIf="bio.errors?.['serverError']" class="p-error">
+          {{ bio.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="portfolio">Portfolio URL</label>
+        <input
+          pInputText
+          type="text"
+          id="portfolio"
+          placeholder="https://www.linkedin.com/in/username/"
+          formControlName="portfolio" />
+      </div>
+      <div *ngIf="portfolio.invalid && (portfolio.dirty || portfolio.touched)">
+        <small *ngIf="portfolio.errors?.['serverError']" class="p-error">
+          {{ portfolio.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <button
+      pButton
+      label="Update summary information"
+      type="submit"
+      class="w-full p-button-success"
+      [disabled]="modalForm.disabled || !modalForm.valid"></button>
+  </form>
 </p-dialog>

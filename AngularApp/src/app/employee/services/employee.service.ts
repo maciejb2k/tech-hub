@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map } from 'rxjs';
 
@@ -8,6 +8,18 @@ import {
   WorkExperiencePayload,
   EducationPayload,
   LanguagePayload,
+  Skill,
+  SkillProperties,
+  WorkExperienceProperties,
+  WorkExperience,
+  Education,
+  EducationProperties,
+  LanguagesProperties,
+  Languages,
+  EmployeeProperties,
+  Employee,
+  EmployeePayload,
+  UserPayload,
 } from '../interfaces/employee.interfaces';
 import { FormService } from 'src/app/shared/services/form.service';
 
@@ -21,7 +33,10 @@ export class EmployeeService {
 
   getEmployeeProfile(id: number) {
     const url = `http://localhost:8000/api/employees/${id}`;
-    return this.http.get<EmployeeProfile>(url);
+    return this.http.get<EmployeeProfile>(url).pipe(
+      map(res => this.parseProfile(res)),
+      catchError(this.formService.handleError)
+    );
   }
 
   /* Skills */
@@ -32,12 +47,8 @@ export class EmployeeService {
   }
 
   getSkill(id: number) {
-    const url = `http://localhost:8000/api/profile`;
-    return this.http.get<EmployeeProfile>(url).pipe(
-      map(res => {
-        return res.skills.find(skill => skill.id === id);
-      })
-    );
+    const url = `http://localhost:8000/api/skill/${id}`;
+    return this.http.get<Skill>(url).pipe(catchError(this.formService.handleError));
   }
 
   updateSkill(id: number, payload: SkillPayload) {
@@ -58,12 +69,8 @@ export class EmployeeService {
   }
 
   getWorkExperience(id: number) {
-    const url = `http://localhost:8000/api/profile`;
-    return this.http.get<EmployeeProfile>(url).pipe(
-      map(res => {
-        return res.work_experiences.find(workExperience => workExperience.id === id);
-      })
-    );
+    const url = `http://localhost:8000/api/work-experience/${id}`;
+    return this.http.get<WorkExperience>(url).pipe(catchError(this.formService.handleError));
   }
 
   updateWorkExperience(id: number, payload: WorkExperiencePayload) {
@@ -84,12 +91,8 @@ export class EmployeeService {
   }
 
   getEducation(id: number) {
-    const url = `http://localhost:8000/api/profile`;
-    return this.http.get<EmployeeProfile>(url).pipe(
-      map(res => {
-        return res.educations.find(education => education.id === id);
-      })
-    );
+    const url = `http://localhost:8000/api/education/${id}`;
+    return this.http.get<Education>(url).pipe(catchError(this.formService.handleError));
   }
 
   updateEducation(id: number, payload: EducationPayload) {
@@ -110,12 +113,8 @@ export class EmployeeService {
   }
 
   getLanguage(id: number) {
-    const url = `http://localhost:8000/api/profile`;
-    return this.http.get<EmployeeProfile>(url).pipe(
-      map(res => {
-        return res.languages.find(language => language.id === id);
-      })
-    );
+    const url = `http://localhost:8000/api/language/${id}`;
+    return this.http.get<Languages>(url).pipe(catchError(this.formService.handleError));
   }
 
   updateLanguage(id: number, payload: LanguagePayload) {
@@ -126,5 +125,84 @@ export class EmployeeService {
   deleteLanguage(id: number) {
     const url = `http://localhost:8000/api/language/${id}`;
     return this.http.delete(url).pipe(catchError(this.formService.handleError));
+  }
+
+  /* Employee */
+
+  getEmployeeInfo(id: number) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.get<EmployeeProfile>(url).pipe(
+      map(res => {
+        return res.employee;
+      })
+    );
+  }
+
+  updateEmployeeInfo(id: number, payload: EmployeePayload) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.put(url, payload).pipe(catchError(this.formService.handleError));
+  }
+
+  /* User */
+
+  getUserInfo(id: number) {
+    const url = `http://localhost:8000/api/employees/${id}`;
+    return this.http.get<EmployeeProfile>(url).pipe(
+      map(res => {
+        return res.employee.user;
+      })
+    );
+  }
+
+  updateUserInfo(id: number, payload: UserPayload) {
+    const url = `http://localhost:8000/api/user/${id}`;
+    return this.http.put(url, payload).pipe(catchError(this.formService.handleError));
+  }
+
+  setProfilePicture(id: number, payload: FormData) {
+    const url = `http://localhost:8000/api/user/${id}/`;
+
+    return this.http
+      .post(url, payload, {
+        params: new HttpParams().set('_method', 'PUT'),
+      })
+      .pipe(catchError(this.formService.handleError));
+  }
+
+  /* Helpers */
+
+  private parseProfile(response: EmployeeProfile) {
+    const employeeFieldNames = Object.keys(EmployeeProperties) as (keyof Employee)[];
+    const skillFieldNames = Object.keys(SkillProperties) as (keyof Skill)[];
+    const workExperienceFieldNames = Object.keys(
+      WorkExperienceProperties
+    ) as (keyof WorkExperience)[];
+    const educationFieldNames = Object.keys(EducationProperties) as (keyof Education)[];
+    const languagesFieldName = Object.keys(LanguagesProperties) as (keyof Languages)[];
+
+    this.setHiddenFields<Employee>(response.employee, employeeFieldNames);
+
+    response.skills.forEach(item => {
+      this.setHiddenFields<Skill>(item, skillFieldNames);
+    });
+    response.work_experiences.forEach(item => {
+      this.setHiddenFields<WorkExperience>(item, workExperienceFieldNames);
+    });
+    response.educations.forEach(item => {
+      this.setHiddenFields<Education>(item, educationFieldNames);
+    });
+    response.languages.forEach(item => {
+      this.setHiddenFields<Languages>(item, languagesFieldName);
+    });
+
+    return response;
+  }
+
+  private setHiddenFields<T>(object: any, keys: (keyof T)[]) {
+    keys.forEach(key => {
+      if (!(key in object)) {
+        object[key] = 'Hidden';
+      }
+    });
   }
 }

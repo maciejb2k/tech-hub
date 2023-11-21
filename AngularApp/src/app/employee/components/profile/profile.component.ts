@@ -6,7 +6,6 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile, ModalsData, ProfileSections } from '../../interfaces/employee.interfaces';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +17,7 @@ export class ProfileComponent extends BaseComponent {
   isEditable = false;
 
   modals: ProfileSections = {
+    user: false,
     summary: false,
     skills: false,
     workExperience: false,
@@ -25,6 +25,7 @@ export class ProfileComponent extends BaseComponent {
   };
 
   modalsData: ModalsData = {
+    user: null,
     summary: null,
     skills: null,
     workExperience: null,
@@ -48,21 +49,19 @@ export class ProfileComponent extends BaseComponent {
     const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.subscriptions.push(
-      this.employeeService
-        .getEmployeeProfile(employeeId)
-        .pipe(
-          switchMap(employeeProfile => {
-            this.userData = employeeProfile;
-            return this.authService.getUserData();
-          })
-        )
-        .subscribe(userData => {
-          if (userData.id === this.userData.employee.id) {
-            this.isEditable = true;
-          }
+      this.employeeService.getEmployeeProfile(employeeId).subscribe(employeeProfile => {
+        this.userData = employeeProfile;
 
-          this.onDataLoaded();
-        })
+        if (this.authService.isAuthenticated()) {
+          this.authService.getUserData().subscribe(authData => {
+            if (authData.id === this.userData.employee.id) {
+              this.isEditable = true;
+            }
+          });
+        }
+
+        this.onDataLoaded();
+      })
     );
   }
 
@@ -85,5 +84,47 @@ export class ProfileComponent extends BaseComponent {
 
     this.modals[modalId] = false;
     this.modalsData[modalId] = null;
+  }
+
+  handleProfilePictureClick() {
+    if (!this.isEditable) {
+      return;
+    }
+
+    document.getElementById('uploader').click();
+  }
+
+  deleteProfilePicture() {
+    const formData: FormData = new FormData();
+
+    formData.append('email', this.userData.employee.user.email);
+    formData.append('first_name', this.userData.employee.user.first_name);
+    formData.append('last_name', this.userData.employee.user.last_name);
+    // NIE PODAJEMY AVATARA XD
+
+    this.employeeService.setProfilePicture(this.userData.employee.user.id, formData).subscribe({
+      next: () => {
+        this.fetchData();
+      },
+    });
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files[0]) {
+      const formData = new FormData();
+
+      formData.append('email', this.userData.employee.user.email);
+      formData.append('first_name', this.userData.employee.user.first_name);
+      formData.append('last_name', this.userData.employee.user.last_name);
+      formData.set('avatar', input.files[0]);
+
+      this.employeeService.setProfilePicture(this.userData.employee.user.id, formData).subscribe({
+        next: () => {
+          this.fetchData();
+        },
+      });
+    }
   }
 }

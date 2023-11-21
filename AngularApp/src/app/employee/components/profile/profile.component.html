@@ -3,7 +3,32 @@
     *ngIf="!isLoading; else loadingHeader"
     class="flex flex-row items-center pb-6 border-b border-gray-200">
     <div class="relative">
-      <img class="object-cover w-16 h-16 rounded-md" src="assets/user.jpg" alt="User" />
+      <div class="profile-picture">
+        <ng-container *ngIf="userData.employee.user.avatar; else defaultAvatar">
+          <img
+            class="object-cover w-16 h-16 rounded-md"
+            [src]="'http://localhost:8000/storage/avatars/' + userData.employee.user.avatar"
+            alt="User" />
+          <div
+            class="overlay overlay--delete"
+            *ngIf="isEditable && userData.employee.user.avatar"
+            (click)="deleteProfilePicture()">
+            <i class="pi pi-trash"></i>
+          </div>
+        </ng-container>
+        <ng-template #defaultAvatar>
+          <div class="object-cover w-16 h-16 rounded-md default-avatar">
+            <img class="object-cover w-16 h-16 rounded-md" src="assets/user.jpg" alt="User" />
+          </div>
+          <div
+            *ngIf="isEditable"
+            class="overlay overlay--add"
+            (click)="handleProfilePictureClick()">
+            <i class="pi pi-plus"></i>
+          </div>
+        </ng-template>
+      </div>
+      <input type="file" id="uploader" hidden (change)="onFileSelected($event)" />
       <div
         class="absolute w-5 h-5 bg-green-400 border-4 border-white rounded-full -right-3 bottom-5 sm:top-2 sm:invisible md:visible"
         title="User is online"></div>
@@ -22,9 +47,25 @@
         <div class="flex flex-row">
           <i class="w-4 h-4 mr-1 pi pi-map-marker fill-gray-500/80" style="font-size: 0.8rem"></i>
           <div class="text-xs text-gray-500 hover:text-gray-400">
-            {{ userData.employee.location ? userData.employee.location : 'Unknown location' }}
+            {{ userData.employee.location ? userData.employee.location : 'Unknown address' }}
           </div>
         </div>
+      </div>
+    </div>
+    <div class="flex flex-col ml-auto">
+      <div *ngIf="isEditable">
+        <div class="flex items-center gap-3">
+          <p-button
+            icon="pi pi-ellipsis-h"
+            size="small"
+            (click)="openModal('user', userData.employee.id)"
+            [outlined]="true"></p-button>
+        </div>
+        <app-user-modal
+          [isVisible]="modals['user']"
+          [data]="modalsData['user']"
+          (close)="closeModal('user')"
+          (refetch)="fetchData()"></app-user-modal>
       </div>
     </div>
   </div>
@@ -52,14 +93,16 @@
         <div *ngIf="isEditable">
           <div class="flex items-center gap-3">
             <p-button
-              icon="pi pi-wrench"
+              icon="pi pi-ellipsis-h"
               size="small"
-              (click)="openModal('summary')"
+              (click)="openModal('summary', userData.employee.id)"
               [outlined]="true"></p-button>
           </div>
           <app-summary-modal
             [isVisible]="modals['summary']"
-            (close)="closeModal('summary')"></app-summary-modal>
+            [data]="modalsData['summary']"
+            (close)="closeModal('summary')"
+            (refetch)="fetchData()"></app-summary-modal>
         </div>
       </div>
     </div>
@@ -68,25 +111,28 @@
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Rigga 47, San Francisco, California, USA
+            {{ userData.employee.location ? userData.employee.location : '-' }}
           </dd>
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium leading-6 text-gray-900">Salary expectation</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">$120,000</dd>
+          <dt class="text-sm font-medium leading-6 text-gray-900">Salary expectations</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            {{
+              +userData.employee.expected_salary === 0
+                ? '-'
+                : userData.employee.expected_salary + ' $'
+            }}
+          </dd>
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">About</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa
-            consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit
-            nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing
-            reprehenderit deserunt qui eu.
+            {{ userData.employee.bio ? userData.employee.bio : '-' }}
           </dd>
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Profile views</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">432</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">0</dd>
         </div>
       </dl>
     </div>
@@ -131,7 +177,7 @@
         <span
           *ngFor="let skill of userData.skills"
           class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-sky-700 bg-sky-50 ring-1 ring-inset ring-sky-700/10 hover:cursor-pointer"
-          pTooltip="{{ skill.level }} / 5"
+          pTooltip="{{ skill.level }} ⭐"
           tooltipPosition="top"
           (click)="openModal('skills', skill.id)"
           >{{ skill.name }}</span
