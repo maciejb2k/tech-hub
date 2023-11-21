@@ -26,11 +26,11 @@ class UserRequest extends FormRequest
         $user = $request->user();
 
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => [
-                'required',
+                'nullable',
                 'string',
                 'email',
                 'max:255',
