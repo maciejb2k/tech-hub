@@ -39,8 +39,8 @@
         <p-splitButton
           *ngIf="authService.isAuthenticated() && userData"
           label="Hi, {{ userData.first_name }}!"
-          styleClass="p-button-sm"
-          icon="pi pi-user"
+          styleClass="p-button-sm {{ userData.role === 'recruiter' ? 'p-button-help' : '' }}"
+          icon="pi {{ userData.role === 'recruiter' ? 'pi-briefcase' : 'pi-user' }}"
           severity="secondary"
           [model]="items">
         </p-splitButton>
