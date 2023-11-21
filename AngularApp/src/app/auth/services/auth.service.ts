@@ -78,16 +78,20 @@ export class AuthService {
     return this.getUserData().pipe(map(user => (user ? user.role : null)));
   }
 
-  roleBasedRedirect() {
-    const role = localStorage.getItem('role');
+  hasRole(role: string) {
+    return this.getRole().pipe(map(userRole => userRole === role));
+  }
 
-    if (role === 'employee') {
-      return '/employee';
-    } else if (role === 'recruiter') {
-      return '/recruiter';
-    } else {
-      return '/login';
-    }
+  roleBasedRedirect() {
+    this.getRole().subscribe(role => {
+      if (role === 'employee') {
+        this.router.navigate(['/employee']);
+      } else if (role === 'recruiter') {
+        this.router.navigate(['/recruiter']);
+      } else {
+        this.router.navigate(['/auth/login']);
+      }
+    }); // TODO: Unsubscribe
   }
 
   isAuthenticated() {
@@ -111,6 +115,7 @@ export class AuthService {
 
         const userDetails: ProfileData = {
           id: data.id,
+          user_id: userData.id,
           email: userData.email,
           role: userData.role.name,
           first_name: userData.first_name,

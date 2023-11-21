@@ -1,0 +1,79 @@
+<p-dialog
+  header="Update User Information"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClosed()">
+  <div class="flex flex-col gap-2">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="email">E-Mail</label>
+        <input
+          pInputText
+          required
+          value="{{ email }}"
+          type="email"
+          id="email"
+          disabled
+          placeholder="jan.kowalski@email.com" />
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2">
+          <label for="first_name">First Name</label>
+          <input
+            pInputText
+            required
+            type="text"
+            id="first_name"
+            placeholder="Jan"
+            formControlName="first_name" />
+        </div>
+        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+          <small *ngIf="firstName.errors?.['required']" class="p-error"
+            >First name is required.</small
+          >
+          <small *ngIf="firstName.errors?.['serverError']" class="p-error">
+            {{ firstName.errors['serverError'] }}
+          </small>
+        </div>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2">
+          <label for="last_name">Expected Salary</label>
+          <input
+            pInputText
+            required
+            type="text"
+            id="last_name"
+            placeholder="Kowalski"
+            formControlName="last_name" />
+        </div>
+        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+          <small *ngIf="lastName.errors?.['required']" class="p-error"
+            >Last Name is required.</small
+          >
+          <small *ngIf="lastName.errors?.['serverError']" class="p-error">
+            {{ lastName.errors['serverError'] }}
+          </small>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <button
+        pButton
+        label="Update user information"
+        type="submit"
+        class="w-full p-button-success"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+    </form>
+  </div>
+</p-dialog>

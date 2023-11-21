@@ -1,25 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { tap } from 'rxjs';
+
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
-import { EmployeeService } from '../../services/employee.service';
 import { FormService } from 'src/app/shared/services/form.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { UserPayload } from '../../interfaces/employee.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
-import { tap } from 'rxjs';
-
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
-}
+import { RecruiterService } from '../../services/recruiter.service';
+import { UserPayload } from '../../interfaces/recruiter.interfaces';
 
 @Component({
-  selector: 'app-user-modal',
-  templateUrl: './user-modal.component.html',
-  styleUrls: ['./user-modal.component.scss'],
+  selector: 'app-recruiter-user-modal',
+  templateUrl: './recruiter-user-modal.component.html',
+  styleUrls: ['./recruiter-user-modal.component.scss'],
 })
-export class UserModalComponent extends BaseComponent {
+export class RecruiterUserModalComponent extends BaseComponent {
   @Input() isVisible: boolean;
   @Input() data: number | null;
   @Output() close = new EventEmitter();
@@ -35,7 +31,7 @@ export class UserModalComponent extends BaseComponent {
 
   constructor(
     protected override loaderService: LoaderService,
-    private employeeService: EmployeeService,
+    private recruiterService: RecruiterService,
     private formService: FormService,
     private formBuilder: FormBuilder,
     private toastService: ToastService
@@ -51,11 +47,12 @@ export class UserModalComponent extends BaseComponent {
 
   show() {
     this.subscriptions.push(
-      this.employeeService
-        .getUserInfo(this.data)
+      this.recruiterService
+        .getUserInfo()
         .pipe(
           tap(res => {
             this.userId = res.id;
+            this.email = res.email;
           })
         )
         .subscribe({
@@ -64,14 +61,13 @@ export class UserModalComponent extends BaseComponent {
               first_name: value.first_name,
               last_name: value.last_name,
             });
-            this.email = value.email;
           },
         })
     );
   }
 
   update(formData: UserPayload) {
-    this.employeeService.updateUserInfo(this.userId, formData).subscribe({
+    this.recruiterService.updateUserInfo(this.userId, formData).subscribe({
       next: () => {
         this.modalForm.enable();
         this.modalForm.reset();

@@ -1,0 +1,36 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 6px;
+
+  &--add {
+    background-color: #0284c7;
+  }
+
+  &--delete {
+    background-color: #f44336;
+  }
+}
+
+.profile-picture {
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+
+    .overlay {
+      opacity: 0.75;
+    }
+  }
+}

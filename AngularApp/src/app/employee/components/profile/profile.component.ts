@@ -52,15 +52,19 @@ export class ProfileComponent extends BaseComponent {
       this.employeeService.getEmployeeProfile(employeeId).subscribe(employeeProfile => {
         this.userData = employeeProfile;
 
-        if (this.authService.isAuthenticated()) {
-          this.authService.getUserData().subscribe(authData => {
-            if (authData.id === this.userData.employee.id) {
-              this.isEditable = true;
-            }
-          });
+        if (!this.authService.isAuthenticated()) {
+          this.onDataLoaded();
+          return;
         }
 
-        this.onDataLoaded();
+        this.subscriptions.push(
+          this.authService.getUserData().subscribe(authData => {
+            if (authData && authData.user_id === this.userData.employee.user.id) {
+              this.isEditable = true;
+              this.onDataLoaded();
+            }
+          })
+        );
       })
     );
   }
