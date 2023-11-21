@@ -96,11 +96,7 @@ export class ProfileComponent extends BaseComponent {
 
   deleteProfilePicture() {
     const formData: FormData = new FormData();
-
-    formData.append('email', this.userData.employee.user.email);
-    formData.append('first_name', this.userData.employee.user.first_name);
-    formData.append('last_name', this.userData.employee.user.last_name);
-    // NIE PODAJEMY AVATARA XD
+    formData.append('avatar', '');
 
     this.employeeService.setProfilePicture(this.userData.employee.user.id, formData).subscribe({
       next: () => {
@@ -114,10 +110,6 @@ export class ProfileComponent extends BaseComponent {
 
     if (input.files && input.files[0]) {
       const formData = new FormData();
-
-      formData.append('email', this.userData.employee.user.email);
-      formData.append('first_name', this.userData.employee.user.first_name);
-      formData.append('last_name', this.userData.employee.user.last_name);
       formData.set('avatar', input.files[0]);
 
       this.employeeService.setProfilePicture(this.userData.employee.user.id, formData).subscribe({

@@ -26,10 +26,11 @@ export class UserModalComponent extends BaseComponent {
   @Output() refetch = new EventEmitter();
 
   userId: number;
+  email: string;
+
   modalForm = this.formBuilder.group({
     first_name: ['', Validators.required],
     last_name: ['', Validators.required],
-    email: ['', Validators.required],
   });
 
   constructor(
@@ -62,8 +63,8 @@ export class UserModalComponent extends BaseComponent {
             this.modalForm.patchValue({
               first_name: value.first_name,
               last_name: value.last_name,
-              email: value.email,
             });
+            this.email = value.email;
           },
         })
     );
@@ -118,9 +119,5 @@ export class UserModalComponent extends BaseComponent {
 
   get lastName() {
     return this.modalForm.get('last_name');
-  }
-
-  get email() {
-    return this.modalForm.get('email');
   }
 }
