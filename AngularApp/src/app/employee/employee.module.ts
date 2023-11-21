@@ -25,6 +25,11 @@ import { EducationModalComponent } from './components/education-modal/education-
 import { LanguageModalComponent } from './components/language-modal/language-modal.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { SettingsComponent } from './components/settings/settings.component';
+import { PreferencesModalComponent } from './components/preferences-modal/preferences-modal.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { TreeSelectModule } from 'primeng/treeselect';
+import { TreeTableModule } from 'primeng/treetable';
 
 @NgModule({
   declarations: [
@@ -36,6 +41,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     EducationModalComponent,
     LanguageModalComponent,
     UserModalComponent,
+    SettingsComponent,
+    PreferencesModalComponent,
   ],
   imports: [
     CommonModule,
@@ -54,7 +61,10 @@ import { FileUploadModule } from 'primeng/fileupload';
     ToastModule,
     BadgeModule,
     CalendarModule,
+    TreeSelectModule,
     FileUploadModule,
+    DropdownModule,
+    TreeTableModule,
   ],
 })
 export class EmployeeModule {}

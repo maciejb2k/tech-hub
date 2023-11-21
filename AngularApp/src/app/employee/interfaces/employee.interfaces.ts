@@ -138,3 +138,14 @@ export interface LanguagePayload {
   name: string;
   proficiency: string;
 }
+
+export interface Preferences {
+  id: number;
+  field_name: string;
+  visibility: string;
+}
+
+export interface PreferencesPayload {
+  field_name: string;
+  visibility: string;
+}
