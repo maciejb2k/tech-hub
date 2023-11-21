@@ -1,5 +1,7 @@
 <div class="max-w-3xl mx-auto mt-10">
-  <div *ngIf="!isLoading" class="flex flex-row items-center pb-6 border-b border-gray-200">
+  <div
+    *ngIf="!isLoading; else loadingHeader"
+    class="flex flex-row items-center pb-6 border-b border-gray-200">
     <div class="relative">
       <div class="profile-picture">
         <ng-container *ngIf="userData.recruiter.user.avatar; else defaultAvatar">
@@ -28,7 +30,6 @@
         class="absolute w-5 h-5 bg-green-400 border-4 border-white rounded-full -right-3 bottom-5 sm:top-2 sm:invisible md:visible"
         title="User is online"></div>
     </div>
-
     <div class="flex flex-col px-8">
       <div class="flex flex-row items-center h-8">
         <a href="#" target="_blank">
@@ -37,19 +38,29 @@
           </h2>
         </a>
       </div>
-
       <div class="flex flex-row space-x-3">
         <div class="flex flex-row">
-          <i class="w-4 h-4 mr-1 pi pi-map-marker fill-gray-500/80" style="font-size: 0.8rem"></i>
+          <i class="w-4 h-4 mr-1 pi pi-verified fill-gray-500/80" style="font-size: 0.8rem"></i>
           <div class="text-xs text-gray-500 hover:text-gray-400">
-            {{
-              userData.recruiter.company_name ? userData.recruiter.company_name : 'Unknown address'
-            }}
+            {{ userData.recruiter.position ? userData.recruiter.position : 'Unknown position' }}
           </div>
         </div>
       </div>
     </div>
-    <div class="flex flex-col ml-auto"></div>
+    <div class="flex flex-col ml-auto">
+      <div class="flex items-center gap-3">
+        <p-button
+          icon="pi pi-ellipsis-h"
+          size="small"
+          (click)="openModal('user', userData.recruiter.id)"
+          [outlined]="true"></p-button>
+      </div>
+      <app-recruiter-user-modal
+        [isVisible]="modals['user']"
+        [data]="modalsData['user']"
+        (close)="closeModal('user')"
+        (refetch)="fetchData()"></app-recruiter-user-modal>
+    </div>
   </div>
   <ng-template #loadingHeader>
     <div class="flex items-center pb-6 mb-3 border-b border-gray-200">
@@ -65,13 +76,26 @@
     <div class="flex items-center justify-between">
       <div>
         <h3 class="flex items-center gap-3 text-base font-semibold leading-7 text-gray-900">
-          <i class="pi pi-info-circle"></i>Summary Information
+          <i class="pi pi-building"></i>Company Information
         </h3>
         <p class="max-w-2xl text-sm leading-6 text-gray-500">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
         </p>
       </div>
-      <div></div>
+      <div>
+        <div class="flex items-center gap-3">
+          <p-button
+            icon="pi pi-ellipsis-h"
+            size="small"
+            (click)="openModal('recruiter', userData.recruiter.id)"
+            [outlined]="true"></p-button>
+        </div>
+        <app-recruiter-modal
+          [isVisible]="modals['recruiter']"
+          [data]="modalsData['recruiter']"
+          (close)="closeModal('recruiter')"
+          (refetch)="fetchData()"></app-recruiter-modal>
+      </div>
     </div>
     <div *ngIf="!isLoading; else loadingInfo" class="mt-6 border-t border-gray-200">
       <dl class="divide-y divide-gray-200">
@@ -79,6 +103,20 @@
           <dt class="text-sm font-medium leading-6 text-gray-900">Company Name</dt>
           <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
             {{ userData.recruiter.company_name ? userData.recruiter.company_name : '-' }}
+          </dd>
+        </div>
+        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Company Url</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            {{ userData.recruiter.company_url ? userData.recruiter.company_url : '-' }}
+          </dd>
+        </div>
+        <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Company Description</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            {{
+              userData.recruiter.company_description ? userData.recruiter.company_description : '-'
+            }}
           </dd>
         </div>
       </dl>

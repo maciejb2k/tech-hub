@@ -102,7 +102,6 @@ export class UserModalComponent extends BaseComponent {
     }
 
     const formData = this.modalForm.getRawValue() as UserPayload;
-    console.log(formData);
 
     this.modalForm.disable();
     this.update(formData);

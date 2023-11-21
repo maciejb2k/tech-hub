@@ -35,3 +35,7 @@ router-outlet {
 .p-dialog-content {
   overflow-y: visible !important;
 }
+
+.p-inputtext::placeholder {
+  color: #98a4b1;
+}

@@ -16,18 +16,12 @@ export class ProfileComponent extends BaseComponent {
 
   modals: ProfileSections = {
     user: false,
-    summary: false,
-    skills: false,
-    workExperience: false,
-    education: false,
+    recruiter: false,
   };
 
   modalsData: ModalsData = {
     user: null,
-    summary: null,
-    skills: null,
-    workExperience: null,
-    education: null,
+    recruiter: null,
   };
 
   constructor(
@@ -45,6 +39,7 @@ export class ProfileComponent extends BaseComponent {
     this.subscriptions.push(
       this.recruiterService.getRecruiterProfile().subscribe(profile => {
         this.userData = profile;
+        this.onDataLoaded();
       })
     );
   }
@@ -68,9 +63,27 @@ export class ProfileComponent extends BaseComponent {
 
   deleteProfilePicture() {
     const formData: FormData = new FormData();
+    formData.append('avatar', '');
+
+    this.recruiterService.setProfilePicture(this.userData.recruiter.user.id, formData).subscribe({
+      next: () => {
+        this.fetchData();
+      },
+    });
   }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files[0]) {
+      const formData = new FormData();
+      formData.set('avatar', input.files[0]);
+
+      this.recruiterService.setProfilePicture(this.userData.recruiter.user.id, formData).subscribe({
+        next: () => {
+          this.fetchData();
+        },
+      });
+    }
   }
 }

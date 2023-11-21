@@ -1,30 +1,32 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { EmployeeService } from 'src/app/employee/services/employee.service';
+import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { tap } from 'rxjs';
+
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
-import { FormService } from 'src/app/shared/services/form.service';
 import { LoaderService } from 'src/app/shared/services/loader.service';
+import { FormService } from 'src/app/shared/services/form.service';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { RecruiterService } from '../../services/recruiter.service';
-import { RecruiterPayload } from '../../interfaces/recruiter.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
+import { RecruiterService } from '../../services/recruiter.service';
+import { UserPayload } from '../../interfaces/recruiter.interfaces';
 
 @Component({
-  selector: 'app-recruiter-modal',
-  templateUrl: './recruiter-modal.component.html',
-  styleUrls: ['./recruiter-modal.component.scss'],
+  selector: 'app-recruiter-user-modal',
+  templateUrl: './recruiter-user-modal.component.html',
+  styleUrls: ['./recruiter-user-modal.component.scss'],
 })
-export class RecruiterModalComponent extends BaseComponent {
+export class RecruiterUserModalComponent extends BaseComponent {
   @Input() isVisible: boolean;
   @Input() data: number | null;
   @Output() close = new EventEmitter();
   @Output() refetch = new EventEmitter();
 
+  userId: number;
+  email: string;
+
   modalForm = this.formBuilder.group({
-    company_name: ['', Validators.required],
-    company_url: [''],
-    company_description: [''],
-    position: [''],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
   });
 
   constructor(
@@ -45,28 +47,34 @@ export class RecruiterModalComponent extends BaseComponent {
 
   show() {
     this.subscriptions.push(
-      this.recruiterService.getRecruiterInfo().subscribe({
-        next: value => {
-          this.modalForm.patchValue({
-            company_name: value.company_name,
-            company_url: value.company_url,
-            company_description: value.company_description,
-            position: value.position,
-          });
-        },
-      })
+      this.recruiterService
+        .getUserInfo()
+        .pipe(
+          tap(res => {
+            this.userId = res.id;
+            this.email = res.email;
+          })
+        )
+        .subscribe({
+          next: value => {
+            this.modalForm.patchValue({
+              first_name: value.first_name,
+              last_name: value.last_name,
+            });
+          },
+        })
     );
   }
 
-  update(formData: RecruiterPayload) {
-    this.recruiterService.updateRecruiterInfo(this.data, formData).subscribe({
+  update(formData: UserPayload) {
+    this.recruiterService.updateUserInfo(this.userId, formData).subscribe({
       next: () => {
         this.modalForm.enable();
         this.modalForm.reset();
         this.toastService.add({
           severity: 'success',
           summary: 'Success',
-          detail: "You've successfully updated a recruiter info.",
+          detail: "You've successfully updated a user info.",
         });
         this.refetch.emit();
         this.close.emit();
@@ -89,7 +97,7 @@ export class RecruiterModalComponent extends BaseComponent {
       return;
     }
 
-    const formData = this.modalForm.value as RecruiterPayload;
+    const formData = this.modalForm.getRawValue() as UserPayload;
 
     this.modalForm.disable();
     this.update(formData);
@@ -100,19 +108,11 @@ export class RecruiterModalComponent extends BaseComponent {
     this.close.emit();
   }
 
-  get companyName() {
-    return this.modalForm.get('company_name');
+  get firstName() {
+    return this.modalForm.get('first_name');
   }
 
-  get companyUrl() {
-    return this.modalForm.get('company_url');
-  }
-
-  get companyDescription() {
-    return this.modalForm.get('company_description');
-  }
-
-  get position() {
-    return this.modalForm.get('position');
+  get lastName() {
+    return this.modalForm.get('last_name');
   }
 }

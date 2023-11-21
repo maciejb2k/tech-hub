@@ -52,14 +52,14 @@ export class ProfileComponent extends BaseComponent {
       this.employeeService.getEmployeeProfile(employeeId).subscribe(employeeProfile => {
         this.userData = employeeProfile;
 
-        if (this.authService.isAuthenticated()) {
+        if (!this.authService.isAuthenticated()) {
           this.onDataLoaded();
           return;
         }
 
         this.subscriptions.push(
           this.authService.getUserData().subscribe(authData => {
-            if (authData.user_id === this.userData.employee.user.id) {
+            if (authData && authData.user_id === this.userData.employee.user.id) {
               this.isEditable = true;
               this.onDataLoaded();
             }
