@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkExperienceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PreferenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,9 @@ Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
     Route::resource('education', EducationController::class);
     Route::resource('work-experience', WorkExperienceController::class);
     Route::resource('language', LanguageController::class);
+    Route::get('/preference/fields', [PreferenceController::class, 'fields']);
+    Route::resource('preference', PreferenceController::class);
+
 
     Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 });
@@ -52,3 +56,4 @@ Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(functio
 });
 
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
+
