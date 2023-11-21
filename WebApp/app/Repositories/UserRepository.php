@@ -74,25 +74,25 @@ class UserRepository {
     public function updateUser(UserRequest $request, int $userId)
     {
         $user = $this->user::where('id', $userId)->first();
-        $user['first_name'] = $request['first_name'];
-        $user['last_name'] = $request['last_name'];
-        $user['email'] = $request['email'];
+        if ($request['first_name'] !== null) $user['first_name'] = $request['first_name'];
+        if ($request['last_name'] !== null) $user['last_name'] = $request['last_name'];
+        if ($request['email'] !== null) $user['email'] = $request['email'];
 
         if ($request->has('avatar')) {
-            if(Storage::exists('public/avatars/'.$user->avatar))
-                Storage::delete('public/avatars/'.$user->avatar);
+            if($request['avatar'] === null)
+            {
+                if(Storage::exists('public/avatars/'.$user->avatar))
+                    Storage::delete('public/avatars/'.$user->avatar);
 
-            $image = $request['avatar'];
-            $path2 = $image->store('public/avatars');
-            $filename_image = $image->hashName();
-
-            $user->avatar = $filename_image;
-        }
-        else {
-            if(Storage::exists('public/avatars/'.$user->avatar))
-                Storage::delete('public/avatars/'.$user->avatar);
-
-            $user->avatar = null;
+                $user->avatar = null;
+            }
+            else {
+                $image = $request['avatar'];
+                $path2 = $image->store('public/avatars');
+                $filename_image = $image->hashName();
+    
+                $user->avatar = $filename_image;
+            }
         }
 
         $user->save();
