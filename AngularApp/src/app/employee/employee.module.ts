@@ -30,6 +30,7 @@ import { PreferencesModalComponent } from './components/preferences-modal/prefer
 import { DropdownModule } from 'primeng/dropdown';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { TreeTableModule } from 'primeng/treetable';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { TreeTableModule } from 'primeng/treetable';
     FileUploadModule,
     DropdownModule,
     TreeTableModule,
+    RadioButtonModule,
   ],
 })
 export class EmployeeModule {}

@@ -35,7 +35,29 @@
           </td>
           <td>
             <div *ngIf="rowData.key">
-              <p-dropdown [options]="visibilityOptions" optionLabel="name"></p-dropdown>
+              <div class="flex flex-wrap gap-3">
+                <p-button
+                  label="Public"
+                  size="small"
+                  icon="pi pi-globe"
+                  (click)="onSettingsChange(rowData.key, 'public')"
+                  [outlined]="selectedOptions[rowData.key] == 'public' ? false : true"
+                  [disabled]="selectedOptions[rowData.key] == 'public'"></p-button>
+                <p-button
+                  label="Recruiter Only"
+                  size="small"
+                  icon="pi pi-briefcase"
+                  (click)="onSettingsChange(rowData.key, 'recruter-only')"
+                  [outlined]="selectedOptions[rowData.key] == 'recruter-only' ? false : true"
+                  [disabled]="selectedOptions[rowData.key] == 'recruter-only'"></p-button>
+                <p-button
+                  label="Private"
+                  size="small"
+                  icon="pi pi-lock"
+                  (click)="onSettingsChange(rowData.key, 'private')"
+                  [outlined]="selectedOptions[rowData.key] == 'private' ? false : true"
+                  [disabled]="selectedOptions[rowData.key] == 'private'"></p-button>
+              </div>
             </div>
           </td>
         </tr>
