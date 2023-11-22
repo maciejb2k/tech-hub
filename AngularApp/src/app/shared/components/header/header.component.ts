@@ -3,7 +3,6 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { LoaderService } from '../../services/loader.service';
 import { BaseComponent } from '../base/base.component';
 import { ProfileData } from 'src/app/auth/interfaces/auth.interfaces';
-import { Subscription } from 'rxjs';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
 
@@ -69,8 +68,13 @@ export class HeaderComponent extends BaseComponent {
     this.subscriptions.push(
       this.authService.getUserData().subscribe(value => {
         this.userData = value;
-        if (this.userData.role === 'recruiter') this.items = this.recruiterItems;
-        else this.items = this.employeeItems;
+        this.onDataLoaded();
+
+        if (this.userData.role === 'recruiter') {
+          this.items = this.recruiterItems;
+        } else {
+          this.items = this.employeeItems;
+        }
       })
     );
   }

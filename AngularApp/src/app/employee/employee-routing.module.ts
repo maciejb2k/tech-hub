@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowseEmployeesComponent } from './components/browse-employees/browse-employees.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { authenticatedGuard, roleGuard } from '../auth/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -16,6 +17,8 @@ const routes: Routes = [
   {
     path: 'settings',
     component: SettingsComponent,
+    canActivate: [authenticatedGuard, roleGuard],
+    data: { role: 'employee' },
   },
   {
     path: '',

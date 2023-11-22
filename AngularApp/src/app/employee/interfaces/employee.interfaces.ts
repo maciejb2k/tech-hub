@@ -1,5 +1,8 @@
 import { User } from 'src/app/auth/interfaces/auth.interfaces';
 
+export const ROLE_RECRUITER = 'recruiter';
+export const ROLE_EMPLOYEE = 'employee';
+
 export interface Skill {
   id: number;
   name: string;
