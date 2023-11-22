@@ -39,3 +39,7 @@ router-outlet {
 .p-inputtext::placeholder {
   color: #98a4b1;
 }
+
+.p-treetable-scrollable-body {
+  overflow: visible !important;
+}

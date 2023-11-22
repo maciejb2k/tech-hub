@@ -82,18 +82,6 @@ export class AuthService {
     return this.getRole().pipe(map(userRole => userRole === role));
   }
 
-  roleBasedRedirect() {
-    this.getRole().subscribe(role => {
-      if (role === 'employee') {
-        this.router.navigate(['/employee']);
-      } else if (role === 'recruiter') {
-        this.router.navigate(['/recruiter']);
-      } else {
-        this.router.navigate(['/auth/login']);
-      }
-    }); // TODO: Unsubscribe
-  }
-
   isAuthenticated() {
     return localStorage.getItem('token');
   }

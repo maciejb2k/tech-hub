@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
-import { roleGuard } from './auth/guards/auth.guard';
+import { authenticatedGuard, roleGuard } from './auth/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'recruiter',
-    canActivate: [roleGuard],
+    canActivate: [authenticatedGuard, roleGuard],
     data: { role: 'recruiter' },
     loadChildren: () => import('./recruiter/recruiter.module').then(m => m.RecruiterModule),
   },

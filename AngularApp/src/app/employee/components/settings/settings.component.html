@@ -1,0 +1,56 @@
+<div class="max-w-5xl mt-10">
+  <div class="flex items-center justify-between pb-10 mb-10 border-b border-gray-200">
+    <div>
+      <h2 class="text-2xl font-medium tracking-tight text-gray-900">Visibility Preferences</h2>
+      <p class="leading-8 text-gray-500 text-md">
+        Manage the fields you want to display for the other users.
+      </p>
+    </div>
+    <div></div>
+  </div>
+  <div>
+    <p-treeTable [value]="fields" [scrollable]="true" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Visibility</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+        <tr [ttRow]="rowNode">
+          <td>
+            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+            {{ rowData.name }}
+          </td>
+          <td>
+            <div *ngIf="rowData.key">
+              <div class="flex flex-wrap gap-3">
+                <p-button
+                  label="Public"
+                  size="small"
+                  icon="pi pi-globe"
+                  (click)="onSettingsChange(rowData.key, 'public')"
+                  [outlined]="selectedOptions[rowData.key] == 'public' ? false : true"
+                  [disabled]="selectedOptions[rowData.key] == 'public'"></p-button>
+                <p-button
+                  label="Recruiter Only"
+                  size="small"
+                  icon="pi pi-briefcase"
+                  (click)="onSettingsChange(rowData.key, 'recruter-only')"
+                  [outlined]="selectedOptions[rowData.key] == 'recruter-only' ? false : true"
+                  [disabled]="selectedOptions[rowData.key] == 'recruter-only'"></p-button>
+                <p-button
+                  label="Private"
+                  size="small"
+                  icon="pi pi-lock"
+                  (click)="onSettingsChange(rowData.key, 'private')"
+                  [outlined]="selectedOptions[rowData.key] == 'private' ? false : true"
+                  [disabled]="selectedOptions[rowData.key] == 'private'"></p-button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+  </div>
+</div>

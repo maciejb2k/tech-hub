@@ -1,0 +1,38 @@
+<p-dialog
+  header="{{ header }}"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClosed()">
+  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col w-full"></div>
+
+    <p-divider></p-divider>
+
+    <div *ngIf="!isEdit" class="flex flex-col gap-2">
+      <button
+        pButton
+        label="Add new preference"
+        type="submit"
+        class="w-full"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+    </div>
+    <div *ngIf="isEdit" class="flex items-center gap-2">
+      <button
+        pButton
+        label="Update"
+        type="submit"
+        severity="secondary"
+        class="w-2/3 p-button-success"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+      <button
+        pButton
+        label="Delete"
+        type="button"
+        class="w-1/3 p-button-danger p-button-outlined"
+        (click)="destroy()"></button>
+    </div>
+  </form>
+</p-dialog>

@@ -30,10 +30,12 @@ export const roleGuard = (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (!authService.hasRole(route.data['role'])) {
-    return true;
-  } else {
-    router.navigate(['/']);
-    return false;
-  }
+  authService.hasRole(route.data['role']).subscribe(result => {
+    if (result) {
+      return true;
+    } else {
+      router.navigate(['/']);
+      return false;
+    }
+  });
 };

@@ -1,5 +1,8 @@
 import { User } from 'src/app/auth/interfaces/auth.interfaces';
 
+export const ROLE_RECRUITER = 'recruiter';
+export const ROLE_EMPLOYEE = 'employee';
+
 export interface Skill {
   id: number;
   name: string;
@@ -137,4 +140,15 @@ export interface EducationPayload {
 export interface LanguagePayload {
   name: string;
   proficiency: string;
+}
+
+export interface Preferences {
+  id: number;
+  field_name: string;
+  visibility: string;
+}
+
+export interface PreferencesPayload {
+  field_name: string;
+  visibility: string;
 }

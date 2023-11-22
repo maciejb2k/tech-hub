@@ -3,7 +3,6 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { LoaderService } from '../../services/loader.service';
 import { BaseComponent } from '../base/base.component';
 import { ProfileData } from 'src/app/auth/interfaces/auth.interfaces';
-import { Subscription } from 'rxjs';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
 
@@ -14,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent extends BaseComponent {
   userData: ProfileData;
-  items: MenuItem[] = [
+  recruiterItems: MenuItem[] = [
     {
       label: 'Profile',
       icon: 'pi pi-user',
@@ -31,6 +30,32 @@ export class HeaderComponent extends BaseComponent {
     },
   ];
 
+  employeeItems: MenuItem[] = [
+    {
+      label: 'Profile',
+      icon: 'pi pi-user',
+      command: () => {
+        this.redirectToProfile();
+      },
+    },
+    {
+      label: 'Settings',
+      icon: 'pi pi-wrench',
+      command: () => {
+        this.router.navigate([`/employee/settings`]);
+      },
+    },
+    {
+      label: 'Sign out',
+      icon: 'pi pi-sign-out',
+      command: () => {
+        this.logout();
+      },
+    },
+  ];
+
+  items: MenuItem[] = [];
+
   constructor(
     protected override loaderService: LoaderService,
     public authService: AuthService,
@@ -43,6 +68,13 @@ export class HeaderComponent extends BaseComponent {
     this.subscriptions.push(
       this.authService.getUserData().subscribe(value => {
         this.userData = value;
+        this.onDataLoaded();
+
+        if (this.userData.role === 'recruiter') {
+          this.items = this.recruiterItems;
+        } else {
+          this.items = this.employeeItems;
+        }
       })
     );
   }

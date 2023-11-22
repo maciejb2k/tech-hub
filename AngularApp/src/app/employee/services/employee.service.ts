@@ -20,6 +20,8 @@ import {
   Employee,
   EmployeePayload,
   UserPayload,
+  PreferencesPayload,
+  Preferences,
 } from '../interfaces/employee.interfaces';
 import { FormService } from 'src/app/shared/services/form.service';
 
@@ -167,6 +169,28 @@ export class EmployeeService {
         params: new HttpParams().set('_method', 'PUT'),
       })
       .pipe(catchError(this.formService.handleError));
+  }
+
+  /* Preferences */
+
+  addPreferences(payload: PreferencesPayload) {
+    const url = `http://localhost:8000/api/preferences/`;
+    return this.http.post(url, payload).pipe(catchError(this.formService.handleError));
+  }
+
+  getPreferences(id: number) {
+    const url = `http://localhost:8000/api/preferences/${id}`;
+    return this.http.get<Preferences>(url).pipe(catchError(this.formService.handleError));
+  }
+
+  updatePreferences(id: number, payload: PreferencesPayload) {
+    const url = `http://localhost:8000/api/preferences/${id}`;
+    return this.http.put(url, payload).pipe(catchError(this.formService.handleError));
+  }
+
+  deletePreferences(id: number) {
+    const url = `http://localhost:8000/api/preferences/${id}`;
+    return this.http.delete(url).pipe(catchError(this.formService.handleError));
   }
 
   /* Helpers */
