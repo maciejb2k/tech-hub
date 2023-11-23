@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\EmployeeRequest;
+use App\Http\Requests\SearchEmployeeRequest;
 use App\Services\EmployeeService;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,9 +23,18 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(SearchEmployeeRequest $request)
     {
-        //
+        try 
+        {
+            $res = $this->employeeService->searchEmployee($request);
+            return response($res, 200);
+        } 
+        catch(Exception $e)
+        {
+            if($e instanceof NotFoundException)
+                return response(['message' => 'The resource does not exist!'], 404);
+        }
     }
 
     /**
