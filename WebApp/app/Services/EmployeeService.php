@@ -5,25 +5,23 @@ namespace App\Services;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\EmployeeRequest;
-use App\Http\Requests\LanguageRequest;
+use App\Http\Requests\SearchEmployeeRequest;
 use App\Http\Resources\EducationCollection;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\LanguageCollection;
-use App\Http\Resources\LanguageResource;
-use App\Http\Resources\RecruiterResource;
 use App\Http\Resources\SkillCollection;
 use App\Http\Resources\WorkExperienceCollection;
 use App\Models\Employee;
 use App\Repositories\EducationRepository;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\LanguageRepository;
-use App\Repositories\RecruiterRepository;
 use App\Repositories\SkillRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\WorkExperienceRepository;
 use App\Traits\HandlesPreferences;
+use App\Utils\PaginateTransformation;
 use App\Utils\ResourceTransformation;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeService {
 
@@ -33,10 +31,11 @@ class EmployeeService {
     protected $workExperienceRepository;
 
     protected $employeeRepository;
+    protected $userRepository;
 
     use HandlesPreferences;
 
-    public function __construct(LanguageRepository $languageRepository, EducationRepository $educationRepository, SkillRepository $skillRepository, WorkExperienceRepository $workExperienceRepository, EmployeeRepository $employeeRepository)
+    public function __construct(LanguageRepository $languageRepository, EducationRepository $educationRepository, SkillRepository $skillRepository, WorkExperienceRepository $workExperienceRepository, EmployeeRepository $employeeRepository, UserRepository $userRepository)
     {
         $this->languageRepository = $languageRepository;
         $this->educationRepository = $educationRepository;
@@ -44,6 +43,7 @@ class EmployeeService {
         $this->workExperienceRepository = $workExperienceRepository;
 
         $this->employeeRepository = $employeeRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function getEmployeeById(int $employeeId, $request)
@@ -104,5 +104,55 @@ class EmployeeService {
         $updatedEmployee = $this->employeeRepository->updateEmployee($request, $employeeId);
 
         return new EmployeeResource($updatedEmployee, [], "owner");
+    }
+
+    public function searchEmployee(SearchEmployeeRequest $request)
+    {
+        $token = $request->bearerToken();
+
+        if ($token) {
+            $user = Auth::guard('sanctum')->user();
+        } else {
+            $user = null;
+        }
+
+        $userSearchIds = $this->userRepository->searchUserIds($request);
+        $employeeSearchResult = $this->employeeRepository->searchEmployee($request, $userSearchIds->toArray());
+
+        $visitors = [];
+        $preferences = [];
+        foreach($employeeSearchResult as $employee)
+        {
+            $user_id = $employee['user_id'];
+            array_push($preferences, $this->getPreferences($user_id));
+            array_push($visitors, ResourceTransformation::GetVisitorType($user, $user_id));
+        }
+
+        $employeeResponse = [];
+        for($i = 0; $i < count($employeeSearchResult); $i++)
+        {
+            $employee = ResourceTransformation::TransformResource($employeeSearchResult[$i], ["id", "expected_salary", 'location', "user_id"], $this->getTablePreferences($preferences[$i], 'employee'), $visitors[$i]);
+            
+            if(isset($request['salary_min']) || isset($request['salary_max']))
+            {
+                if(isset($employee['expected_salary'])) 
+                {   
+                    $employee['user'] = $this->userRepository->getUserById($employee['user_id']);
+                    unset($employee['user_id']);
+                    array_push($employeeResponse, $employee);
+                }
+            }
+            else 
+            {
+                $employee['user'] = $this->userRepository->getUserById($employee['user_id']);
+                unset($employee['user_id']);
+                array_push($employeeResponse, $employee);
+            }
+        }
+
+        $perPage = $request['per_page'];
+        if(!isset($request['per_page'])) $perPage = 10;
+
+        return PaginateTransformation::getPaginateFromArray($employeeResponse, $perPage);
     }
 }
