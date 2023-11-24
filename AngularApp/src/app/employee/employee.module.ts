@@ -31,6 +31,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { TreeTableModule } from 'primeng/treetable';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { PaginatorModule } from 'primeng/paginator';
+import { SidebarModule } from 'primeng/sidebar';
+import { SliderModule } from 'primeng/slider';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -67,6 +71,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     DropdownModule,
     TreeTableModule,
     RadioButtonModule,
+    PaginatorModule,
+    SidebarModule,
+    SliderModule,
+    InputNumberModule,
   ],
 })
 export class EmployeeModule {}
