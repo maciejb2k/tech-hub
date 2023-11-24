@@ -4,7 +4,10 @@ namespace App\Repositories;
 
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Requests\RegisterEmployeeRequest;
+use App\Http\Requests\SearchEmployeeRequest;
 use App\Models\Employee;
+
+use function PHPUnit\Framework\isEmpty;
 
 class EmployeeRepository {
 
@@ -51,5 +54,35 @@ class EmployeeRepository {
         $employee->save();
 
         return $employee;
+    }
+
+    public function searchEmployee(SearchEmployeeRequest $request, array $userSearchIds)
+    {
+        $query = $this->employee::query();
+        
+        $query->whereIn('user_id', $userSearchIds);
+
+        if (isset($request['salary_min'])) {
+            $query->where('expected_salary', '>=', intval($request['salary_min']));
+        }
+
+        if (isset($request['salary_max'])) {
+            $query->where('expected_salary', '<=', intval($request['salary_max']));
+        }
+
+        if (isset($request['sort_by']) && $request['sort_by'] === 'expected_salary') {
+            $sortDirection = $request['sort_direction'];
+            if($sortDirection === null) $sortDirection = "asc";
+
+            $query->orderBy('expected_salary', $sortDirection);
+        }
+        
+        if(count($userSearchIds) > 0)
+        {
+            $userIdsString = implode(',', $userSearchIds);
+            $query->orderByRaw("FIELD(user_id, $userIdsString)");
+        }
+        
+        return $query->get();
     }
 }

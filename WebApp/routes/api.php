@@ -56,4 +56,4 @@ Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(functio
 });
 
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
-
+Route::get('/employees', [EmployeeController::class, 'index']);

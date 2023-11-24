@@ -4,12 +4,14 @@ namespace App\Repositories;
 
 use App\Http\Requests\RegisterEmployeeRequest;
 use App\Http\Requests\RegisterRecruiterRequest;
+use App\Http\Requests\SearchEmployeeRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\Continue_;
 
 class UserRepository {
 
@@ -98,5 +100,30 @@ class UserRepository {
         $user->save();
         
         return $user;
+    }
+
+    public function searchUserIds(SearchEmployeeRequest $request)
+    {
+        $query = $this->user::query();
+
+        $query->where('role_id', '=', 1);
+
+        if (isset($request['name'])) {
+            $name = $request['name'];
+
+            $query->where(function ($query) use ($name) {
+                $query->where('first_name', 'LIKE', "%$name%")
+                    ->orWhere('last_name', 'LIKE', "%$name%");
+            });
+        }
+
+        if (isset($request['sort_by']) && $request['sort_by'] !== 'expected_salary') {
+            $sortDirection = $request['sort_direction'];
+            if($sortDirection === null) $sortDirection = "asc";
+
+            $query->orderBy($request['sort_by'], $sortDirection);
+        }
+
+        return $query->pluck('id');
     }
 }
