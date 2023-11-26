@@ -11,8 +11,21 @@
         </div>
         <p-divider></p-divider>
         <div>
-          <h3 class="pb-8 text-lg font-medium text-gray-600">Salary: {{ rangeValues }} $</h3>
-          <p-slider [(ngModel)]="rangeValues" [step]="1000" [min]="0" [max]="280000"></p-slider>
+          <div class="pb-12">
+            <h3 class="text-lg font-medium text-gray-600">Salary:</h3>
+            <p class="text-gray-500">Filter records based on salary range.</p>
+          </div>
+          <p-slider
+            [(ngModel)]="state.salary"
+            [range]="true"
+            [step]="1000"
+            [min]="0"
+            [max]="280000"></p-slider>
+          <div class="pt-4">
+            <p class="font-medium text-center text-gray-600 text-md">
+              {{ state.salary[0] }} - {{ state.salary[1] }} $
+            </p>
+          </div>
         </div>
         <p-divider></p-divider>
         <p>
@@ -22,8 +35,15 @@
       </div></ng-template
     >
     <ng-template pTemplate="footer">
-      <div class="py-6">
-        <p-button label="Apply" [style]="{ width: '100%' }"></p-button>
+      <div class="flex items-center gap-3 py-6">
+        <button pButton label="Apply" class="w-full" (click)="setFilters()"></button>
+        <button
+          pButton
+          *ngIf="hasFilters()"
+          label="Clear"
+          class="w-full p-button-danger p-button-outlined"
+          (click)="clearFilters()"
+          severity="danger"></button>
       </div>
     </ng-template>
   </p-sidebar>
@@ -35,13 +55,23 @@
       </p>
     </div>
     <div class="flex items-center gap-5">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input type="text" pInputText placeholder="Search" />
-      </span>
+      <div>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            [(ngModel)]="state.name"
+            type="text"
+            (blur)="setSearch()"
+            (keyup.enter)="setSearch()"
+            pInputText
+            placeholder="Search" />
+        </span>
+      </div>
       <p-dropdown
+        [(ngModel)]="state.sort"
         [options]="sortOptions"
-        [(ngModel)]="selectedSortOption"
+        (onChange)="setSort($event)"
+        (onClear)="clearSort()"
         optionLabel="name"
         [showClear]="true"
         [style]="{ width: '15rem' }"
@@ -49,53 +79,88 @@
         <ng-template let-option pTemplate="item">
           <div class="flex gap-2 align-items-center">
             <div class="flex items-center gap-3">
-              <i class="{{ option.icon }}"></i> {{ option.name }}
+              <i
+                class="{{
+                  option.direction === 'asc' ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-up'
+                }}"></i>
+              {{ option.name }}
             </div>
           </div>
-        </ng-template></p-dropdown
-      >
+        </ng-template>
+      </p-dropdown>
       <p-button (click)="sidebarVisible = true" [outlined]="true" icon="pi pi-th-large"></p-button>
     </div>
   </header>
-  <div class="grid gap-8 lg:grid-cols-2">
-    <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-      <div class="flex justify-between mb-5">
-        <div class="flex items-center gap-5">
-          <img src="assets/user.jpg" class="rounded w-14 h-14" alt="" />
-          <div class="pt-1">
-            <h2 class="text-xl font-medium tracking-tight text-gray-900">Tomasz Nowak</h2>
-            <div class="flex items-center gap-2 mb-1 text-gray-500">
-              <i class="pi pi-map-marker fill-gray-500/80" style="font-size: 0.8rem"></i>
-              <span class="text-sm">Rzeszów, Poland</span>
+  <div *ngIf="!isLoading; else loadingResults">
+    <div *ngIf="results.data.length" class="grid gap-8 lg:grid-cols-2">
+      <div
+        class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
+        *ngFor="let employee of results.data">
+        <div class="flex justify-between mb-5">
+          <div class="flex items-center gap-5">
+            <img src="assets/user.jpg" class="rounded w-14 h-14" alt="" />
+            <div class="pt-1">
+              <h2 class="text-xl font-medium tracking-tight text-gray-900">
+                {{ employee.user.first_name }} {{ employee.user.last_name }}
+              </h2>
+              <div class="flex items-center gap-2 mb-1 text-gray-500">
+                <i class="pi pi-map-marker fill-gray-500/80" style="font-size: 0.8rem"></i>
+                <span class="text-sm">{{
+                  employee.location ? employee.location : 'Unknown address'
+                }}</span>
+              </div>
             </div>
           </div>
+          <div>
+            <span
+              *ngIf="+employee.expected_salary != 0"
+              class="inline-flex items-center px-4 py-1 text-xs font-medium text-green-700 rounded-md bg-green-50 ring-1 ring-inset ring-green-700/10"
+              >{{ employee.expected_salary }} $</span
+            >
+            <span
+              *ngIf="+employee.expected_salary === 0"
+              class="inline-flex items-center px-4 py-1 text-xs font-medium rounded-md text-slate-700 bg-slate-50 ring-1 ring-inset ring-slate-700/10"
+              >Unknown</span
+            >
+          </div>
         </div>
-        <div>
-          <span
-            class="inline-flex items-center px-4 py-1 text-xs font-medium text-green-700 rounded-md bg-green-50 ring-1 ring-inset ring-green-700/10"
-            >120000 $</span
-          >
+        <p class="mb-5 text-sm text-gray-500">
+          User did not provide a brief description about himself.
+        </p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <img class="rounded-full w-7 h-7" src="assets/building.jpg" alt="Bonnie Green avatar" />
+            <span class="">Front-End Developer</span>
+          </div>
+          <a
+            [routerLink]="['/employee/account/' + employee.id]"
+            class="inline-flex items-center font-medium text-sky-600 hover:underline">
+            View Profile
+          </a>
         </div>
       </div>
-      <p class="mb-5 text-sm text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, laboriosam.
-      </p>
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="rounded-full w-7 h-7" src="assets/building.jpg" alt="Bonnie Green avatar" />
-          <span class="">Front-End Developer</span>
-        </div>
-        <a href="#" class="inline-flex items-center font-medium text-sky-600 hover:underline">
-          View Profile
-        </a>
+    </div>
+    <div *ngIf="!results.data.length">
+      <div class="flex items-center justify-center w-full h-32">
+        <p class="text-gray-500">No results found.</p>
       </div>
     </div>
   </div>
-  <div class="flex justify-center mt-14 align-center">
+
+  <ng-template #loadingResults>
+    <div class="grid gap-8 lg:grid-cols-2">
+      <p-skeleton height="10rem"></p-skeleton>
+      <p-skeleton height="10rem"></p-skeleton>
+      <p-skeleton height="10rem"></p-skeleton>
+      <p-skeleton height="10rem"></p-skeleton>
+    </div>
+  </ng-template>
+  <div *ngIf="!isLoading" class="flex justify-center mt-14 align-center">
     <p-paginator
-      [first]="1"
-      [rows]="10"
-      [totalRecords]="120"
-      [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+      [first]="first"
+      [rows]="results.meta.per_page"
+      [totalRecords]="results.meta.total"
+      [rowsPerPageOptions]="[10, 20, 30]"
+      (onPageChange)="setPagination($event)"></p-paginator>
   </div>
 </div>

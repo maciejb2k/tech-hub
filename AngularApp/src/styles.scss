@@ -12,6 +12,10 @@ html {
   font-size: 14px;
 }
 
+body {
+  overflow-y: scroll;
+}
+
 // Tailwind Base override
 
 button,
