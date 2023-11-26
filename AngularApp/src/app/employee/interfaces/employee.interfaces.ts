@@ -152,3 +152,34 @@ export interface PreferencesPayload {
   field_name: string;
   visibility: string;
 }
+
+export interface Paginable<T> {
+  data: T[];
+  links: {
+    self: string;
+    next: string | null;
+    prev: string | null;
+  };
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
+export interface EmployeeBrowse {
+  id: number;
+  expected_salary: string;
+  location: string | null;
+  user: {
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    avatar: string | null;
+    role_id: number;
+  };
+}
+
+export interface EmployeePaginable extends Paginable<EmployeeBrowse> {}
