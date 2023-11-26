@@ -15,11 +15,18 @@ type SortOption = {
 };
 
 type State = {
+  filters: {
+    salary: number[];
+  };
+  pagination: {
+    page: number;
+    first: number;
+    rows: number;
+  };
+  search: {
+    name: string;
+  };
   sort: SortOption | undefined;
-  salary: number[];
-  name: string;
-  per_page: number;
-  page: number;
 };
 
 type QueryParams = {
@@ -47,18 +54,24 @@ export class BrowseEmployeesComponent extends BaseComponent {
   ];
 
   initState: State = {
+    filters: {
+      salary: [1, 280000],
+    },
+    search: {
+      name: '',
+    },
+    pagination: {
+      page: 1,
+      first: 0,
+      rows: 10,
+    },
     sort: null,
-    salary: [1, 280000],
-    name: '',
-    per_page: 10,
-    page: 1,
   };
-  state: State = { ...this.initState };
+
+  state: State = JSON.parse(JSON.stringify(this.initState));
 
   currentQueryParams: Params;
   results: EmployeePaginable;
-
-  first = 0;
 
   constructor(
     protected override loaderService: LoaderService,
@@ -68,15 +81,13 @@ export class BrowseEmployeesComponent extends BaseComponent {
     private router: Router
   ) {
     super(loaderService);
-  }
 
-  ngOnInit() {
     this.subscriptions.push(
       this.route.queryParams
         .pipe(
           tap((params: QueryParams) => {
             this.currentQueryParams = params;
-            this.state = this.updateStateFromQueryParams(params);
+            this.queryParamsToState(params);
           }),
           switchMap(params => this.browseService.getEmployees(params))
         )
@@ -86,39 +97,19 @@ export class BrowseEmployeesComponent extends BaseComponent {
     );
   }
 
-  updateStateFromQueryParams(params: QueryParams) {
-    const sort =
-      this.sortOptions.find(
-        option => option.code === params['sort_by'] && option.direction === params['sort_direction']
-      ) || this.state.sort;
-
-    const salary = [
-      Number(params['salary_min']) || this.state.salary[0],
-      Number(params['salary_max']) || this.state.salary[1],
-    ];
-
-    const name = params['name'] || this.state.name;
-
-    const page = params['page'] || this.state.page;
-    const per_page = params['per_page'] || this.state.per_page;
-
-    return {
-      ...params,
-      sort,
-      salary,
-      name,
-      page,
-      per_page,
-    };
-  }
+  // Methods for components in template
 
   setSearch() {
     this.updateQueryParams();
   }
 
-  setSort(event: DropdownChangeEvent) {
+  setSort() {
     if (!this.state.sort) return;
 
+    this.updateQueryParams();
+  }
+
+  clearSort() {
     this.updateQueryParams();
   }
 
@@ -127,61 +118,122 @@ export class BrowseEmployeesComponent extends BaseComponent {
     this.updateQueryParams();
   }
 
-  clearSort() {
-    this.updateQueryParams();
-  }
-
-  setPagination(event: any) {
-    const page = event.page + 1;
-
-    console.log(event);
-    if (this.state.page === page) return;
-
-    this.first = event.first;
-
-    this.state = { ...this.state, page };
-
-    this.updateQueryParams();
-  }
-
   hasFilters() {
     return this.currentQueryParams['salary_min'] || this.currentQueryParams['salary_max'];
   }
 
   clearFilters() {
-    this.state = { ...this.state, salary: [1, 280000] };
+    this.sidebarVisible = false;
+    this.state = {
+      ...this.state,
+      filters: { ...this.state.filters, ...this.initState.filters },
+    };
     this.updateQueryParams();
   }
 
+  setPagination(event: any) {
+    console.log(event);
+
+    this.state = {
+      ...this.state,
+      pagination: {
+        ...this.state.pagination,
+        page: event.page + 1,
+        first: event.first,
+        rows: event.rows,
+      },
+    };
+
+    this.updateQueryParams();
+  }
+
+  // Method which updates the query params in the backend
+
   updateQueryParams() {
-    const updatedParams: QueryParams = {};
-
-    if (this.state.sort && this.state.sort !== this.initState.sort) {
-      updatedParams['sort_by'] = this.state.sort.code;
-      updatedParams['sort_direction'] = this.state.sort.direction;
-    }
-
-    if (
-      this.state.salary[0] !== this.initState.salary[0] ||
-      this.state.salary[1] !== this.initState.salary[1]
-    ) {
-      updatedParams['salary_min'] = this.state.salary[0];
-      updatedParams['salary_max'] = this.state.salary[1];
-    }
-
-    if (this.state.name && this.state.name !== this.initState.name) {
-      updatedParams['name'] = this.state.name;
-    }
-
-    if (this.state.per_page !== this.initState.per_page) {
-      updatedParams['per_page'] = this.state.per_page;
-    }
-
-    updatedParams['page'] = this.state.page;
+    const queryParams = this.stateToQueryParams();
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: updatedParams,
+      queryParams,
     });
+  }
+
+  // Utility methods
+
+  private queryParamsToState(params: QueryParams) {
+    if (!params) return;
+
+    if (params['salary_min'] || params['salary_max']) {
+      this.state = {
+        ...this.state,
+        filters: {
+          ...this.state.filters,
+          salary: [Number(params['salary_min']), Number(params['salary_max'])],
+        },
+      };
+    }
+
+    if (params['name']) {
+      this.state = {
+        ...this.state,
+        search: { ...this.state.search, name: params['name'] },
+      };
+    }
+
+    if (params['sort_by'] && params['sort_direction']) {
+      const sort = this.sortOptions.find(
+        option => option.code === params['sort_by'] && option.direction === params['sort_direction']
+      );
+
+      this.state = {
+        ...this.state,
+        sort,
+      };
+    }
+
+    if (params['per_page']) {
+      this.state = {
+        ...this.state,
+        pagination: { ...this.state.pagination, rows: Number(params['per_page']) },
+      };
+    }
+
+    if (params['page']) {
+      this.state = {
+        ...this.state,
+        pagination: { ...this.state.pagination, page: Number(params['page']) },
+      };
+    }
+  }
+
+  private stateToQueryParams() {
+    const queryParams: QueryParams = {};
+
+    if (this.state.sort) {
+      queryParams['sort_by'] = this.state.sort.code;
+      queryParams['sort_direction'] = this.state.sort.direction;
+    }
+
+    if (
+      this.state.filters.salary[0] !== this.initState.filters.salary[0] ||
+      this.state.filters.salary[1] !== this.initState.filters.salary[1]
+    ) {
+      queryParams['salary_min'] = this.state.filters.salary[0];
+      queryParams['salary_max'] = this.state.filters.salary[1];
+    }
+
+    if (this.state.search.name !== this.initState.search.name) {
+      queryParams['name'] = this.state.search.name;
+    }
+
+    if (this.state.pagination.rows !== this.initState.pagination.rows) {
+      queryParams['per_page'] = this.state.pagination.rows;
+    }
+
+    if (this.state.pagination.page !== this.initState.pagination.page) {
+      queryParams['page'] = this.state.pagination.page;
+    }
+
+    return queryParams;
   }
 }

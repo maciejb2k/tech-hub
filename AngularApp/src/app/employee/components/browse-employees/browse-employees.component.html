@@ -16,14 +16,14 @@
             <p class="text-gray-500">Filter records based on salary range.</p>
           </div>
           <p-slider
-            [(ngModel)]="state.salary"
+            [(ngModel)]="state.filters.salary"
             [range]="true"
             [step]="1000"
             [min]="0"
             [max]="280000"></p-slider>
           <div class="pt-4">
             <p class="font-medium text-center text-gray-600 text-md">
-              {{ state.salary[0] }} - {{ state.salary[1] }} $
+              {{ state.filters.salary[0] }} - {{ state.filters.salary[1] }} $
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
           <input
-            [(ngModel)]="state.name"
+            [(ngModel)]="state.search.name"
             type="text"
             (blur)="setSearch()"
             (keyup.enter)="setSearch()"
@@ -70,7 +70,7 @@
       <p-dropdown
         [(ngModel)]="state.sort"
         [options]="sortOptions"
-        (onChange)="setSort($event)"
+        (onChange)="setSort()"
         (onClear)="clearSort()"
         optionLabel="name"
         [showClear]="true"
@@ -98,7 +98,14 @@
         *ngFor="let employee of results.data">
         <div class="flex justify-between mb-5">
           <div class="flex items-center gap-5">
-            <img src="assets/user.jpg" class="rounded w-14 h-14" alt="" />
+            <img
+              src="{{
+                employee.user.avatar
+                  ? 'http://localhost:8000/storage/avatars/' + employee.user.avatar
+                  : 'assets/user.jpg'
+              }}"
+              class="rounded w-14 h-14"
+              alt="" />
             <div class="pt-1">
               <h2 class="text-xl font-medium tracking-tight text-gray-900">
                 {{ employee.user.first_name }} {{ employee.user.last_name }}
@@ -155,12 +162,15 @@
       <p-skeleton height="10rem"></p-skeleton>
     </div>
   </ng-template>
-  <div *ngIf="!isLoading" class="flex justify-center mt-14 align-center">
+
+  <p *ngIf="isLoading; else showThis">Magic element!</p>
+  <ng-template #showThis>
     <p-paginator
-      [first]="first"
+      *ngIf="!isLoading"
+      [first]="(results.meta.current_page - 1) * results.meta.per_page"
       [rows]="results.meta.per_page"
       [totalRecords]="results.meta.total"
       [rowsPerPageOptions]="[10, 20, 30]"
       (onPageChange)="setPagination($event)"></p-paginator>
-  </div>
+  </ng-template>
 </div>
