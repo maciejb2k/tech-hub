@@ -35,6 +35,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { SidebarModule } from 'primeng/sidebar';
 import { SliderModule } from 'primeng/slider';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InvitationsComponent } from './components/invitations/invitations.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     UserModalComponent,
     SettingsComponent,
     PreferencesModalComponent,
+    InvitationsComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +78,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     SidebarModule,
     SliderModule,
     InputNumberModule,
+    TableModule,
   ],
 })
 export class EmployeeModule {}
