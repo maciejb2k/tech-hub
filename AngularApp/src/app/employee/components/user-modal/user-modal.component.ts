@@ -8,6 +8,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { UserPayload } from '../../interfaces/employee.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
 import { tap } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -38,7 +39,8 @@ export class UserModalComponent extends BaseComponent {
     private employeeService: EmployeeService,
     private formService: FormService,
     private formBuilder: FormBuilder,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {
     super(loaderService);
   }
@@ -80,6 +82,9 @@ export class UserModalComponent extends BaseComponent {
           summary: 'Success',
           detail: "You've successfully updated a user info.",
         });
+
+        this.authService.updateUserName(formData.first_name, formData.last_name);
+
         this.refetch.emit();
         this.close.emit();
       },

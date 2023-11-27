@@ -18,7 +18,8 @@ import { FormService } from 'src/app/shared/services/form.service';
   providedIn: 'root',
 })
 export class AuthService {
-  user$: BehaviorSubject<ProfileData | null> = new BehaviorSubject<ProfileData | null>(null);
+  userSubject: BehaviorSubject<ProfileData | null> = new BehaviorSubject<ProfileData | null>(null);
+
   private destroy$: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient, private router: Router, private formService: FormService) {}
@@ -52,20 +53,24 @@ export class AuthService {
     const url = 'http://localhost:8000/api/auth/logout';
     return this.http.post(url, {}).pipe(
       tap(() => {
-        this.removeToken();
-        this.clearUser();
+        this.logoutUser();
         this.router.navigate(['/auth/login']);
       })
     );
   }
 
+  logoutUser() {
+    this.removeToken();
+    this.clearUser();
+  }
+
   getUserData() {
-    return this.user$.pipe(
+    return this.userSubject.pipe(
       switchMap(user => {
         if (user === null && this.isAuthenticated()) {
           return this.fetchUserData().pipe(
             finalize(() => {
-              return this.user$.asObservable();
+              return this.userSubject.asObservable();
             })
           );
         }
@@ -84,6 +89,14 @@ export class AuthService {
 
   isAuthenticated() {
     return localStorage.getItem('token');
+  }
+
+  updateUserName(firstName: string, lastName: string) {
+    this.userSubject.next({
+      ...this.userSubject.value,
+      first_name: firstName,
+      last_name: lastName,
+    });
   }
 
   private setToken(token: string): void {
@@ -121,16 +134,16 @@ export class AuthService {
     );
   }
 
+  getUser() {
+    return this.userSubject.asObservable();
+  }
+
   private setUser(userDetails: ProfileData) {
-    this.user$.next(userDetails);
+    this.userSubject.next(userDetails);
   }
 
   private clearUser() {
-    this.user$.next(null);
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    return throwError(() => error.error);
+    this.userSubject.next(null);
   }
 
   unsubscribeUserData() {
