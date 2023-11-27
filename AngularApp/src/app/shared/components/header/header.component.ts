@@ -66,11 +66,10 @@ export class HeaderComponent extends BaseComponent {
 
   ngOnInit() {
     this.subscriptions.push(
-      this.authService.getUserData().subscribe(value => {
+      this.authService.getUser().subscribe(value => {
         this.userData = value;
-        this.onDataLoaded();
 
-        if (this.userData.role === 'recruiter') {
+        if (this.userData?.role === 'recruiter') {
           this.items = this.recruiterItems;
         } else {
           this.items = this.employeeItems;

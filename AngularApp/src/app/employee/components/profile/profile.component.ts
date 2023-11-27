@@ -58,7 +58,7 @@ export class ProfileComponent extends BaseComponent {
         }
 
         this.subscriptions.push(
-          this.authService.getUserData().subscribe(authData => {
+          this.authService.getUser().subscribe(authData => {
             if (authData && authData.user_id === this.userData.employee.user.id) {
               this.isEditable = true;
               this.onDataLoaded();

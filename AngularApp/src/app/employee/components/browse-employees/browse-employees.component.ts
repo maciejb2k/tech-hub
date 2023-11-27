@@ -132,8 +132,6 @@ export class BrowseEmployeesComponent extends BaseComponent {
   }
 
   setPagination(event: any) {
-    console.log(event);
-
     this.state = {
       ...this.state,
       pagination: {

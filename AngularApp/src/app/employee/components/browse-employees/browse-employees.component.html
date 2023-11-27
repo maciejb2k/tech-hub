@@ -163,8 +163,7 @@
     </div>
   </ng-template>
 
-  <p *ngIf="isLoading; else showThis">Magic element!</p>
-  <ng-template #showThis>
+  <div class="pt-14">
     <p-paginator
       *ngIf="!isLoading"
       [first]="(results.meta.current_page - 1) * results.meta.per_page"
@@ -172,5 +171,5 @@
       [totalRecords]="results.meta.total"
       [rowsPerPageOptions]="[10, 20, 30]"
       (onPageChange)="setPagination($event)"></p-paginator>
-  </ng-template>
+  </div>
 </div>
