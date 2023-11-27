@@ -9,6 +9,8 @@ use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkExperienceController;
+use App\Http\Controllers\EmployeeInvitationController;
+use App\Http\Controllers\RecruiterInvitationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController;
@@ -42,12 +44,14 @@ Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
     Route::get('/preference/fields', [PreferenceController::class, 'fields']);
     Route::resource('preference', PreferenceController::class);
 
-
     Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+    Route::resource('invitations', EmployeeInvitationController::class);
 });
 
 Route::middleware(['auth:sanctum', 'ability:recruiter'])->group(function () {
+    Route::resource('recruiter/invitations', RecruiterInvitationController::class);
     Route::resource('recruiter', RecruiterController::class);
+
 });
 
 Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(function () {
