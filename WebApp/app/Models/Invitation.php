@@ -9,10 +9,19 @@ class Invitation extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
     protected $fillable = [
-        'mail_content',
+        'message',
         'employee_id',
         'recruiter_id',
+        'status'
+    ];
+
+    public static $statuses = [
+        'Pending',
+        'Cancelled',
+        'Finished',
     ];
 
     public function employee()

@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
-            $table->string('mail_content');
+            $table->string('message');
+            $table->enum('status', ['Pending', 'Cancelled', 'Finished']);
             $table->foreignIdFor(Employee::class)->constrained();
             $table->foreignIdFor(Recruiter::class)->constrained();
             $table->timestamps();
