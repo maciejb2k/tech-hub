@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { map, skipWhile, take, tap } from 'rxjs';
 
 export const authenticatedGuard = () => {
   const authService = inject(AuthService);
@@ -30,12 +31,16 @@ export const roleGuard = (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  authService.hasRole(route.data['role']).subscribe(result => {
-    if (result) {
+  return authService.userSubject.pipe(
+    skipWhile(user => !user),
+    take(1),
+    map(user => {
+      if (user.role !== route.data['role']) {
+        router.navigate(['/']);
+        return false;
+      }
+
       return true;
-    } else {
-      router.navigate(['/']);
-      return false;
-    }
-  });
+    })
+  );
 };

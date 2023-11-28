@@ -22,6 +22,13 @@ export class HeaderComponent extends BaseComponent {
       },
     },
     {
+      label: 'Invitations',
+      icon: 'pi pi-envelope',
+      command: () => {
+        this.router.navigate([`/recruiter/invitations`]);
+      },
+    },
+    {
       label: 'Sign out',
       icon: 'pi pi-sign-out',
       command: () => {

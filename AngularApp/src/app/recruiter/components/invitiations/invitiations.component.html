@@ -1,0 +1,79 @@
+<div class="mt-10">
+  <header class="flex items-center justify-between pb-10 mb-10 border-b border-gray-200">
+    <div>
+      <h2 class="text-2xl font-medium tracking-tight text-gray-900">Employees Invitations</h2>
+      <p class="leading-8 text-gray-500 text-md">
+        Display all invitations from recruiters to the meetings.
+      </p>
+    </div>
+    <div></div>
+  </header>
+  <div *ngIf="!isLoading; else loadingResults">
+    <div *ngIf="results.data.length; else emptyResults">
+      <p-table [value]="results.data" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>#</th>
+            <th>Employee</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Message</th>
+            <th>Edit</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-invitation>
+          <tr>
+            <td>{{ invitation.id }}</td>
+            <td>
+              {{ invitation.employee.first_name }} {{ invitation.employee.last_name }}
+              <a [routerLink]="'/employee/account/' + invitation.employee.id">
+                <i
+                  class="px-2 pi pi-external-link text-sky-600 hover:cursor-pointer"
+                  style="font-size: 0.8rem"></i>
+              </a>
+            </td>
+            <td>{{ invitation.status }}</td>
+            <td>{{ invitation.created_at | date : 'dd-MM-yyyy' }}</td>
+            <td>
+              <p-overlayPanel #op>
+                {{ invitation.message }}
+              </p-overlayPanel>
+              <p-button
+                (click)="op.toggle($event)"
+                icon="pi pi-envelope"
+                label="Show content"
+                size="small"
+                [outlined]="true"></p-button>
+            </td>
+            <td>
+              <p-button
+                icon="pi pi-ellipsis-h"
+                (click)="openModal('invitation', invitation.id)"
+                size="small"
+                [text]="true"
+                [outlined]="true"
+                severity="secondary"></p-button>
+              <app-invitation-modal
+                [isVisible]="modals['invitation']"
+                [data]="modalsData['invitation']"
+                (close)="closeModal('invitation')"
+                (refetch)="fetchData()"></app-invitation-modal>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #emptyResults>
+      <p class="pt-6 leading-8 text-center text-gray-500 text-md">
+        There are no invitations found.
+      </p>
+    </ng-template>
+  </div>
+  <ng-template #loadingResults>
+    <div class="flex flex-col gap-3">
+      <p-skeleton height="5rem"></p-skeleton>
+      <p-skeleton height="5rem"></p-skeleton>
+      <p-skeleton height="5rem"></p-skeleton>
+    </div>
+  </ng-template>
+</div>
