@@ -29,6 +29,13 @@ export class HeaderComponent extends BaseComponent {
       },
     },
     {
+      label: 'Waitlists',
+      icon: 'pi pi-align-justify',
+      command: () => {
+        this.router.navigate([`/recruiter/wait-lists`]);
+      },
+    },
+    {
       label: 'Sign out',
       icon: 'pi pi-sign-out',
       command: () => {

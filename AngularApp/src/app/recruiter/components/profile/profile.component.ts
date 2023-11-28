@@ -57,6 +57,8 @@ export class ProfileComponent extends BaseComponent {
     this.modalsData[modalId] = null;
   }
 
+  addToWaitlist() {}
+
   handleProfilePictureClick() {
     document.getElementById('uploader').click();
   }

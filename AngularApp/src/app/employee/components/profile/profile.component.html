@@ -70,7 +70,47 @@
       </div>
       <div *ngIf="authUserData?.role === 'recruiter'">
         <div class="flex items-center">
-          <p-button icon="pi pi-bookmark" size="small" [outlined]="true"></p-button>
+          <p-button
+            *ngIf="waitListId"
+            icon="pi pi-bookmark-fill"
+            (click)="removeFromWaitlist()"
+            size="small"
+            [outlined]="false"></p-button>
+          <p-button
+            *ngIf="!waitListId"
+            icon="pi pi-bookmark"
+            size="small"
+            (click)="op.toggle($event)"
+            [outlined]="true"></p-button>
+          <p-overlayPanel #op>
+            <form
+              [formGroup]="waitListForm"
+              (ngSubmit)="addToWaitlist()"
+              class="flex flex-col gap-4">
+              <div class="p-inputgroup">
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="description"
+                  placeholder="Enter a note" />
+                <button
+                  type="submit"
+                  pButton
+                  icon="pi pi-check"
+                  styleClass="p-button-warn"
+                  (click)="op.toggle($event)"
+                  [disabled]="waitListForm.disabled || !waitListForm.valid"></button>
+              </div>
+              <div *ngIf="description.invalid && (description.dirty || description.touched)">
+                <small *ngIf="description.errors?.['required']" class="p-error"
+                  >Description is required.</small
+                >
+                <small *ngIf="description.errors?.['serverError']" class="p-error">
+                  {{ description.errors['serverError'] }}
+                </small>
+              </div>
+            </form>
+          </p-overlayPanel>
         </div>
       </div>
       <div *ngIf="isEditable">
