@@ -71,9 +71,7 @@ export interface Waitlist {
 
 export interface WaitlistPaginable extends Paginable<Waitlist> {}
 
-export interface WaitlistResponse {
-  data: Waitlist;
-}
+export interface WaitlistResponse extends Waitlist {}
 
 export interface WaitlistPayload {
   employee_id: number;

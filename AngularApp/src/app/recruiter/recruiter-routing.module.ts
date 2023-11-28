@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ProfileComponent } from './components/profile/profile.component';
 import { InvitiationsComponent } from './components/invitiations/invitiations.component';
+import { WaitlistComponent } from './components/waitlist/waitlist.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'invitations',
     component: InvitiationsComponent,
+  },
+  {
+    path: 'wait-lists',
+    component: WaitlistComponent,
   },
 ];
 

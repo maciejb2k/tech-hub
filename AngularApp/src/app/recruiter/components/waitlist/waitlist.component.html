@@ -1,32 +1,44 @@
 <div class="mt-10">
   <header class="flex items-center justify-between pb-10 mb-10 border-b border-gray-200">
     <div>
-      <h2 class="text-2xl font-medium tracking-tight text-gray-900">Employees Invitations</h2>
+      <h2 class="text-2xl font-medium tracking-tight text-gray-900">Wait list</h2>
       <p class="leading-8 text-gray-500 text-md">
-        Display all invitations from recruiters to the meetings.
+        Display all of the bookmarked candidates that are waiting for an invitation.
       </p>
     </div>
     <div></div>
   </header>
   <div *ngIf="!isLoading; else loadingResults">
-    <div *ngIf="results.data.length; else emptyResults">
-      <p-table [value]="results.data" styleClass="p-datatable-striped">
+    <div *ngIf="results.length; else emptyResults">
+      <p-table [value]="results" styleClass="p-datatable-striped">
         <ng-template pTemplate="header">
           <tr>
             <th>#</th>
+            <th>Employee</th>
+            <th>Description</th>
+            <th>Action</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-invitation>
+        <ng-template pTemplate="body" let-employee>
           <tr>
-            <td>{{ invitation.id }}</td>
+            <td>{{ employee.id }}</td>
+            <td>{{ employee.employee.first_name }} {{ employee.employee.last_name }}</td>
+            <td>{{ employee.description }}</td>
+            <td>
+              <p-button
+                icon="pi pi-trash"
+                (click)="destroy(employee.id)"
+                size="small"
+                [text]="true"
+                [outlined]="true"
+                severity="danger"></p-button>
+            </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
     <ng-template #emptyResults>
-      <p class="pt-6 leading-8 text-center text-gray-500 text-md">
-        There are no invitations found.
-      </p>
+      <p class="pt-6 leading-8 text-center text-gray-500 text-md">There are no candidates found.</p>
     </ng-template>
   </div>
   <ng-template #loadingResults>
