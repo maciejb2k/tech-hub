@@ -10,7 +10,7 @@
   </header>
   <div *ngIf="!isLoading; else loadingResults">
     <div *ngIf="results.length; else emptyResults">
-      <p-table [value]="results" styleClass="p-datatable-striped">
+      <p-table [value]="results" styleClass="p-datatable-striped p-datatable-sm">
         <ng-template pTemplate="header">
           <tr>
             <th>#</th>

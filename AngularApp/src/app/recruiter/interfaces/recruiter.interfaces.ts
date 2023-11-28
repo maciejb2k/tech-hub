@@ -75,4 +75,5 @@ export interface WaitlistResponse extends Waitlist {}
 
 export interface WaitlistPayload {
   employee_id: number;
+  description: string;
 }
