@@ -52,9 +52,29 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col ml-auto">
+    <div class="flex items-center gap-3 ml-auto">
+      <div *ngIf="authUserData?.role === 'recruiter'">
+        <div class="flex items-center">
+          <p-button
+            icon="pi pi-envelope"
+            size="small"
+            severity="secondary"
+            (click)="openModal('invitation', userData.employee.id)"
+            [outlined]="true"></p-button>
+          <app-invitation-modal
+            [isVisible]="modals['invitation']"
+            [data]="modalsData['invitation']"
+            (close)="closeModal('invitation')"
+            (refetch)="fetchData()"></app-invitation-modal>
+        </div>
+      </div>
+      <div *ngIf="authUserData?.role === 'recruiter'">
+        <div class="flex items-center">
+          <p-button icon="pi pi-bookmark" size="small" [outlined]="true"></p-button>
+        </div>
+      </div>
       <div *ngIf="isEditable">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center">
           <p-button
             icon="pi pi-ellipsis-h"
             size="small"

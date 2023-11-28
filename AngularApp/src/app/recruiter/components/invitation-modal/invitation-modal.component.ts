@@ -26,14 +26,17 @@ export class InvitationModalComponent extends BaseComponent {
 
   messageOptions: Message[] = [
     { name: 'Pending', code: 'Pending' },
-    { name: 'Accepted', code: 'Finished' },
-    { name: 'Rejected', code: 'Cancelled' },
+    { name: 'Finished', code: 'Finished' },
+    { name: 'Cancelled', code: 'Cancelled' },
   ];
 
   modalForm = this.formBuilder.group({
-    status: new FormControl<Message | null>(null, Validators.required),
+    status: new FormControl<Message | null>(this.messageOptions[0], Validators.required),
     message: ['', Validators.required],
   });
+
+  employeeId: number | null;
+  invitationId: number | null;
 
   constructor(
     protected override loaderService: LoaderService,
@@ -57,8 +60,6 @@ export class InvitationModalComponent extends BaseComponent {
         next: value => {
           const status = this.messageOptions.find(option => option.code === value.data.status);
           const message = value.data.message;
-
-          console.log(value);
 
           this.modalForm.patchValue({
             status,

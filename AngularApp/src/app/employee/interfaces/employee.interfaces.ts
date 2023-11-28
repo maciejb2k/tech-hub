@@ -193,3 +193,9 @@ export interface Invitation {
 }
 
 export interface InvitationsPaginable extends Paginable<Invitation> {}
+
+export interface InvitationPayload {
+  status: string;
+  message: string;
+  employee_id: number;
+}

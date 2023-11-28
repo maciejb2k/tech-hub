@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
-import { InvitationsService } from '../../services/invitations.service';
+import { InvitationsService } from 'src/app/employee/services/invitations.service';
 import { Invitation } from '../../interfaces/employee.interfaces';
 
 type State = {
@@ -42,7 +42,7 @@ export class InvitationsComponent extends BaseComponent {
   fetchData() {
     this.subscriptions.push(
       this.invitationsService.getInvitations().subscribe(res => {
-        console.log(res);
+        this.results = res.data;
       })
     );
   }

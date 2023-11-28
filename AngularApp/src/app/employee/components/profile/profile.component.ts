@@ -6,6 +6,7 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile, ModalsData, ProfileSections } from '../../interfaces/employee.interfaces';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { ProfileData } from 'src/app/auth/interfaces/auth.interfaces';
 
 @Component({
   selector: 'app-profile',
@@ -13,8 +14,10 @@ import { AuthService } from 'src/app/auth/services/auth.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent extends BaseComponent {
-  userData: EmployeeProfile;
   isEditable = false;
+
+  userData: EmployeeProfile;
+  authUserData: ProfileData;
 
   modals: ProfileSections = {
     user: false,
@@ -22,14 +25,16 @@ export class ProfileComponent extends BaseComponent {
     skills: false,
     workExperience: false,
     education: false,
+    invitation: false,
   };
 
-  modalsData: ModalsData = {
+  modalsData: any = {
     user: null,
     summary: null,
     skills: null,
     workExperience: null,
     education: null,
+    invitation: null,
   };
 
   constructor(
@@ -59,33 +64,32 @@ export class ProfileComponent extends BaseComponent {
 
         this.subscriptions.push(
           this.authService.getUser().subscribe(authData => {
-            if (authData && authData.user_id === this.userData.employee.user.id) {
-              this.isEditable = true;
-              this.onDataLoaded();
+            if (!authData) {
+              return;
             }
+
+            this.authUserData = authData;
+
+            if (authData.user_id === this.userData.employee.user.id) {
+              this.isEditable = true;
+            }
+
+            this.onDataLoaded();
           })
         );
       })
     );
   }
 
-  openModal(modalId: string, id?: number) {
-    if (!this.isEditable) {
-      return;
-    }
-
+  openModal(modalId: string, data?: any) {
     this.modals[modalId] = true;
 
-    if (id) {
-      this.modalsData[modalId] = id;
+    if (data) {
+      this.modalsData[modalId] = data;
     }
   }
 
   closeModal(modalId: string) {
-    if (!this.isEditable) {
-      return;
-    }
-
     this.modals[modalId] = false;
     this.modalsData[modalId] = null;
   }
