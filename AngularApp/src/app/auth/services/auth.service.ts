@@ -20,6 +20,7 @@ import { FormService } from 'src/app/shared/services/form.service';
 export class AuthService {
   userSubject: BehaviorSubject<ProfileData | null> = new BehaviorSubject<ProfileData | null>(null);
 
+  private fetchingUser: boolean = false;
   private destroy$: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient, private router: Router, private formService: FormService) {}
@@ -67,20 +68,27 @@ export class AuthService {
   getUserData() {
     return this.userSubject.pipe(
       switchMap(user => {
-        if (user === null && this.isAuthenticated()) {
-          return this.fetchUserData().pipe(
-            finalize(() => {
-              return this.userSubject.asObservable();
-            })
-          );
+        if (!(user === null && this.isAuthenticated())) {
+          return of(user);
         }
-        return of(user);
+
+        if (this.fetchingUser) {
+          return of(null);
+        }
+
+        this.fetchingUser = true;
+        return this.fetchUserData().pipe(
+          catchError(() => of(null)),
+          finalize(() => {
+            this.fetchingUser = false;
+          })
+        );
       })
     );
   }
 
   getRole() {
-    return this.getUserData().pipe(map(user => (user ? user.role : null)));
+    return this.getUser().pipe(map(user => (user ? user.role : null)));
   }
 
   hasRole(role: string) {
@@ -107,13 +115,13 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  private fetchUserData(): Observable<ProfileData> {
+  fetchUserData() {
     const url = 'http://localhost:8000/api/profile';
+
     return this.http.get<ProfileResponse>(url).pipe(
       map((response: ProfileResponse) => {
         const data = response['employee'] || response['recruiter'];
         const userData = data.user;
-
         const userDetails: ProfileData = {
           id: data.id,
           user_id: userData.id,

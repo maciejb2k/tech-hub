@@ -1,0 +1,65 @@
+<p-dialog
+  header="Update Invitation Details"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClosed()">
+  <form [formGroup]="modalForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="status">Status</label>
+        <p-dropdown
+          formControlName="status"
+          [options]="messageOptions"
+          optionLabel="name"
+          [style]="{ width: '100%' }"
+          placeholder="Select status"></p-dropdown>
+      </div>
+      <div *ngIf="status.invalid && (status.dirty || status.touched)">
+        <small *ngIf="status.errors?.['required']" class="p-error">Status is required.</small>
+        <small *ngIf="status.errors?.['serverError']" class="p-error">
+          {{ status.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="flex flex-col gap-2">
+        <label for="message">Message</label>
+        <textarea
+          rows="5"
+          cols="30"
+          id="message"
+          pInputTextarea
+          formControlName="message"
+          placeholder="I would like to invite you to the ..."></textarea>
+      </div>
+      <div *ngIf="message.invalid && (message.dirty || message.touched)">
+        <small *ngIf="message.errors?.['required']" class="p-error">Message is required.</small>
+        <small *ngIf="message.errors?.['serverError']" class="p-error">
+          {{ message.errors['serverError'] }}
+        </small>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <div class="flex items-center gap-2">
+      <button
+        pButton
+        label="Update"
+        type="submit"
+        severity="secondary"
+        class="w-2/3 p-button-success"
+        [disabled]="modalForm.disabled || !modalForm.valid"></button>
+      <button
+        pButton
+        label="Delete"
+        type="button"
+        class="w-1/3 p-button-danger p-button-outlined"
+        (click)="destroy()"></button>
+    </div>
+  </form>
+</p-dialog>

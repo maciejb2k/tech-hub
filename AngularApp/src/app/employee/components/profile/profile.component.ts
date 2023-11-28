@@ -6,6 +6,8 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile, ModalsData, ProfileSections } from '../../interfaces/employee.interfaces';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { ProfileData } from 'src/app/auth/interfaces/auth.interfaces';
+import { combineLatest, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -13,8 +15,10 @@ import { AuthService } from 'src/app/auth/services/auth.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent extends BaseComponent {
-  userData: EmployeeProfile;
   isEditable = false;
+
+  userData: EmployeeProfile;
+  authUserData: ProfileData;
 
   modals: ProfileSections = {
     user: false,
@@ -22,14 +26,16 @@ export class ProfileComponent extends BaseComponent {
     skills: false,
     workExperience: false,
     education: false,
+    invitation: false,
   };
 
-  modalsData: ModalsData = {
+  modalsData: any = {
     user: null,
     summary: null,
     skills: null,
     workExperience: null,
     education: null,
+    invitation: null,
   };
 
   constructor(
@@ -49,43 +55,32 @@ export class ProfileComponent extends BaseComponent {
     const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.subscriptions.push(
-      this.employeeService.getEmployeeProfile(employeeId).subscribe(employeeProfile => {
+      combineLatest([
+        this.employeeService.getEmployeeProfile(employeeId),
+        this.authService.getUser(),
+      ]).subscribe(([employeeProfile, authData]) => {
+        this.onDataLoaded();
         this.userData = employeeProfile;
+        this.authUserData = authData;
 
-        if (!this.authService.isAuthenticated()) {
-          this.onDataLoaded();
-          return;
+        if (!authData || !this.authService.isAuthenticated()) return;
+
+        if (authData.user_id === this.userData.employee.user.id) {
+          this.isEditable = true;
         }
-
-        this.subscriptions.push(
-          this.authService.getUser().subscribe(authData => {
-            if (authData && authData.user_id === this.userData.employee.user.id) {
-              this.isEditable = true;
-              this.onDataLoaded();
-            }
-          })
-        );
       })
     );
   }
 
-  openModal(modalId: string, id?: number) {
-    if (!this.isEditable) {
-      return;
-    }
-
+  openModal(modalId: string, data?: any) {
     this.modals[modalId] = true;
 
-    if (id) {
-      this.modalsData[modalId] = id;
+    if (data) {
+      this.modalsData[modalId] = data;
     }
   }
 
   closeModal(modalId: string) {
-    if (!this.isEditable) {
-      return;
-    }
-
     this.modals[modalId] = false;
     this.modalsData[modalId] = null;
   }

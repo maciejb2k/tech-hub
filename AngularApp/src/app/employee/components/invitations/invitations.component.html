@@ -1,0 +1,71 @@
+<div class="mt-10">
+  <header class="flex items-center justify-between pb-10 mb-10 border-b border-gray-200">
+    <div>
+      <h2 class="text-2xl font-medium tracking-tight text-gray-900">Invitations</h2>
+      <p class="leading-8 text-gray-500 text-md">
+        Display all invitations from recruiters to the meetings.
+      </p>
+    </div>
+    <div></div>
+  </header>
+  <div *ngIf="!isLoading; else loadingResults">
+    <div *ngIf="results.length; else emptyResults">
+      <p-table [value]="results" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>#</th>
+            <th>Recruiter</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Message</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-invitation>
+          <tr>
+            <td>{{ invitation.id }}</td>
+            <td>
+              {{ invitation.recruiter.user.first_name }} {{ invitation.recruiter.user.last_name }}
+            </td>
+            <td>
+              <p-tag
+                *ngIf="invitation.status === 'Pending'"
+                value="{{ invitation.status }}"></p-tag>
+              <p-tag
+                *ngIf="invitation.status === 'Finished'"
+                severity="success"
+                value="{{ invitation.status }}"></p-tag>
+              <p-tag
+                *ngIf="invitation.status === 'Cancelled'"
+                severity="danger"
+                value="{{ invitation.status }}"></p-tag>
+            </td>
+            <td>{{ invitation.created_at | date : 'dd-MM-yyyy' }}</td>
+            <td>
+              <p-overlayPanel #op>
+                {{ invitation.message }}
+              </p-overlayPanel>
+              <p-button
+                (click)="op.toggle($event)"
+                icon="pi pi-envelope"
+                label="Show content"
+                size="small"
+                [outlined]="true"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #emptyResults>
+      <p class="pt-6 leading-8 text-center text-gray-500 text-md">
+        There are no invitations found.
+      </p>
+    </ng-template>
+  </div>
+  <ng-template #loadingResults>
+    <div class="flex flex-col gap-3">
+      <p-skeleton height="5rem"></p-skeleton>
+      <p-skeleton height="5rem"></p-skeleton>
+      <p-skeleton height="5rem"></p-skeleton>
+    </div>
+  </ng-template>
+</div>

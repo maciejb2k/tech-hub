@@ -1,4 +1,5 @@
 import { User } from 'src/app/auth/interfaces/auth.interfaces';
+import { Recruiter } from 'src/app/recruiter/interfaces/recruiter.interfaces';
 
 export const ROLE_RECRUITER = 'recruiter';
 export const ROLE_EMPLOYEE = 'employee';
@@ -183,3 +184,18 @@ export interface EmployeeBrowse {
 }
 
 export interface EmployeePaginable extends Paginable<EmployeeBrowse> {}
+
+export interface Invitation {
+  id: number;
+  recruiter: Recruiter;
+  message: string;
+  status: string;
+}
+
+export interface InvitationsPaginable extends Paginable<Invitation> {}
+
+export interface InvitationPayload {
+  status: string;
+  message: string;
+  employee_id: number;
+}
