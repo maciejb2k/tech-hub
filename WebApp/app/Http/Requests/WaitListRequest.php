@@ -15,7 +15,7 @@ class WaitListRequest extends FormRequest
     {
         return [
             'description' => 'sometimes|string|max:255',
-            'employee_id' => 'sometimes|integer',
+            'employee_id' => 'sometimes|integer|unique:wait_lists',
             'recruiter_id' => 'sometimes|integer',
         ];
     }

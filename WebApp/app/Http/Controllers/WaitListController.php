@@ -20,7 +20,14 @@ class WaitListController extends Controller
 
     public function index(Request $request)
     {
+        $employeeId = $request->query('employee_id');
+
         $waitLists = $this->waitListService->getWaitListsByRecruiterUserId($request->user()->id);
+
+        if ($employeeId !== null) {
+            $waitLists = $waitLists->where('employee_id', $employeeId)->values();
+        }
+
         return response()->json($waitLists);
     }
 
