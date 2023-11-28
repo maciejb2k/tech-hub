@@ -61,3 +61,20 @@ export interface InvitationPayload {
 export interface InvitationResponse {
   data: Invitation;
 }
+
+export interface Waitlist {
+  id: number;
+  employee: Employee;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WaitlistPaginable extends Paginable<Waitlist> {}
+
+export interface WaitlistResponse {
+  data: Waitlist;
+}
+
+export interface WaitlistPayload {
+  employee_id: number;
+}

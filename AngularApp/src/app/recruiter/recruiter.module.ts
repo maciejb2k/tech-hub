@@ -19,6 +19,7 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
+import { WaitlistComponent } from './components/waitlist/waitlist.component';
 @NgModule({
   declarations: [
     ProfileComponent,
@@ -26,6 +27,7 @@ import { TagModule } from 'primeng/tag';
     RecruiterModalComponent,
     InvitiationsComponent,
     InvitationModalComponent,
+    WaitlistComponent,
   ],
   imports: [
     CommonModule,
