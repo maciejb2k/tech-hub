@@ -11,9 +11,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkExperienceController;
 use App\Http\Controllers\EmployeeInvitationController;
 use App\Http\Controllers\RecruiterInvitationController;
+use App\Http\Controllers\WaitListResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController;
+use App\Http\Controllers\WaitListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +51,7 @@ Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'ability:recruiter'])->group(function () {
+    Route::resource('recruiter/wait-lists', WaitListController::class);
     Route::resource('recruiter/invitations', RecruiterInvitationController::class);
     Route::resource('recruiter', RecruiterController::class);
 
