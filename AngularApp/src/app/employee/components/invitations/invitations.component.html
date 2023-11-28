@@ -26,7 +26,19 @@
             <td>
               {{ invitation.recruiter.user.first_name }} {{ invitation.recruiter.user.last_name }}
             </td>
-            <td>{{ invitation.status }}</td>
+            <td>
+              <p-tag
+                *ngIf="invitation.status === 'Pending'"
+                value="{{ invitation.status }}"></p-tag>
+              <p-tag
+                *ngIf="invitation.status === 'Finished'"
+                severity="success"
+                value="{{ invitation.status }}"></p-tag>
+              <p-tag
+                *ngIf="invitation.status === 'Cancelled'"
+                severity="danger"
+                value="{{ invitation.status }}"></p-tag>
+            </td>
             <td>{{ invitation.created_at | date : 'dd-MM-yyyy' }}</td>
             <td>
               <p-overlayPanel #op>

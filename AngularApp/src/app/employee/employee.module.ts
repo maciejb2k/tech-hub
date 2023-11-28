@@ -39,6 +39,7 @@ import { SliderModule } from 'primeng/slider';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     InputNumberModule,
     TableModule,
     OverlayPanelModule,
+    TagModule,
   ],
 })
 export class EmployeeModule {}

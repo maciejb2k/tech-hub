@@ -106,7 +106,7 @@
           <i class="pi pi-info-circle"></i>Summary Information
         </h3>
         <p class="max-w-2xl text-sm leading-6 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+          Basic information about the user like address or expected salary.
         </p>
       </div>
       <div>
@@ -148,7 +148,9 @@
         </div>
         <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium leading-6 text-gray-900">Profile views</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">0</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            {{ userData.employee.views ? userData.employee.views : '0' }}
+          </dd>
         </div>
       </dl>
     </div>
@@ -168,7 +170,7 @@
           <i class="pi pi-bolt"></i>Skills
         </h3>
         <p class="max-w-2xl text-sm leading-6 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+          List of hard skill with their level of proficiency.
         </p>
       </div>
       <div>
@@ -217,7 +219,7 @@
           <i class="pi pi-briefcase"></i>Work Experience
         </h3>
         <p class="max-w-2xl text-sm leading-6 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, tempore.
+          The experience that a user already has from previous jobs.
         </p>
       </div>
       <div>
@@ -288,7 +290,7 @@
           <i class="pi pi-book"></i>Education
         </h3>
         <p class="max-w-2xl text-sm leading-6 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, tempore.
+          Higher education of a user with the name of the university and the field of study.
         </p>
       </div>
       <div>
@@ -360,7 +362,7 @@
           <i class="pi pi-language"></i>Languages
         </h3>
         <p class="max-w-2xl text-sm leading-6 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, dolorem.
+          Languages that a user knows with their level of proficiency.
         </p>
       </div>
       <div>

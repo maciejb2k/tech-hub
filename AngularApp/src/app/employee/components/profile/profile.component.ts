@@ -7,6 +7,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile, ModalsData, ProfileSections } from '../../interfaces/employee.interfaces';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ProfileData } from 'src/app/auth/interfaces/auth.interfaces';
+import { combineLatest, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -54,29 +55,19 @@ export class ProfileComponent extends BaseComponent {
     const employeeId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.subscriptions.push(
-      this.employeeService.getEmployeeProfile(employeeId).subscribe(employeeProfile => {
+      combineLatest([
+        this.employeeService.getEmployeeProfile(employeeId),
+        this.authService.getUser(),
+      ]).subscribe(([employeeProfile, authData]) => {
+        this.onDataLoaded();
         this.userData = employeeProfile;
+        this.authUserData = authData;
 
-        if (!this.authService.isAuthenticated()) {
-          this.onDataLoaded();
-          return;
+        if (!authData || !this.authService.isAuthenticated()) return;
+
+        if (authData.user_id === this.userData.employee.user.id) {
+          this.isEditable = true;
         }
-
-        this.subscriptions.push(
-          this.authService.getUser().subscribe(authData => {
-            if (!authData) {
-              return;
-            }
-
-            this.authUserData = authData;
-
-            if (authData.user_id === this.userData.employee.user.id) {
-              this.isEditable = true;
-            }
-
-            this.onDataLoaded();
-          })
-        );
       })
     );
   }
