@@ -4,37 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotFoundException;
-use App\Services\InvitationService;
-use App\Http\Requests\InvitationRequest;
 use Illuminate\Http\Request;
-use App\Http\Resources\InvitationResource;
+use App\Http\Requests\WaitListRequest;
+use App\Services\WaitListService;
 use Exception;
 
-class RecruiterInvitationController extends Controller
+class WaitListController extends Controller
 {
-    protected $invitationService;
+    protected $waitListService;
 
-    public function __construct(InvitationService $invitationService)
+    public function __construct(WaitListService $waitListService)
     {
-        $this->invitationService = $invitationService;
+        $this->waitListService = $waitListService;
     }
 
     public function index(Request $request)
     {
-        $user_id = $request->user()->id;
-        $invitations = $this->invitationService->getMeetingInvitationsByRecruiterUserId($user_id);
-
-        return InvitationResource::collection($invitations);
+        $waitLists = $this->waitListService->getWaitListsByRecruiterUserId($request->user()->id);
+        return response()->json($waitLists);
     }
 
-    public function show($invitationId, Request $request)
+    public function store(WaitListRequest $request)
     {
         try
         {
-            $user_id = $request->user()->id;
-            $invitation = $this->invitationService->getMeetingInvitationByIdAndRecruiterId($invitationId, $user_id);
-
-            return new InvitationResource($invitation);
+            $recruiterUserId = $request->user()->id;
+            $waitList = $this->waitListService->createWaitList($request, $recruiterUserId);
+            return response()->json($waitList, 201);
         }
         catch(Exception $e)
         {
@@ -45,15 +41,13 @@ class RecruiterInvitationController extends Controller
         }
     }
 
-    public function store(InvitationRequest $request)
+    public function show(int $waitListId, Request $request)
     {
         try
         {
-            $user_id = $request->user()->id;
-
-            $invitation = $this->invitationService->createMeetingInvitation($request, $user_id);
-
-            return new InvitationResource($invitation);
+            $recruiterUserId = $request->user()->id;
+            $waitList = $this->waitListService->getWaitListById($waitListId, $recruiterUserId);
+            return response()->json($waitList);
         }
         catch(Exception $e)
         {
@@ -64,15 +58,12 @@ class RecruiterInvitationController extends Controller
         }
     }
 
-    public function update(InvitationRequest $request, $invitationId)
+    public function update(WaitListRequest $request, int $waitListId, int $recruiterUserId)
     {
         try
         {
-            $user_id = $request->user()->id;
-
-            $invitation = $this->invitationService->updateMeetingInvitation($request, $invitationId, $user_id);
-
-            return new InvitationResource($invitation);
+            $updatedWaitList = $this->waitListService->updateWaitList($request, $waitListId, $recruiterUserId);
+            return response()->json($updatedWaitList);
         }
         catch(Exception $e)
         {
@@ -83,15 +74,13 @@ class RecruiterInvitationController extends Controller
         }
     }
 
-    public function destroy($invitationId, Request $request)
+    public function destroy(int $waitListId, Request $request)
     {
         try
         {
-            $user_id = $request->user()->id;
-
-            $this->invitationService->deleteMeetingInvitation($invitationId, $user_id);
-
-            return response()->json(null, 204);
+            $recruiterUserId = $request->user()->id;
+            $this->waitListService->deleteWaitList($waitListId, $recruiterUserId);
+            return response()->json(['message' => 'WaitList deleted successfully'], 204);
         }
         catch(Exception $e)
         {
