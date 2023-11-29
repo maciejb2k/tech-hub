@@ -85,4 +85,12 @@ class EmployeeRepository {
         
         return $query->get();
     }
+
+    public function addEmployeeView(int $employeeId)
+    {
+        $employee = $this->employee::where("id", $employeeId)->first();
+
+        $employee['views'] = intval($employee['views']) + 1;
+        $employee->save();
+    }
 }

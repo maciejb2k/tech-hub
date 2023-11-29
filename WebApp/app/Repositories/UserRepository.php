@@ -112,8 +112,17 @@ class UserRepository {
             $name = $request['name'];
 
             $query->where(function ($query) use ($name) {
-                $query->where('first_name', 'LIKE', "%$name%")
-                    ->orWhere('last_name', 'LIKE', "%$name%");
+                $nameParts = explode(' ', $name);
+            
+                if (count($nameParts) === 2) {
+                    $query->where(function ($query) use ($nameParts) {
+                        $query->where('first_name', 'LIKE', "%$nameParts[0]%")
+                              ->where('last_name', 'LIKE', "%$nameParts[1]%");
+                    });
+                } else {
+                    $query->where('first_name', 'LIKE', "%$name%")
+                          ->orWhere('last_name', 'LIKE', "%$name%");
+                }
             });
         }
 
