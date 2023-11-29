@@ -18,16 +18,16 @@ class PaginateTransformation
         
         $paginator = new LengthAwarePaginator($itemstoshow, $total, $perPage);
         
-        $path = 'http://localhost:8000/api';
-        $paginator->setPath($path);
+        // $path = 'http://localhost:8000/api';
+        // $paginator->setPath($path);
 
         return [
             'data' => $paginator->items(),
-            'links' => [
-                'self' => $paginator->url($paginator->currentPage()),
-                'next' => $paginator->nextPageUrl(),
-                'prev' => $paginator->previousPageUrl(),
-            ],
+            // 'links' => [
+            //     'self' => $paginator->url($paginator->currentPage()),
+            //     'next' => $paginator->nextPageUrl(),
+            //     'prev' => $paginator->previousPageUrl(),
+            // ],
             'meta' => [
                 'current_page' => $paginator->currentPage(),
                 'last_page' => $paginator->lastPage(),
