@@ -25,11 +25,11 @@ class EmployeeController extends Controller
      */
     public function index(SearchEmployeeRequest $request)
     {
-        try 
+        try
         {
             $res = $this->employeeService->searchEmployee($request);
             return response($res, 200);
-        } 
+        }
         catch(Exception $e)
         {
             if($e instanceof NotFoundException)
@@ -58,12 +58,20 @@ class EmployeeController extends Controller
      */
     public function show(int $id, Request $request)
     {
-        if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
-            Auth::setUser($user);
-        }
+        try
+        {
+            if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
+                Auth::setUser($user);
+            }
 
-        $res = $this->employeeService->getEmployeeById($id, $request);
-        return response($res, 200);
+            $res = $this->employeeService->getEmployeeById($id, $request);
+            return response($res, 200);
+        }
+        catch(Exception $e)
+        {
+            if($e instanceof NotFoundException)
+                return response(['message' => 'The employee does not exist!'], 404);
+        }
     }
 
     /**
@@ -79,11 +87,11 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeRequest $request, string $id)
     {
-        try 
+        try
         {
             $res = $this->employeeService->updateEmployee($request, $id, $request->user()->id);
             return response($res, 200);
-        } 
+        }
         catch(Exception $e)
         {
             if($e instanceof ForbiddenException)

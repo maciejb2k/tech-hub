@@ -49,6 +49,9 @@ class EmployeeService {
     public function getEmployeeById(int $employeeId, $request)
     {
         $employee = $this->employeeRepository->getEmployeeById($employeeId);
+
+        if (!isset($employee)) throw new NotFoundException();
+
         return $this->getEmployee($employee, $request);
     }
 
@@ -134,17 +137,17 @@ class EmployeeService {
         for($i = 0; $i < count($employeeSearchResult); $i++)
         {
             $employee = ResourceTransformation::TransformResource($employeeSearchResult[$i], ["id", "expected_salary", 'location', "user_id"], $this->getTablePreferences($preferences[$i], 'employee'), $visitors[$i]);
-            
+
             if(isset($request['salary_min']) || isset($request['salary_max']) || $request['sort_by'] === 'expected_salary')
             {
-                if(array_key_exists('expected_salary', $employee)) 
-                {   
+                if(array_key_exists('expected_salary', $employee))
+                {
                     $employee['user'] = $this->userRepository->getUserById($employee['user_id']);
                     unset($employee['user_id']);
                     array_push($employeeResponse, $employee);
                 }
             }
-            else 
+            else
             {
                 $employee['user'] = $this->userRepository->getUserById($employee['user_id']);
                 unset($employee['user_id']);
