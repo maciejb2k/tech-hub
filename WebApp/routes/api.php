@@ -51,10 +51,9 @@ Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'ability:recruiter'])->group(function () {
-    Route::resource('recruiter/wait-lists', WaitListController::class);
+    Route::resource('wait-lists', WaitListController::class);
     Route::resource('recruiter/invitations', RecruiterInvitationController::class);
     Route::resource('recruiter', RecruiterController::class);
-
 });
 
 Route::middleware(['auth:sanctum', 'ability:employee,recruiter'])->group(function () {

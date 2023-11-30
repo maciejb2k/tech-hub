@@ -87,7 +87,7 @@ class WaitListController extends Controller
         {
             $recruiterUserId = $request->user()->id;
             $this->waitListService->deleteWaitList($waitListId, $recruiterUserId);
-            return response()->json(['message' => 'WaitList deleted successfully'], 204);
+            return response()->json("", 204);
         }
         catch(Exception $e)
         {
