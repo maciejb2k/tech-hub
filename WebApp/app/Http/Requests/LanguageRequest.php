@@ -22,7 +22,7 @@ class LanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'proficiency' => 'required|in:A1,A2,B1,B2,C1,C2',
         ];
     }

@@ -24,7 +24,7 @@ class InvitationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'nullable|string',
+            'message' => 'nullable|string|max:255',
             'employee_id' => 'nullable|exists:employees,id',
             'status' => [
                 Rule::in(Invitation::$statuses),
