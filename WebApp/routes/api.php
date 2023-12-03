@@ -39,12 +39,12 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth
 
 
 Route::middleware(['auth:sanctum', 'ability:employee'])->group(function () {
-    Route::resource('skill', SkillController::class);
-    Route::resource('education', EducationController::class);
-    Route::resource('work-experience', WorkExperienceController::class);
-    Route::resource('language', LanguageController::class);
-    Route::get('/preference/fields', [PreferenceController::class, 'fields']);
-    Route::resource('preference', PreferenceController::class);
+    Route::resource('skills', SkillController::class);
+    Route::resource('educations', EducationController::class);
+    Route::resource('work-experiences', WorkExperienceController::class);
+    Route::resource('languages', LanguageController::class);
+    Route::get('/preferences/fields', [PreferenceController::class, 'fields']);
+    Route::resource('preferences', PreferenceController::class);
 
     Route::put('/employees/{id}', [EmployeeController::class, 'update']);
     Route::resource('invitations', EmployeeInvitationController::class);
