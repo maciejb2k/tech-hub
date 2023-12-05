@@ -28,10 +28,6 @@ use App\Http\Controllers\WaitListController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('/auth/register-employee', [AuthController::class, 'registerEmployee']);
 Route::post('/auth/register-recruiter', [AuthController::class, 'registerRecruiter']);
 Route::post('/auth/login', [AuthController::class, 'login']);

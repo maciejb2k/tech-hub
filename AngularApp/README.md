@@ -1,7 +1,5 @@
-# Projekt AI2 - Angular
+# Angular - Application setup
 
-Instalacja:
-```
-npm i
-ng serve
-```
+- Install Node.js and @angular/cli
+- Run `npm install`
+- Run `ng serve` for a dev server
