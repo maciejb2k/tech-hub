@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs';
 
+import { environment } from 'src/environments/environment';
+
 import { FormService } from 'src/app/shared/services/form.service';
 import { EmployeePaginable } from '../interfaces/employee.interfaces';
 
@@ -12,7 +14,7 @@ export class BrowseService {
   constructor(private http: HttpClient, private formService: FormService) {}
 
   getEmployees(params: any) {
-    const url = 'http://localhost:8000/api/employees';
+    const url = `${environment.apiBaseUrl}/employees`;
 
     const filteredParams = this.filterEmptyParams(params);
     let httpParams = new HttpParams();

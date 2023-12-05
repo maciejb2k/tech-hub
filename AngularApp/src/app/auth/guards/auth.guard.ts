@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { map, skipWhile, take, tap } from 'rxjs';
+import { map, skipWhile, take } from 'rxjs';
 
 export const authenticatedGuard = () => {
   const authService = inject(AuthService);

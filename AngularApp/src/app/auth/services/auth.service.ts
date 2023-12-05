@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, of, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, of, throwError } from 'rxjs';
 import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 import {
   AuthResponse,
@@ -11,7 +13,6 @@ import {
   ProfileResponse,
   RecruiterRegistrationForm,
 } from '../interfaces/auth.interfaces';
-import { Router } from '@angular/router';
 import { FormService } from 'src/app/shared/services/form.service';
 
 @Injectable({
@@ -26,21 +27,24 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router, private formService: FormService) {}
 
   registerEmployee(formData: EmployeeRegistrationForm) {
-    const url = 'http://localhost:8000/api/auth/register-employee';
+    const url = `${environment.apiBaseUrl}/auth/register-employee`;
+
     return this.http
       .post<AuthResponse>(url, formData)
       .pipe(catchError(this.formService.handleError));
   }
 
   registerRecruiter(formData: RecruiterRegistrationForm) {
-    const url = 'http://localhost:8000/api/auth/register-recruiter';
+    const url = `${environment.apiBaseUrl}/auth/register-recruiter`;
+
     return this.http
       .post<AuthResponse>(url, formData)
       .pipe(catchError(this.formService.handleError));
   }
 
   login(formData: LoginForm) {
-    const url = 'http://localhost:8000/api/auth/login';
+    const url = `${environment.apiBaseUrl}/auth/login`;
+
     return this.http.post<AuthResponse>(url, formData).pipe(
       catchError(this.formService.handleError),
       tap(response => {
@@ -51,7 +55,8 @@ export class AuthService {
   }
 
   logout() {
-    const url = 'http://localhost:8000/api/auth/logout';
+    const url = `${environment.apiBaseUrl}/auth/logout`;
+
     return this.http.post(url, {}).pipe(
       tap(() => {
         this.logoutUser();
@@ -116,7 +121,7 @@ export class AuthService {
   }
 
   fetchUserData() {
-    const url = 'http://localhost:8000/api/profile';
+    const url = `${environment.apiBaseUrl}/profile`;
 
     return this.http.get<ProfileResponse>(url).pipe(
       map((response: ProfileResponse) => {

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { EmployeeService } from 'src/app/employee/services/employee.service';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { FormService } from 'src/app/shared/services/form.service';
 import { LoaderService } from 'src/app/shared/services/loader.service';

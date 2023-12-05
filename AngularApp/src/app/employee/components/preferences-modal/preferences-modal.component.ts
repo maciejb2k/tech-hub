@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
@@ -7,8 +7,6 @@ import { FormService } from 'src/app/shared/services/form.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { PreferencesPayload } from '../../interfaces/employee.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
-import { SelectItemGroup, TreeNode } from 'primeng/api';
-import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-preferences-modal',

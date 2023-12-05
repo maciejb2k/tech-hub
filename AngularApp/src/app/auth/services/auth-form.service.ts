@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { passwordMatchValidator, urlValidator } from 'src/app/auth/validators/auth.validator';
 
 @Injectable({
@@ -10,8 +10,8 @@ export class AuthFormService {
 
   getLoginForm() {
     return this.formBuilder.group({
-      email: ['tomasz.nowak@gmail.com', [Validators.required, Validators.email]],
-      password: ['password', [Validators.required, Validators.minLength(8)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 

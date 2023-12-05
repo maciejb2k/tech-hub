@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { tap } from 'rxjs';
 
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { FormService } from 'src/app/shared/services/form.service';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
 import { RecruiterService } from '../../services/recruiter.service';

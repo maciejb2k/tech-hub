@@ -3,10 +3,9 @@ import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { BrowseService } from '../../services/browse.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { LoaderService } from 'src/app/shared/services/loader.service';
-import { EmployeeBrowse, EmployeePaginable } from '../../interfaces/employee.interfaces';
+import { EmployeePaginable } from '../../interfaces/employee.interfaces';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, switchMap, tap } from 'rxjs';
-import { DropdownChangeEvent } from 'primeng/dropdown';
+import { switchMap, tap } from 'rxjs';
 
 type SortOption = {
   name: string;

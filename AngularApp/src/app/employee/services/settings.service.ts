@@ -1,9 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
 import { Preferences, PreferencesPayload } from '../interfaces/employee.interfaces';
-import { TreeNode } from 'primeng/api';
 import { FormService } from 'src/app/shared/services/form.service';
+
+import { TreeNode } from 'primeng/api';
 
 type Fields = { [key: string]: string[] };
 export type ParsedFields = {
@@ -22,27 +25,27 @@ export class SettingsService {
   constructor(private http: HttpClient, private formService: FormService) {}
 
   getPreferences() {
-    const url = `http://localhost:8000/api/preference/`;
+    const url = `${environment.apiBaseUrl}/preferences/`;
     return this.http.get<Preferences[]>(url).pipe(catchError(this.formService.handleError));
   }
 
   getPreferencesFields() {
-    const url = `http://localhost:8000/api/preference/fields/`;
+    const url = `${environment.apiBaseUrl}/preferences/fields/`;
     return this.http.get<Fields>(url).pipe(catchError(this.formService.handleError));
   }
 
   addPreferences(payload: PreferencesPayload) {
-    const url = `http://localhost:8000/api/preference/`;
+    const url = `${environment.apiBaseUrl}/preferences/`;
     return this.http.post<Preferences>(url, payload).pipe(catchError(this.formService.handleError));
   }
 
   updatePreferences(id: number, payload: PreferencesPayload) {
-    const url = `http://localhost:8000/api/preference/${id}`;
+    const url = `${environment.apiBaseUrl}/preferences/${id}`;
     return this.http.put<Preferences>(url, payload).pipe(catchError(this.formService.handleError));
   }
 
   deletePreferences(id: number) {
-    const url = `http://localhost:8000/api/preference/${id}`;
+    const url = `${environment.apiBaseUrl}/preferences/${id}`;
     return this.http.delete(url).pipe(catchError(this.formService.handleError));
   }
 

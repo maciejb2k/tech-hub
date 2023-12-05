@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 
 import { BaseComponent } from 'src/app/shared/components/base/base.component';
 import { LoaderService } from 'src/app/shared/services/loader.service';
@@ -7,7 +7,6 @@ import { EmployeeService } from '../../services/employee.service';
 import { FormService } from 'src/app/shared/services/form.service';
 import { SkillPayload } from '../../interfaces/employee.interfaces';
 import { ErrorResponse } from 'src/app/auth/interfaces/auth.interfaces';
-import { MessageService } from 'primeng/api';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
