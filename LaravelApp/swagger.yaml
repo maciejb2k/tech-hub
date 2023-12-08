@@ -1024,6 +1024,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchEmployeeResource"
+        "422":
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateErrorResponse"
 
   /employees/{id}:
     get:
