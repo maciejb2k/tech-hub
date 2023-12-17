@@ -1,3 +1,9 @@
+<app-invitation-modal
+  [isVisible]="modals['invitation']"
+  [data]="modalsData['invitation']"
+  (close)="closeModal('invitation')"
+  (refetch)="fetchData()"></app-invitation-modal>
+
 <div class="mt-10">
   <header class="flex items-center justify-between pb-10 mb-10 border-b border-gray-200">
     <div>
@@ -58,11 +64,6 @@
                 [text]="true"
                 [outlined]="true"
                 severity="secondary"></p-button>
-              <app-invitation-modal
-                [isVisible]="modals['invitation']"
-                [data]="modalsData['invitation']"
-                (close)="closeModal('invitation')"
-                (refetch)="fetchData()"></app-invitation-modal>
             </td>
           </tr>
         </ng-template>
